@@ -6,11 +6,12 @@
     label-position='top'
   )
     template(v-if="confirmationInitiated")
-      p.leading-normal.text-gray-600.text-center.break-normal
-        | Check your
-        |
-        strong {{ user.email }}
-        |  inbox for instructions from us on how to verify your account
+      base-action-completed(
+        header="Signed up successfully"
+        text="Check your inbox for instructions from us on how to verify your account"
+        buttonText="Close"
+        @completeAction="$emit('signOnFinished')"
+      )
     template(v-else)
       el-form-item(prop='email')
         el-input(

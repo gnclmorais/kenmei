@@ -6,11 +6,12 @@
     label-position='top'
   )
     template(v-if="resetInitiated")
-      p.leading-normal.text-gray-600.text-center.break-normal
-        | Check your
-        |
-        strong {{ user.email }}
-        |  inbox for instructions from us on how to reset your password
+      base-action-completed(
+        header="Password reset completed"
+        text="Check your inbox for instructions from us on how to reset your password"
+        buttonText="Close"
+        @completeAction="$emit('signOnFinished')"
+      )
     template(v-else)
       el-form-item.mb-6(prop='email')
         p.leading-normal.text-gray-600.mt-0
