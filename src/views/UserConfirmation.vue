@@ -15,7 +15,7 @@
 <script>
   import { mapGetters, mapMutations } from 'vuex';
 
-  import { plain } from '@/modules/axios';
+  import { show } from '@/services/endpoints/auth/confirmations';
 
   export default {
     props: {
@@ -42,26 +42,32 @@
       ...mapMutations('user', [
         'setCurrentUser',
       ]),
-      checkTokenValidity() {
-        plain.get(`/auth/confirmations/?confirmation_token=${this.confirmationToken}`)
-          .then((response) => {
-            this.setCurrentUser({ user_id: response.data.user_id });
-            localStorage.access = response.data.access;
-            this.$router.push({ name: 'manga-list' });
-          })
-          .catch((request) => {
-            const { error } = request.response.data;
+      async checkTokenValidity() {
+        const response = await show(this.confirmationToken);
 
-            this.tokenValid = false;
-
-            if (error === 'Token not found') {
-              this.validationError = error;
-            } else {
-              this.validationError = `
-                Something went wrong, try again later or contact hi@kenmei.co
-              `;
-            }
+        if (response.status === 200) {
+          this.setCurrentUser({
+            user_id: response.data.user_id,
+            email: response.data.email,
           });
+          localStorage.access = response.data.access;
+
+          this.$router.push({ name: 'manga-list' });
+        } else {
+          const { error } = response.data;
+
+          this.tokenValid = false;
+
+          if (error === 'Token not found') {
+            this.validationError = `
+              ${error}, please double check it's correct or contact hi@kenmei.co
+            `;
+          } else {
+            this.validationError = `
+              Something went wrong, try again later or contact hi@kenmei.co
+            `;
+          }
+        }
       },
     },
   };
