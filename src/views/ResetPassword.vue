@@ -43,12 +43,10 @@
 </template>
 
 <script>
-  import {
-    Form, FormItem, Input,
-  } from 'element-ui';
-  import { mapActions, mapGetters } from 'vuex';
+  import { Form, FormItem, Input, Message } from 'element-ui';
+  import { mapGetters, mapMutations } from 'vuex';
 
-  import { plain } from '@/modules/axios';
+  import { edit, update } from '@/services/endpoints/auth/passwords';
 
   export default {
     components: {
@@ -112,8 +110,8 @@
       this.checkTokenValidity();
     },
     methods: {
-      ...mapActions('user', [
-        'updatePassword',
+      ...mapMutations('user', [
+        'setCurrentUser',
       ]),
       submitForm() {
         this.$refs.updatePasswordForm.validate((valid) => {
@@ -123,31 +121,41 @@
         });
       },
       async submitNewPassword() {
-        await this.updatePassword(
-          { user: this.user, resetPasswordToken: this.resetPasswordToken }
-        );
-        if (this.signedIn) { this.$router.push({ name: 'manga-list' }); }
-      },
-      checkTokenValidity() {
-        plain.get(`/auth/passwords/edit?reset_password_token=${this.resetPasswordToken}`)
-          .then(() => {
-            this.tokenValid = true;
-          })
-          .catch((request) => {
-            const { error } = request.response.data;
+        const response = await update(this.user, this.resetPasswordToken);
 
-            this.tokenValid = false;
-
-            if (error === 'Token not found' || error === 'Token has expired') {
-              this.validationError = `
-                ${error}, please reset your password again
-              `;
-            } else {
-              this.validationError = `
-                Something went wrong, try again later or contact hi@kenmei.co
-              `;
-            }
+        if (response.status === 200) {
+          this.setCurrentUser({
+            user_id: response.data.user_id,
+            email: response.data.email,
           });
+          localStorage.access = response.data.access;
+
+          this.$router.push({ name: 'manga-list' });
+        } else {
+          Message.error({
+            dangerouslyUseHTMLString: true,
+            message: response.data.error,
+          });
+        }
+      },
+      async checkTokenValidity() {
+        const response = await edit(this.resetPasswordToken);
+
+        if (response.status === 200) {
+          this.tokenValid = true;
+        } else {
+          const { error } = response.data;
+
+          this.tokenValid = false;
+
+          if (error === 'Token not found' || error === 'Token has expired') {
+            this.validationError = `${error}, please reset your password again`;
+          } else {
+            this.validationError = `
+              Something went wrong, try again later or contact hi@kenmei.co
+            `;
+          }
+        }
       },
     },
   };

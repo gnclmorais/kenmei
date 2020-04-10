@@ -43,21 +43,6 @@ const actions = {
         }
       });
   },
-  updatePassword({ commit }, { resetPasswordToken, user }) {
-    const payload = { user, reset_password_token: resetPasswordToken };
-
-    return plain.put('/auth/passwords/', payload)
-      .then((response) => {
-        commit('setCurrentUser', { user_id: response.data.user_id });
-        localStorage.access = response.data.access;
-      })
-      .catch((request) => {
-        Message.error({
-          dangerouslyUseHTMLString: true,
-          message: request.response.data,
-        });
-      });
-  },
 };
 
 const mutations = {
