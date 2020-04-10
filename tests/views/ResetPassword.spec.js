@@ -1,18 +1,22 @@
 import Vuex from 'vuex';
-import axios from 'axios';
+import VueRouter from 'vue-router';
+import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
 
 import ResetPassword from '@/views/ResetPassword.vue';
+import * as resource from '@/services/endpoints/auth/passwords';
 
 import user from '@/store/modules/user';
 
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
+localVue.use(VueRouter);
 
 describe('ResetPassword.vue', () => {
   let resetPassword;
   let store;
+  const mutations = { setCurrentUser: jest.fn() };
 
   beforeEach(() => {
     store = new Vuex.Store({
@@ -22,6 +26,7 @@ describe('ResetPassword.vue', () => {
           state: user.state,
           actions: user.actions,
           getters: user.getters,
+          mutations,
         },
       },
     });
@@ -36,14 +41,18 @@ describe('ResetPassword.vue', () => {
   });
 
   describe('when visiting the page', () => {
+    let tokenValidationSpy;
+
+    beforeEach(() => {
+      tokenValidationSpy = jest.spyOn(resource, 'edit');
+    });
+
     it('shows token is validating message if validating token', async () => {
       expect(resetPassword.text()).toContain('Checking token validity');
     });
 
     it('shows reset password form if token is valid', async () => {
-      const axiosSpy = jest.spyOn(axios, 'get');
-
-      axiosSpy.mockResolvedValue({ status: 200 });
+      tokenValidationSpy.mockResolvedValue({ status: 200 });
 
       resetPassword = shallowMount(ResetPassword, {
         store,
@@ -59,17 +68,11 @@ describe('ResetPassword.vue', () => {
     });
 
     describe('when token is invalid', () => {
-      let axiosSpy;
-
-      beforeEach(() => {
-        axiosSpy = jest.spyOn(axios, 'get');
-      });
-
       it('shows token not valid validation error', async () => {
         const error = 'Token not found, please reset your password again';
 
-        axiosSpy.mockRejectedValue(
-          { response: { data: { error: 'Token not found' } } }
+        tokenValidationSpy.mockResolvedValue(
+          { data: { error: 'Token not found' } }
         );
 
         resetPassword = shallowMount(ResetPassword, {
@@ -88,8 +91,8 @@ describe('ResetPassword.vue', () => {
       it('shows token has expired validation error', async () => {
         const error = 'Token has expired, please reset your password again';
 
-        axiosSpy.mockRejectedValue(
-          { response: { data: { error: 'Token has expired' } } }
+        tokenValidationSpy.mockResolvedValue(
+          { data: { error: 'Token has expired' } }
         );
 
         resetPassword = shallowMount(ResetPassword, {
@@ -108,8 +111,8 @@ describe('ResetPassword.vue', () => {
       it('shows generic validation error', async () => {
         const error = 'Something went wrong, try again later or contact hi@kenmei.co';
 
-        axiosSpy.mockRejectedValue(
-          { response: { data: { error: 'Unexpected' } } }
+        tokenValidationSpy.mockResolvedValue(
+          { data: { error: 'Unexpected' } }
         );
 
         resetPassword = shallowMount(ResetPassword, {
@@ -128,9 +131,18 @@ describe('ResetPassword.vue', () => {
   });
 
   describe('when updating the password', () => {
+    let router;
+    let updatePasswordSpy;
+
     beforeEach(() => {
+      updatePasswordSpy = jest.spyOn(resource, 'update');
+      router = new VueRouter({
+        routes: [{ path: '/manga-list', name: 'manga-list' }],
+      });
+
       resetPassword = mount(ResetPassword, {
         store,
+        router,
         localVue,
         propsData: {
           resetPasswordToken: 'token',
@@ -142,8 +154,8 @@ describe('ResetPassword.vue', () => {
       resetPassword.setData({
         tokenValid: true,
         user: {
-          password: 'pass',
-          password_confirmation: 'passwo',
+          password: 'password',
+          password_confirmation: 'passwords',
         },
       });
 
@@ -156,19 +168,59 @@ describe('ResetPassword.vue', () => {
       expect(resetPassword.text()).toContain('Passwords do not match');
     });
 
-    it.skip('delegates to user module updatePassword action', async () => {
-      const userSpy = jest.spyOn(user, 'updatePassword');
+    describe('with valid params', () => {
+      it('updates the password, sets current user and redirects to manga list', async () => {
+        resetPassword.setData({
+          tokenValid: true,
+          user: {
+            password: 'password',
+            password_confirmation: 'password',
+          },
+        });
 
-      userSpy.mockResolvedValue({ status: 200 });
+        await nextTick();
 
-      resetPassword.vm.submitNewPassword();
+        const user = { user_id: 1, email: 'test1@example.com' };
 
-      await flushPromises();
+        updatePasswordSpy.mockResolvedValue({ status: 200, data: user });
 
-      expect(userSpy).toHaveBeenCalledWith(
-        '/auth/passwords',
-        { email: 'test@example.com' }
-      );
+        resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
+
+        await flushPromises();
+
+        expect(router.currentRoute.name).toBe('manga-list');
+        expect(mutations.setCurrentUser).toHaveBeenCalledWith(
+          { currentUser: null }, user
+        );
+      });
+    });
+
+    describe('with invalid params', () => {
+      it('shows validation errors', async () => {
+        resetPassword.setData({
+          tokenValid: true,
+          user: {
+            password: 'password',
+            password_confirmation: 'password',
+          },
+        });
+
+        await nextTick();
+
+        const errorMessageSpy = jest.spyOn(Message, 'error');
+
+        updatePasswordSpy.mockResolvedValue(
+          { status: 500, data: { error: 'Wrong user' } }
+        );
+
+        resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
+
+        await flushPromises();
+
+        expect(errorMessageSpy).toBeCalledWith(
+          expect.objectContaining({ message: 'Wrong user' }),
+        );
+      });
     });
   });
 });
