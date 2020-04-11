@@ -6,55 +6,52 @@
     @dialogClosed="$emit('closeDialog')"
   )
     template(slot='body')
-      el-tabs.w-full(v-model="activeTab" stretch)
+      base-action-completed(
+        v-if="mangaDexImportInitiated || trackrMoeimportInitiated"
+        header="Import started"
+        text="You will receive an email when your manga list have been imported."
+        buttonText="Go back to dashboard"
+        @completeAction="$emit('closeDialog')"
+      )
+      el-tabs.w-full(v-else v-model="activeTab" stretch)
         el-tab-pane(label="Trakr.moe" name="trackrMoe")
-          template(v-if="trackrMoeimportInitiated")
-            p.leading-normal.text-gray-600.text-center.break-normal
-              | Your Trackr.moe import has started. You will receive an email
-              | when the series have been imported.
-          template(v-else)
-            el-upload(
-              ref="upload"
-              action=""
-              :http-request="processUpload"
-              :multiple="false"
-              :show-file-list="false"
-              accept="application/json"
-              drag
-              )
-              i.el-icon-upload
-              .el-upload__text
-                | Drop file here or click to upload
-              .el-upload__tip(slot="tip")
-                | You can download your Trackr.moe list
-                |
-                el-link.align-baseline.text-xs(
-                  href="https://trackr.moe/user/options"
-                  :underline="false"
-                  target="_blank"
-                )
-                  | here
-        el-tab-pane(label="MangaDex" name="mangaDex")
-          template(v-if="mangaDexImportInitiated")
-            p.leading-normal.text-gray-600.text-center.break-normal
-              | Your MangaDex MDList import has started.
-              | You will receive an email when the series have been imported.
-          template(v-else)
-            el-input(
-              v-model.trim="importURL"
-              placeholder="https://mangadex.cc/list/3"
-              prefix-icon="el-icon-link"
+          el-upload(
+            ref="upload"
+            action=""
+            :http-request="processUpload"
+            :multiple="false"
+            :show-file-list="false"
+            accept="application/json"
+            drag
             )
-            p.text-xs.leading-5.text-gray-500
-              | Provide your MangaDex MDList URL. It needs to be all lists link,
-              | not specific ones like Reading or Completed.
-            span.flex.w-full.rounded-md.shadow-sm.sm_w-auto
-              base-button(
-                ref="importMangaDexButton"
-                @click="importMangaDex"
-                :disabled="!validUrl"
+            i.el-icon-upload
+            .el-upload__text
+              | Drop file here or click to upload
+            .el-upload__tip(slot="tip")
+              | You can download your Trackr.moe list
+              |
+              el-link.align-baseline.text-xs(
+                href="https://trackr.moe/user/options"
+                :underline="false"
+                target="_blank"
               )
-                | Import
+                | here
+        el-tab-pane(label="MangaDex" name="mangaDex")
+          el-input(
+            v-model.trim="importURL"
+            placeholder="https://mangadex.cc/list/3"
+            prefix-icon="el-icon-link"
+          )
+          p.text-xs.leading-5.text-gray-500
+            | Provide your MangaDex MDList URL. It needs to be all lists link,
+            | not specific ones like Reading or Completed.
+          span.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+            base-button(
+              ref="importMangaDexButton"
+              @click="importMangaDex"
+              :disabled="!validUrl"
+            )
+              | Import
 </template>
 
 <script>
