@@ -115,6 +115,7 @@
         signOnLoading: false,
         activeSignOnComponent: 'TheSignIn',
         profileLinks: {
+          accountSettings: { title: 'Settings', href: '/settings' },
           signOut: { title: 'Sign Out', href: '/sign-out' },
         },
         MenuLinks: [

@@ -87,6 +87,19 @@ export default new Router({
       props: true,
     },
     {
+      path: '/settings',
+      name: 'Settings',
+      component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings.vue'),
+      beforeEnter: (to, from, next) => {
+        if (store.getters["user/signedIn"]) {
+          next();
+        } else {
+          Message.error('Please sign in first');
+          next('/');
+        }
+      },
+    },
+    {
       path: '/sign-out',
       name: 'Sign Out',
       beforeEnter: async (to, from, next) => {
