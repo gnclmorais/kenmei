@@ -170,8 +170,6 @@
 </script>
 
 <style lang="scss" media="screen" scoped>
-  @tailwind base;
-
   .socials-with-copyright {
     @apply mt-8 border-t pt-8;
 

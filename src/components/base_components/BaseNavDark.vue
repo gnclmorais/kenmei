@@ -158,8 +158,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @tailwind base;
-
   @mixin link-transition {
     @apply transition duration-150 ease-in-out;
   }

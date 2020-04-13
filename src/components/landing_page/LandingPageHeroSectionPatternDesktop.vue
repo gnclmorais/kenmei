@@ -41,7 +41,3 @@
     />
   </svg>
 </template>
-
-<style lang="scss" scoped>
-  @tailwind base;
-</style>

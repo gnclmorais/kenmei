@@ -35,8 +35,6 @@
 </template>
 
 <style lang="scss" scoped>
-  @tailwind base;
-
   h2 {
     @apply text-3xl leading-9 font-extrabold text-gray-900;
 

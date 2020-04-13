@@ -46,8 +46,6 @@
 </script>
 
 <style lang="scss" media="screen" scoped>
-  @tailwind base;
-
   .warning-icon {
     @apply mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12;
     @apply rounded-full bg-red-100;
