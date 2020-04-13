@@ -1,5 +1,6 @@
-@import 'variables';
-@import 'utilities';
+@tailwind base;
+@tailwind variables;
+@tailwind utilities;
 
 html,
 body {
