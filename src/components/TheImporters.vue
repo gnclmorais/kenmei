@@ -38,27 +38,26 @@
               )
                 | here
         el-tab-pane(label="MangaDex" name="mangaDex")
-          el-input(
-            v-model.trim="importURL"
-            placeholder="https://mangadex.cc/list/3"
-            prefix-icon="el-icon-link"
+          base-form-input.px-1(
+            v-model.trim="$v.importURL.$model"
+            :validator="$v.importURL"
+            label="MDList URL"
+            placeholder="https://mangadex.com/list/3"
+            helperText="Provide your MangaDex MDList URL. It needs to be all lists link, not specific ones like Reading or Completed"
           )
-          p.text-xs.leading-5.text-gray-500.my-3
-            | Provide your MangaDex MDList URL. It needs to be all lists link,
-            | not specific ones like Reading or Completed.
-          span.flex.w-full.rounded-md.shadow-sm.sm_w-auto
-            base-button(
-              ref="importMangaDexButton"
-              @click="importMangaDex"
-              :disabled="!validUrl"
-            )
-              | Import
+            template(slot='icon')
+              icon-link.h-5.w-5
+    template(slot='actions' v-if="activeTab === 'mangaDex'")
+      span.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+        base-button(ref="importMangaDexButton" @click="importMangaDex")
+          | Import
 </template>
 
 <script>
+  import { required, url } from 'vuelidate/lib/validators';
   import debounce from 'lodash/debounce';
   import {
-    Tabs, TabPane, Input, Link, Upload, Message,
+    Tabs, TabPane, Link, Upload, Message,
   } from 'element-ui';
 
   import { processList } from '@/services/importer';
@@ -66,7 +65,6 @@
 
   export default {
     components: {
-      'el-input': Input,
       'el-link': Link,
       'el-upload': Upload,
       'el-tabs': Tabs,
@@ -89,9 +87,13 @@
         loading: false,
       };
     },
-    computed: {
-      validUrl() {
-        return this.importURL.match(/(mangadex.(cc|org)\/list[/])\d+$/) !== null;
+    validations: {
+      importURL: {
+        required,
+        url,
+        mustBeMangaDex(url) {
+          return (/(mangadex.(cc|org)\/list[/])\d+$/.test(url));
+        },
       },
     },
     watch: {
@@ -104,6 +106,9 @@
     },
     methods: {
       async importMangaDex() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
+
         this.loading = true;
 
         const response = await postMDList(this.importURL);
