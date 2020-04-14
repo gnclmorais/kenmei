@@ -4,6 +4,7 @@ import Rollbar from 'vue-rollbar';
 import { Loading } from 'element-ui';
 import VueTippy from 'vue-tippy';
 import VueScrollTo from 'vue-scrollto';
+import Vuelidate from 'vuelidate';
 import Meta from 'vue-meta';
 import Home from '@/views/Home.vue';
 import '@/plugins/element.js';
@@ -20,6 +21,7 @@ Vue.config.productionTip = false;
 
 Vue.use(VueScrollTo);
 Vue.use(Meta);
+Vue.use(Vuelidate);
 Vue.use(VueTippy, {
   directive: 'tippy',
   animateFill: false,
