@@ -50,7 +50,7 @@ describe('TheImporters.vue', () => {
           },
         },
       });
-      importers = shallowMount(TheImporters, { store, localVue });
+      importers = mount(TheImporters, { store, localVue });
     });
 
     afterEach(() => {
@@ -86,9 +86,7 @@ describe('TheImporters.vue', () => {
 
         await flushPromises();
 
-        expect(importers.text()).toContain(
-          'Your Trackr.moe import has started'
-        );
+        expect(importers.text()).toContain('Import started');
       });
 
       it('shows Something went wrong message if import failed', async () => {
@@ -134,7 +132,7 @@ describe('TheImporters.vue', () => {
           },
         },
       });
-      importers = shallowMount(TheImporters, { store, localVue });
+      importers = mount(TheImporters, { store, localVue });
       importers.setData({ importURL: 'https://mangadex.org/list/007' });
     });
 
@@ -154,7 +152,8 @@ describe('TheImporters.vue', () => {
       expect(axiosSpy).toHaveBeenCalledWith(
         '/api/v1/importers/mangadex', { url: 'https://mangadex.org/list/007' }
       );
-      expect(importers.text()).toContain('Your MangaDex MDList import');
+
+      expect(importers.text()).toContain('Import started');
     });
 
     it('shows Something went wrong message if import failed', async () => {
