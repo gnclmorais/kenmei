@@ -42,7 +42,7 @@
             placeholder="https://mangadex.cc/list/3"
             prefix-icon="el-icon-link"
           )
-          p.text-xs.leading-5.text-gray-500
+          p.text-xs.leading-5.text-gray-500.my-3
             | Provide your MangaDex MDList URL. It needs to be all lists link,
             | not specific ones like Reading or Completed.
           span.flex.w-full.rounded-md.shadow-sm.sm_w-auto

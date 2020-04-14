@@ -56,8 +56,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @tailwind base;
-
   .btn-action {
     @apply mt-3 w-full px-6 py-3 border border-transparent text-base leading-6;
     @apply font-medium rounded-md text-white bg-blue-500 shadow-sm transition;

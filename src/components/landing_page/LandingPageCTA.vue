@@ -29,8 +29,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @tailwind base;
-
   h2 {
     @apply text-3xl leading-9 font-extrabold tracking-tight text-gray-900;
 

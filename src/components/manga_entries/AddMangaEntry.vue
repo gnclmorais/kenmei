@@ -105,8 +105,6 @@
 </script>
 
 <style lang="scss" media="screen" scoped>
-  @tailwind base;
-
   input {
     @apply appearance-none rounded-md block w-full py-2 pl-8;
     @apply border border-gray-300 text-gray-900;

@@ -92,8 +92,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @tailwind base;
-
   .modal {
     @apply fixed bottom-0 inset-x-0 px-4 pb-4 z-50;
     @screen sm {

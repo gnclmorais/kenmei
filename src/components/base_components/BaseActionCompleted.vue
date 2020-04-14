@@ -39,7 +39,3 @@
     },
   };
 </script>
-
-<style lang="scss" scoped>
-  @tailwind base;
-</style>

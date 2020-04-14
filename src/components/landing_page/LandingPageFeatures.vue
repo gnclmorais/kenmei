@@ -89,8 +89,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @tailwind base;
-
   h3 {
     @apply mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900;
 

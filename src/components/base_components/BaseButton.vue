@@ -37,8 +37,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @tailwind base;
-
   .btn {
     @apply inline-flex justify-center w-full rounded-md border px-4 py-2;
     @apply items-center text-base leading-6 font-medium shadow-sm;

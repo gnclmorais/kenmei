@@ -1,7 +1,17 @@
-@import 'variables';
-@import 'utilities';
+@tailwind base;
+@tailwind variables;
+@tailwind utilities;
 
 html,
 body {
   @apply font-inter m-0 h-full;
+}
+
+// This overwrites loading to be centered, with tailwind preflight enabled
+.el-loading-mask {
+  @apply flex items-center justify-center;
+}
+
+.el-loading-spinner {
+  @apply w-auto mt-0 static;
 }
