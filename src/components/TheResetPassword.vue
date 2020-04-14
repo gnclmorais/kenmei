@@ -14,7 +14,7 @@
       )
     template(v-else)
       el-form-item.mb-6(prop='email')
-        p.leading-normal.text-gray-600.mt-0
+        p.leading-normal.text-gray-600.mb-3
           | Enter your email address below
           | and we'll send you a link to reset your password.
         el-input(
