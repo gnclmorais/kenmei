@@ -16,6 +16,7 @@ import 'tippy.js/themes/light.css';
 
 import router from '@/router/';
 import store from '@/store/index';
+import i18n from '@/plugins/i18n.js';
 
 Vue.config.productionTip = false;
 
@@ -69,5 +70,6 @@ Vue.config.errorHandler = (err, _vm, _info) => { Vue.rollbar.error(err); };
 new Vue({
   router,
   store,
+  i18n,
   render: (h) => h(Home),
 }).$mount('#app');
