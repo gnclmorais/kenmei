@@ -2,15 +2,28 @@
   span.relative.z-0.inline-flex.shadow-sm
     button(
       v-for='(button, i) in buttons'
-      v-text='button.text'
-      @click="$emit('click')"
+      @click="$emit('click', button.action)"
       :key="i"
       :class="{ 'rounded-l-md': i === 0, '-ml-px': i !== 0, 'rounded-r-md': i == buttons.length - 1 }"
     )
+      component.-ml-1.mr-2.h-5.w-5.text-gray-400(
+        v-if="button.icon"
+        :is='button.icon'
+      )
+      | {{ button.text }}
 </template>
 
 <script>
+  import trashIcon from '../icons/heroTrash';
+  import editIcon from '../icons/heroEdit';
+  import warningIcon from '../icons/heroWarning';
+
   export default {
+    components: {
+      trashIcon,
+      editIcon,
+      warningIcon,
+    },
     props: {
       buttons: {
         type: Array,

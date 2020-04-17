@@ -1,7 +1,7 @@
 <template lang="pug">
   #home.h-full
     landing-page(v-if="landing")
-    .min-h-full.flex.flex-col.bg-blue-300(v-else)
+    .min-h-full.flex.flex-col.bg-gray-100(v-else)
       header
         base-nav-light
       .flex-1.overflow-x-hidden

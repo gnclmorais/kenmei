@@ -53,40 +53,8 @@
           base-button-group(
             v-if="entriesSelected"
             :buttons="bulkActions"
+            @click='$event'
           )
-          //- el-button.sm_shadow(
-          //-   v-show="entriesSelected"
-          //-   content="Delete"
-          //-   ref="removeSeriesButton"
-          //-   icon="el-icon-delete"
-          //-   type="danger"
-          //-   size="medium"
-          //-   @click="deleteEntries"
-          //-   circle
-          //-   v-tippy
-          //- )
-          //- el-button.sm_shadow(
-          //-   v-show="entriesSelected"
-          //-   content="Edit"
-          //-   ref="editMangaEntriesButton"
-          //-   icon="el-icon-edit-outline"
-          //-   type="info"
-          //-   size="medium"
-          //-   @click="editDialogVisible = true"
-          //-   circle
-          //-   v-tippy
-          //- )
-          //- el-button.sm_shadow(
-          //-   v-show="entriesSelected"
-          //-   content="Report manga issues"
-          //-   ref="reportMangaEntriesButton"
-          //-   icon="el-icon-document-delete"
-          //-   type="warning"
-          //-   size="medium"
-          //-   @click="reportDialogVisible = true"
-          //-   circle
-          //-   v-tippy
-          //- )
         .actions.inline-block.float-right.sm_flex.sm_flex-row-reverse
           span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
             base-button(
@@ -172,14 +140,17 @@
         bulkActions: [
           {
             text: 'Delete',
+            icon: 'trashIcon',
             action: () => this.deleteEntries,
           },
           {
             text: 'Edit',
-            action: 'editDialogVisible = true',
+            icon: 'editIcon',
+            action: () => { this.editDialogVisible = true },
           },
           {
             text: 'Report',
+            icon: 'warningIcon',
             action: 'reportDialogVisible = true',
           },
         ],
