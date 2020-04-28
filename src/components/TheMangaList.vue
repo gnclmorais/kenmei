@@ -1,12 +1,21 @@
 <template lang="pug">
   #mangaTable
-    el-table.sm_shadow-lg.sm_rounded(
+    el-table(
       ref="mangaListTable"
       :data="currentPageEntries"
       v-loading='listsLoading'
       @selection-change="handleSelectionChange"
       @sort-change="applySorting"
     )
+      template(slot='empty')
+        span.mt-2.leading-normal
+          template(v-if='entries.length || listsLoading')
+            | No entries found.
+            | Try changing your filters
+          template(v-else)
+            | You haven't imported manga yet. Add a new manga series by pressing
+            | Add Manga and providing a URL. Or press Import, to import your
+            | manga from TrackrMoe or MangaDex
       el-table-column(type="selection" width="35")
       el-table-column(
         prop="newReleases"
@@ -163,6 +172,7 @@
     },
     computed: {
       ...mapState('lists', [
+        'entries',
         'statuses',
         'listsLoading',
       ]),
@@ -231,10 +241,10 @@
 <style media="screen" lang="scss">
   .el-pagination {
     width: fit-content;
-    @apply my-5 p-0;
+    @apply my-5 p-0 shadow overflow-hidden;
 
     @screen sm {
-      @apply shadow-lg;
+      @apply rounded-md;
     }
   }
   .btn-prev {
@@ -256,11 +266,35 @@
     background-color: #409EFF;
     @apply h-2 w-2 p-0 rounded-full;
   }
+
+  .el-checkbox__inner {
+    @apply delay-0;
+  }
+
+  .el-table {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .12);
+
+    @screen sm {
+      @apply rounded-md;
+    }
+  }
+
+  .el-table th {
+    @apply border-b border-gray-200 text-xs leading-4 font-medium text-gray-500;
+    @apply uppercase tracking-wider;
+  }
   .el-table th > .cell {
     @apply break-normal;
   }
 
   .el-table td > .cell {
     @apply break-normal;
+  }
+  .el-table--enable-row-hover .el-table__body tr:hover>td {
+    @apply bg-gray-50;
+  }
+
+  .el-table__empty-text {
+    @apply leading-loose my-5;
   }
 </style>

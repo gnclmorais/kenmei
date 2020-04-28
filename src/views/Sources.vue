@@ -1,7 +1,7 @@
 <template lang="pug">
   .max-w-7xl.px-8.my-10.mx-auto
     .grid.gap-10.grid-cols-1.sm_grid-cols-3.md_grid-cols-4.lg_grid-cols-6
-      a.no-underline.max-w-sm.rounded-lg.overflow-hidden.shadow-md.bg-white.hover_shadow-xl.transition.duration-200(
+      a.no-underline.max-w-sm.rounded-lg.overflow-hidden.shadow.bg-white.hover_shadow-lg.transition.duration-200(
         v-for='source in sources'
         :href='source.url'
         target="_blank"

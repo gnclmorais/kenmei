@@ -1,8 +1,9 @@
 <template lang="pug">
   .flex.flex-col.items-center
-    .flex.flex-col.w-full.max-w-7xl.py-6
-      .mx-5.mb-5.max-sm_mx-2
-        el-select.ml-3.sm_shadow-md.rounded.float-right.w-40(
+    .hidden.bg-white.h-64.w-full.absolute.border-b.border-gray-200.sm_block
+    .flex.flex-col.w-full.max-w-7xl.py-8
+      .mx-2.mb-5.sm_mx-5
+        el-select.w-full.sm_w-40(
           v-model="selectedStatus"
           placeholder="Filter by status"
           :disabled="listsLoading"
@@ -13,7 +14,7 @@
             :label="status.name"
             :value="status.enum"
           )
-        el-select.sm_shadow-md.rounded.float-right.w-48(
+        el-select.w-full.mt-3.sm_mt-0.sm_ml-3.sm_w-48(
           ref="tagFilter"
           v-if="lists.length"
           v-model="selectedListIDs"
@@ -28,9 +29,8 @@
             :label="list.attributes.name"
             :value="list.id"
           )
-      .mx-5.mb-5.max-sm_mx-2
-        .mt-3.text-center.sm_mt-0.sm_text-left.w-64.float-right
-          .mt-1.relative.rounded-md.shadow-sm
+        .mt-3.text-center.w-full.float-right.sm_mt-0.sm_text-left.sm_w-64
+          .relative.rounded-md.shadow-sm
             .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
               svg.h-5.w-5.text-gray-400(fill='currentColor' viewbox='0 0 20 20')
                 path(
@@ -49,7 +49,7 @@
           @edit="editDialogVisible = true"
           @report="reportDialogVisible = true"
         )
-        .actions.inline-block.float-right.sm_flex.sm_flex-row-reverse
+        .actions.inline-block.float-right.sm_flex.sm_flex-row-reverse.relative
           span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
             base-button(
               ref="addMangaEntryModalButton"
@@ -262,3 +262,9 @@
     },
   };
 </script>
+
+<style media="screen" lang="scss">
+  .el-input__inner {
+    @apply rounded-md;
+  }
+</style>
