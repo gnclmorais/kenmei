@@ -75,6 +75,7 @@
             base-button(
               ref="addMangaEntryModalButton"
               @click="dialogVisible = true"
+              :disabled="!lists.length"
             )
               i.el-icon-plus.mr-1
               | Add Manga
@@ -94,6 +95,7 @@
         @closeDialog="importDialogVisible = false"
       )
       add-manga-entry(
+        v-if="lists.length"
         ref='addMangaEntryModal'
         :visible="dialogVisible"
         @dialogClosed='dialogVisible = false'
@@ -200,7 +202,7 @@
         let filtered = this.entries;
 
         if (this.selectedListIDs.length) {
-          const taggedEntries = this.getEntriesByTagIDs(this.selectedListIDs);
+          const taggedEntries = this.getEntriesByListIDs(this.selectedListIDs);
 
           filtered = filtered.filter((e) => taggedEntries.includes(e));
         }

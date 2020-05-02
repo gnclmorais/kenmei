@@ -6,20 +6,32 @@
     @dialogClosed="closeModal()"
   )
     template(slot='body')
-      .mt-3.text-center.sm_mt-0.sm_text-left.w-full
-        label.block.text-sm.font-medium.leading-5.text-gray-700(for='url')
-          | Manga URL
-        .mt-1.relative.rounded-md.shadow-sm
-          .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
-             i.el-icon-link.text-gray-400.sm_text-sm.sm_leading-5
-          input#email.form-input.block.w-full.pl-10.sm_text-sm.sm_leading-5(
-            aria-label='Manga URL'
-            name='manga_url'
-            v-model.trim="mangaURL"
-            placeholder='https://mangadex.org/title/7139/'
-          )
-        p.mt-2.text-xs.text-gray-500
-          | When using a chapter URL, last read chapter will be pre-populated
+      .flex.flex-col.w-full
+        .mt-3.text-center.sm_mt-0.sm_text-left.w-full
+          label.block.text-sm.font-medium.leading-5.text-gray-700(for='url')
+            | Manga URL
+          .mt-1.relative.rounded-md.shadow-sm
+            .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
+               i.el-icon-link.text-gray-400.sm_text-sm.sm_leading-5
+            input#email.form-input.block.w-full.pl-10.sm_text-sm.sm_leading-5(
+              aria-label='Manga URL'
+              name='manga_url'
+              v-model.trim="mangaURL"
+              placeholder='https://mangadex.org/title/7139/'
+            )
+          p.mt-2.text-xs.text-gray-500
+            | When using a chapter URL, last read chapter will be pre-populated
+        .mt-6.text-center.sm_text-left.w-full
+          label.block.text-sm.leading-5.font-medium.text-gray-700
+            | List Name
+          .mt-1.relative.rounded-md.shadow-sm.w-auto
+            el-select.rounded.w-full(v-model="listID")
+              el-option(
+                v-for="list in lists"
+                :key="list.id"
+                :label="list.attributes.name"
+                :value="list.id"
+              )
     template(slot='actions')
       span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
         base-button(
@@ -33,32 +45,41 @@
 </template>
 
 <script>
-  import { mapMutations, mapGetters } from 'vuex';
-  import { Message } from 'element-ui';
+  import { mapState, mapMutations, mapGetters } from 'vuex';
+  import { Message, Select, Option } from 'element-ui';
   import { addMangaEntry } from '@/services/api';
 
   export default {
     name: 'AddMangaEntry',
+    components: {
+      'el-select': Select,
+      'el-option': Option,
+    },
     props: {
       visible: {
         type: Boolean,
         default: false,
       },
-      currentListID: {
-        type: String,
-        required: true,
-      },
     },
     data() {
       return {
         mangaURL: '',
+        listID: '',
         loading: false,
       };
     },
     computed: {
+      ...mapState('lists', [
+        'lists',
+      ]),
       ...mapGetters('lists', [
         'findEntryFromIDs',
       ]),
+    },
+    mounted() {
+      this.listID = this.lists.find(
+        (list) => list.attributes.name === 'Reading'
+      ).id;
     },
     methods: {
       ...mapMutations('lists', [
@@ -68,7 +89,7 @@
       mangaDexSearch() {
         this.loading = true;
 
-        addMangaEntry(this.mangaURL, this.currentListID)
+        addMangaEntry(this.mangaURL, this.listID)
           .then((newMangaEntry) => {
             const { data } = newMangaEntry;
             const currentEntry = this.findEntryFromIDs(
