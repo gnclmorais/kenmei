@@ -20,6 +20,7 @@
         prop="attributes.title"
         label="Title"
         sortable="custom"
+        width="400"
       )
         template(slot-scope="scope")
           el-link.break-normal(
