@@ -13,9 +13,11 @@ const state = {
 };
 
 const getters = {
-  getEntriesByListId: (state) => (listID) => state.entries.filter(
-    (entry) => entry.manga_list_id.toString() === listID
+  // TODO: Rename to getEntriesByTagIDs when renaming manga lists to tags
+  getEntriesByListIDs: (state) => (listIDs) => state.entries.filter(
+    (entry) => !listIDs.length || listIDs.includes(entry.manga_list_id.toString())
   ),
+  findListByID: (state) => (id) => state.lists.find((list) => list.id === id),
   findEntryFromIDs: (state) => (ids) => state.entries.find(
     (entry) => ids.includes(entry.id)
   ),

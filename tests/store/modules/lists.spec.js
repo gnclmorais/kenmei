@@ -8,12 +8,10 @@ import mangaListFactory from '../../factories/mangaList';
 
 describe('lists', () => {
   describe('getters', () => {
-    describe('getEntriesByListId', () => {
+    describe('getEntriesByListIDs', () => {
       it('returns entries based on a list id', () => {
-        const listID = '1';
-        const expectedReturn = mangaEntryFactory.build(
-          { manga_list_id: listID }
-        );
+        const listIDs = ['1'];
+        const expectedReturn = mangaEntryFactory.build({ manga_list_id: '1' });
         const state = {
           entries: [
             expectedReturn,
@@ -21,9 +19,9 @@ describe('lists', () => {
           ],
         };
 
-        const getEntriesByListId = lists.getters.getEntriesByListId(state);
+        const getEntriesByListIDs = lists.getters.getEntriesByListIDs(state);
 
-        expect(getEntriesByListId(listID)).toEqual([expectedReturn]);
+        expect(getEntriesByListIDs(listIDs)).toEqual([expectedReturn]);
       });
     });
 
@@ -37,6 +35,17 @@ describe('lists', () => {
         const findEntryFromIDs = lists.getters.findEntryFromIDs(state);
 
         expect(findEntryFromIDs([entry.id])).toEqual(entry);
+      });
+    });
+
+    describe('findListByID', () => {
+      it('returns list based on list ID provided', () => {
+        const list  = mangaListFactory.build({ id: 2 });
+        const state = { lists: [list] };
+
+        const findListByID = lists.getters.findListByID(state);
+
+        expect(findListByID(2)).toEqual(list);
       });
     });
   });
