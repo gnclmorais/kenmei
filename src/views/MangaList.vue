@@ -90,7 +90,6 @@
       importers(
         :visible='importDialogVisible'
         @closeDialog="importDialogVisible = false"
-        @importCompleted="completeImport"
       )
       add-manga-entry(
         ref='addMangaEntryModal'
@@ -256,11 +255,6 @@
             'Deletion failed. Try reloading the page before trying again'
           );
         }
-      },
-      completeImport() {
-        // Request all lists again to get new lists if created
-        // TODO: Figure out based on relationships if there was a new list added
-        this.retrieveLists();
       },
       resetEntries(dialogName) {
         this[dialogName] = false;
