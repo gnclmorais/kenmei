@@ -13,6 +13,7 @@
         width="30"
         align="center"
         sortable="custom"
+        label-class-name="p-0"
       )
         template(slot-scope="scope")
           .new-chapter-dot(v-if="unread(scope.row)")
@@ -37,6 +38,7 @@
         prop="attributes.status"
         label="Manga List"
         width="150"
+        align="center"
       )
         template(slot-scope="scope")
           base-badge(
@@ -46,6 +48,7 @@
       el-table-column(
         prop="attributes.last_chapter_read"
         label="Last Chapter Read"
+        align="center"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
           el-link.break-normal(
@@ -60,6 +63,7 @@
       el-table-column(
         prop="links.last_chapter_available_url"
         label="Latest Chapter"
+        align="center"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
           el-link(
@@ -74,6 +78,7 @@
       el-table-column(
         prop="attributes.last_released_at"
         label="Released"
+        align="center"
         sortable="custom"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
