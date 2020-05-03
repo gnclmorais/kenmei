@@ -15,9 +15,11 @@
           )
       .mx-5.mb-5.max-sm_mx-2
         el-select.sm_shadow-md.rounded.float-right.w-48(
-          v-model="currentListID"
-          placeholder="Select"
+          v-model="selectedListIDs"
+          placeholder="Filter by manga lists"
           :disabled="listsLoading"
+          multiple
+          collapse-tags
         )
           el-option(
             v-for="list in lists"
@@ -73,6 +75,7 @@
             base-button(
               ref="addMangaEntryModalButton"
               @click="dialogVisible = true"
+              :disabled="!lists.length"
             )
               i.el-icon-plus.mr-1
               | Add Manga
@@ -83,7 +86,7 @@
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
           ref='mangaList'
-          :tableData='filteredEntries || currentListEntries'
+          :tableData='filteredEntries || entries'
           @seriesSelected="handleSelection"
           @editEntry='showEditEntryDialog'
         )
@@ -92,9 +95,9 @@
         @closeDialog="importDialogVisible = false"
       )
       add-manga-entry(
+        v-if="lists.length"
         ref='addMangaEntryModal'
         :visible="dialogVisible"
-        :currentListID='currentListID'
         @dialogClosed='dialogVisible = false'
       )
       edit-manga-entries(
@@ -152,8 +155,8 @@
     data() {
       return {
         selectedEntries: [],
+        selectedListIDs: [],
         entriesSelected: false,
-        currentListID: '',
         searchTerm: '',
         dialogVisible: false,
         importDialogVisible: false,
@@ -168,15 +171,13 @@
     },
     computed: {
       ...mapState('lists', [
+        'entries',
         'lists',
         'listsLoading',
       ]),
       ...mapGetters('lists', [
-        'getEntriesByListId',
+        'getEntriesByListIDs',
       ]),
-      currentListEntries() {
-        return this.getEntriesByListId(this.currentListID);
-      },
       selectedEntriesIDs() {
         return this.selectedEntries.map((entry) => entry.id);
       },
@@ -198,19 +199,33 @@
         }, 250),
       },
       filteredEntries() {
-        if (this.searchTerm === '') { return this.currentListEntries; }
+        let filtered = this.entries;
 
-        return this.currentListEntries.filter(
-          (entry) => entry.attributes.title.toLowerCase()
-            .includes(this.searchTerm.toLowerCase())
-        );
+        if (this.selectedListIDs.length) {
+          const taggedEntries = this.getEntriesByListIDs(this.selectedListIDs);
+
+          filtered = filtered.filter((e) => taggedEntries.includes(e));
+        }
+        if (this.searchTerm.length) {
+          filtered = filtered.filter(
+            (entry) => entry.attributes.title.toLowerCase()
+              .includes(this.searchTerm.toLowerCase())
+          );
+        }
+
+        return filtered;
       },
     },
     async created() {
       this.setListsLoading(true);
 
-      await this.retrieveLists();
-      await this.retrieveEntries();
+      await this.getLists();
+      await this.getEntries();
+
+      const readingList = this.lists.find(
+        (list) => list.attributes.name === 'Reading'
+      );
+      this.selectedListIDs.push(readingList.id);
 
       this.setListsLoading(false);
     },
@@ -236,13 +251,6 @@
         } else {
           this.removeSeries();
         }
-      },
-      async retrieveLists() {
-        await this.getLists();
-        this.currentListID = this.currentListID || this.lists[0].id;
-      },
-      async retrieveEntries() {
-        await this.getEntries();
       },
       async removeSeries() {
         const successful = await bulkDeleteMangaEntries(this.trackedEntriesIDs);

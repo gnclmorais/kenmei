@@ -22,12 +22,12 @@ localVue.directive('tippy', true);
 
 describe('MangaList.vue', () => {
   let store;
-  let firstMangaList;
+  let mangaList;
   let entry1;
   let entry2;
 
   beforeEach(() => {
-    firstMangaList = mangaListFactory.build({ id: '1' });
+    mangaList = mangaListFactory.build({ id: '1' });
 
     entry1 = mangaEntryFactory.build({ id: 1 });
     entry2 = mangaEntryFactory.build({ id: 2 });
@@ -37,7 +37,7 @@ describe('MangaList.vue', () => {
         lists: {
           namespaced: true,
           state: {
-            lists: [firstMangaList],
+            lists: [mangaList],
             entries: [entry1, entry2],
           },
           actions: lists.actions,
@@ -63,7 +63,6 @@ describe('MangaList.vue', () => {
         data() {
           return {
             selectedEntries: [entry1],
-            currentListID: firstMangaList.id,
           };
         },
         methods: {
@@ -103,7 +102,6 @@ describe('MangaList.vue', () => {
         data() {
           return {
             selectedEntries: [entry1],
-            currentListID: firstMangaList.id,
           };
         },
         methods: {
@@ -164,7 +162,6 @@ describe('MangaList.vue', () => {
         data() {
           return {
             selectedEntries: [entry1],
-            currentListID: firstMangaList.id,
           };
         },
         methods: {
@@ -184,7 +181,6 @@ describe('MangaList.vue', () => {
 
         mangaList.setData({
           selectedEntries: [entry1, entry3],
-          currentListID: firstMangaList.id,
         });
 
         mangaList.vm.deleteEntries();
@@ -218,11 +214,13 @@ describe('MangaList.vue', () => {
         });
 
         it('removes deleted entries', async () => {
+          expect(mangaList.vm.entries).toContain(entry1);
+
           mangaList.vm.deleteEntries();
 
           await flushPromises();
 
-          expect(mangaList.vm.currentListEntries).not.toContain(entry1);
+          expect(mangaList.vm.entries).not.toContain(entry1);
         });
       });
 
@@ -236,7 +234,7 @@ describe('MangaList.vue', () => {
 
           await flushPromises();
 
-          expect(mangaList.vm.currentListEntries).toContain(entry1);
+          expect(mangaList.vm.entries).toContain(entry1);
           expect(errorMessageMock).toHaveBeenCalledWith(
             'Deletion failed. Try reloading the page before trying again'
           );
@@ -251,11 +249,6 @@ describe('MangaList.vue', () => {
       mangaList = shallowMount(MangaList, {
         store,
         localVue,
-        data() {
-          return {
-            currentListID: firstMangaList.id,
-          };
-        },
       });
     });
 
@@ -290,13 +283,8 @@ describe('MangaList.vue', () => {
       const mangaList = shallowMount(MangaList, {
         store,
         localVue,
-        data() {
-          return {
-            currentListID: firstMangaList.id,
-          };
-        },
         computed: {
-          currentListEntries: () => [entry1, entry2],
+          entries: () => [entry1, entry2],
         },
       });
       jest.useFakeTimers();
@@ -315,22 +303,41 @@ describe('MangaList.vue', () => {
     });
   });
   describe(':lifecycle', () => {
-    it(':mounted() - loads lists and entries, while toggling loading', async () => {
-      const retrieveListsSpy   = jest.spyOn(MangaList.methods, 'retrieveLists');
-      const retrieveEntriesSpy = jest.spyOn(MangaList.methods, 'retrieveEntries');
+    let actions;
 
-      retrieveListsSpy.mockResolvedValue();
-
-      shallowMount(MangaList, {
-        store,
-        localVue,
-        data() { return { currentListID: firstMangaList.id }; },
+    beforeEach(() => {
+      actions = { getLists: jest.fn(), getEntries: jest.fn() };
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: {
+              lists: mangaListFactory.buildList(1),
+              entries: [entry1, entry2],
+            },
+            actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
       });
+    });
+
+    it(':created() - loads lists and entries, while toggling loading', async () => {
+      shallowMount(MangaList, { store, localVue });
 
       await flushPromises();
 
-      expect(retrieveListsSpy).toHaveBeenCalled();
-      expect(retrieveEntriesSpy).toHaveBeenCalled();
+      expect(actions.getLists).toHaveBeenCalled();
+      expect(actions.getEntries).toHaveBeenCalled();
+    });
+
+    it(':created() - sets default lists filter as Reading', async () => {
+      const list = shallowMount(MangaList, { store, localVue });
+
+      await flushPromises();
+
+      expect(list.vm.selectedListIDs).toContain(mangaList.id);
     });
   });
 });

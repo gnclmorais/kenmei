@@ -13,6 +13,7 @@
         width="30"
         align="center"
         sortable="custom"
+        label-class-name="p-0"
       )
         template(slot-scope="scope")
           .new-chapter-dot(v-if="unread(scope.row)")
@@ -20,6 +21,7 @@
         prop="attributes.title"
         label="Title"
         sortable="custom"
+        width="400"
       )
         template(slot-scope="scope")
           el-link.break-normal(
@@ -33,8 +35,20 @@
             )
               | {{ scope.row.attributes.tracked_entries.length }} sites tracked
       el-table-column(
+        prop="attributes.status"
+        label="Manga List"
+        width="150"
+        align="center"
+      )
+        template(slot-scope="scope")
+          base-badge(
+            :text="entryListName(scope.row)"
+            :type="entryType(scope.row)"
+          )
+      el-table-column(
         prop="attributes.last_chapter_read"
         label="Last Chapter Read"
+        align="center"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
           el-link.break-normal(
@@ -49,6 +63,7 @@
       el-table-column(
         prop="links.last_chapter_available_url"
         label="Latest Chapter"
+        align="center"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
           el-link(
@@ -63,6 +78,7 @@
       el-table-column(
         prop="attributes.last_released_at"
         label="Released"
+        align="center"
         sortable="custom"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
@@ -103,7 +119,7 @@
 </template>
 
 <script>
-  import { mapState, mapMutations } from 'vuex';
+  import { mapState, mapGetters, mapMutations } from 'vuex';
   import {
     Table, TableColumn, Link, Button, Message, Pagination,
   } from 'element-ui';
@@ -149,6 +165,9 @@
       ...mapState('lists', [
         'listsLoading',
       ]),
+      ...mapGetters('lists', [
+        'findListByID',
+      ]),
       currentPageEntries() {
         const page = this.currentPage - 1;
         return this.sortedData.slice(page * 50, (page + 1) * 50);
@@ -167,6 +186,14 @@
       ...mapMutations('lists', [
         'updateEntry',
       ]),
+      entryListName(entry) {
+        return this.findListByID(entry.manga_list_id.toString()).attributes.name;
+      },
+      entryType(entry) {
+        const { status } = entry.attributes;
+
+        return { 1: 'success', 2: 'warning', 5: 'danger' }[status];
+      },
       async setLastRead(entry) {
         this.entryUpdated = entry;
 

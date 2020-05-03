@@ -7,6 +7,7 @@ export default new Factory()
   .attr('manga_list_id', 1)
   .attr('attributes', {
     title: 'Manga Title',
+    status: 1,
     last_chapter_read: '1',
     last_chapter_available: '2',
     last_released_at: '2019-01-01T00:00:00.000Z',

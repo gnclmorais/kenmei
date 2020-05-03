@@ -5,8 +5,9 @@ import flushPromises from 'flush-promises';
 import MangaList from '@/components/TheMangaList.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
-import mangaEntryFactory from '../factories/mangaEntry';
 
+import mangaEntryFactory from '../factories/mangaEntry';
+import mangaListFactory from '../factories/mangaList';
 
 const localVue = createLocalVue();
 
@@ -26,10 +27,16 @@ describe('TheMangaList.vue', () => {
         lists: {
           namespaced: true,
           state: {
-            lists: [],
+            lists: [
+              mangaListFactory.build(),
+              mangaListFactory.build(
+                { id: '2', attributes: { name: 'Completed' } }
+              ),
+            ],
             entries: [mangaEntryFactory.build({ id: '1' })],
           },
           mutations: lists.mutations,
+          getters: lists.getters,
         },
       },
     });
@@ -39,6 +46,22 @@ describe('TheMangaList.vue', () => {
       propsData: {
         tableData: defaultEntries,
       },
+    });
+  });
+
+  describe('when showing entries', () => {
+    it('displays manga list name for each entry', async () => {
+      const entry1 = mangaEntryFactory.build({ id: '1' });
+      const entry2 = mangaEntryFactory.build({ id: '2', manga_list_id: 2 });
+
+      mangaList.setData({ sortedData: [entry1, entry2] });
+
+      await nextTick();
+
+      const rows = mangaList.findAll('.el-table__row');
+
+      expect(rows.at(0).text()).toContain('Reading');
+      expect(rows.at(1).text()).toContain('Completed');
     });
   });
 
