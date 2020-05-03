@@ -277,13 +277,6 @@ describe('MangaList.vue', () => {
       expect(reportButton.isVisible()).toBeTruthy();
       expect(mangaList.vm.$data.selectedEntries).toContain(entry1);
     });
-
-    it('@importCompleted - refreshes manga list', () => {
-      const retrieveListsSpy = jest.spyOn(mangaList.vm, 'retrieveLists');
-      mangaList.find(TheImporters).vm.$emit('importCompleted');
-
-      expect(retrieveListsSpy).toHaveBeenCalled();
-    });
   });
   describe(':data', () => {
     it(':searchTerm - if present, filters manga entries', () => {
