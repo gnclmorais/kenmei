@@ -3,11 +3,11 @@
     .flex.flex-col.w-full.max-w-7xl.py-6
       .mx-5.mb-5.max-sm_mx-2
         a.no-underline(
-          href="https://news.kenmei.co/updates/2020/update-13"
+          href="https://news.kenmei.co/monthly-updates/2020/april"
           target="_blank"
         )
           el-alert.cursor-pointer(
-            title="Update #13"
+            title="April Progress Update"
             type="info"
             :description="alertMessage"
             :closable="false"
@@ -164,8 +164,8 @@
         deleteDialogVisible: false,
         reportDialogVisible: false,
         alertMessage: `
-          New landing page, updated UI components and more
-          in the latest update. Click to find out more.
+          There is a new update format in town - monthly progress reports.
+          Click to find out more.
         `,
       };
     },
