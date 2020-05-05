@@ -30,7 +30,8 @@ describe('TheMangaList.vue', () => {
                 { id: '2', attributes: { name: 'Completed' } }
               ),
             ],
-            entries: [factories.entry.build({ id: '1' })],
+            entries: defaultEntries,
+            statuses: lists.state.statuses,
           },
           mutations: lists.mutations,
           getters: lists.getters,
@@ -47,11 +48,11 @@ describe('TheMangaList.vue', () => {
   });
 
   describe('when showing entries', () => {
-    it('displays manga list name for each entry', async () => {
+    it('displays status name for each entry', async () => {
       const entry1 = factories.entry.build({ id: '1' });
-      const entry2 = factories.entry.build({ id: '2', manga_list_id: 2 });
+      const entry2 = factories.entry.build({ id: '2', attributes: { status: 4 } });
 
-      mangaList.setData({ sortedData: [entry1, entry2] });
+      mangaList.setProps({ tableData: [entry1, entry2] });
 
       await nextTick();
 
