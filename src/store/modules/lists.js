@@ -9,15 +9,25 @@ export const getEntryIndex = (state, id) => state.entries.findIndex(
 const state = {
   lists: [],
   entries: [],
+  statuses: [
+    { enum: 1, name: 'Reading' },
+    { enum: 2, name: 'On Hold' },
+    { enum: 3, name: 'Plan to Read' },
+    { enum: 4, name: 'Completed' },
+    { enum: 5, name: 'Dropped' },
+  ],
   listsLoading: false,
 };
 
 const getters = {
   // TODO: Rename to getEntriesByTagIDs when renaming manga lists to tags
   getEntriesByListIDs: (state) => (listIDs) => state.entries.filter(
-    (entry) => !listIDs.length || listIDs.includes(entry.manga_list_id.toString())
+    (entry) => entry.manga_list_id
+      && listIDs.includes(entry.manga_list_id.toString())
   ),
-  findListByID: (state) => (id) => state.lists.find((list) => list.id === id),
+  getEntriesByStatus: (state) => (status) => state.entries.filter(
+    (entry) => status === -1 || entry.attributes.status === status
+  ),
   findEntryFromIDs: (state) => (ids) => state.entries.find(
     (entry) => ids.includes(entry.id)
   ),

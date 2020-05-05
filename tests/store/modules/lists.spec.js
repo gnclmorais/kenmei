@@ -12,6 +12,7 @@ describe('lists', () => {
         const state = {
           entries: [
             expectedReturn,
+            factories.entry.build({ manga_list_id: null }),
             factories.entry.build({ manga_list_id: 2 }),
           ],
         };
@@ -19,6 +20,34 @@ describe('lists', () => {
         const getEntriesByListIDs = lists.getters.getEntriesByListIDs(state);
 
         expect(getEntriesByListIDs(listIDs)).toEqual([expectedReturn]);
+      });
+    });
+
+    describe('getEntriesByStatus', () => {
+      it('returns entries based on status enum', () => {
+        const expectedReturn = factories.entry.build({
+          attributes: { status: 4 },
+        });
+        const state = {
+          entries: [
+            expectedReturn,
+            factories.entry.build({ attributes: { status: 1 } }),
+          ],
+        };
+
+        const getEntriesByStatus = lists.getters.getEntriesByStatus(state);
+
+        expect(getEntriesByStatus(4)).toEqual([expectedReturn]);
+      });
+
+      it('returns all entries if enum is -1', () => {
+        const entry1 = factories.entry.build({ attributes: { status: 1 } });
+        const entry2 = factories.entry.build({ attributes: { status: 2 } });
+        const state  = { entries: [entry1, entry2] };
+
+        const getEntriesByStatus = lists.getters.getEntriesByStatus(state);
+
+        expect(getEntriesByStatus(-1)).toEqual([entry1, entry2]);
       });
     });
 
@@ -32,17 +61,6 @@ describe('lists', () => {
         const findEntryFromIDs = lists.getters.findEntryFromIDs(state);
 
         expect(findEntryFromIDs([entry.id])).toEqual(entry);
-      });
-    });
-
-    describe('findListByID', () => {
-      it('returns list based on list ID provided', () => {
-        const list  = factories.list.build({ id: 2 });
-        const state = { lists: [list] };
-
-        const findListByID = lists.getters.findListByID(state);
-
-        expect(findListByID(2)).toEqual(list);
       });
     });
   });
