@@ -19,23 +19,36 @@ localVue.directive('tippy', true);
 
 describe('MangaList.vue', () => {
   let store;
-  let list;
+  let list1;
+  let list2;
   let entry1;
   let entry2;
+  let entry3;
 
   beforeEach(() => {
-    list = factories.list.build({ id: '1' });
+    list1 = factories.list.build({ id: '1' });
+    list2 = factories.list.build({ id: '2' });
 
-    entry1 = factories.entry.build({ id: 1 });
-    entry2 = factories.entry.build({ id: 2 });
+    entry1 = factories.entry.build({
+      id: 1, attributes: { title: 'Boku no Hero', status: 1 },
+    });
+    entry2 = factories.entry.build({
+      id: 2,
+      manga_list_id: list2.id,
+      attributes: { title: 'Attack on Titan', status: 1 },
+    });
+    entry3 = factories.entry.build({
+      id: 3, manga_list_id: null, attributes: { title: 'Berserk', status: 2 },
+    });
 
     store = new Vuex.Store({
       modules: {
         lists: {
           namespaced: true,
           state: {
-            lists: [list],
-            entries: [entry1, entry2],
+            lists: [list1],
+            entries: [entry1, entry2, entry3],
+            statuses: lists.state.statuses,
           },
           actions: lists.actions,
           getters: lists.getters,
@@ -270,20 +283,8 @@ describe('MangaList.vue', () => {
   });
   describe(':data', () => {
     it(':searchTerm - if present, filters manga entries', () => {
-      const entry1 = factories.entry.build(
-        { attributes: { title: 'Boku no Hero' } }
-      );
-      const entry2 = factories.entry.build(
-        { attributes: { title: 'Attack on Titan' } }
-      );
+      const mangaList = shallowMount(MangaList, { store, localVue });
 
-      const mangaList = shallowMount(MangaList, {
-        store,
-        localVue,
-        computed: {
-          entries: () => [entry1, entry2],
-        },
-      });
       jest.useFakeTimers();
 
       expect(mangaList.vm.filteredEntries).toEqual([entry1, entry2]);
@@ -298,6 +299,30 @@ describe('MangaList.vue', () => {
 
       expect(mangaList.vm.filteredEntries).toEqual([entry2]);
     });
+
+    describe(':selectedListIDs', () => {
+      it('filters entries based on tags', async () => {
+        const mangaList = shallowMount(MangaList, { store, localVue });
+
+        mangaList.setData({ selectedListIDs: [list2.id] });
+
+        await nextTick();
+
+        expect(mangaList.vm.filteredEntries).toEqual([entry2]);
+      });
+    });
+
+    describe(':selectedStatus', () => {
+      it('filters entries based on status enum', async () => {
+        const mangaList = shallowMount(MangaList, { store, localVue });
+
+        mangaList.setData({ selectedStatus: 2 });
+
+        await nextTick();
+
+        expect(mangaList.vm.filteredEntries).toEqual([entry3]);
+      });
+    });
   });
   describe(':lifecycle', () => {
     let actions;
@@ -311,6 +336,7 @@ describe('MangaList.vue', () => {
             state: {
               lists: factories.list.buildList(1),
               entries: [entry1, entry2],
+              statuses: lists.state.statuses,
             },
             actions,
             getters: lists.getters,
@@ -327,14 +353,6 @@ describe('MangaList.vue', () => {
 
       expect(actions.getLists).toHaveBeenCalled();
       expect(actions.getEntries).toHaveBeenCalled();
-    });
-
-    it(':created() - sets default lists filter as Reading', async () => {
-      const mangaList = shallowMount(MangaList, { store, localVue });
-
-      await flushPromises();
-
-      expect(mangaList.vm.selectedListIDs).toContain(list.id);
     });
   });
 });

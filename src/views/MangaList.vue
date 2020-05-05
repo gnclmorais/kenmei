@@ -14,9 +14,22 @@
             show-icon
           )
       .mx-5.mb-5.max-sm_mx-2
+        el-select.ml-3.sm_shadow-md.rounded.float-right.w-40(
+          v-model="selectedStatus"
+          placeholder="Filter by status"
+          :disabled="listsLoading"
+        )
+          el-option(
+            v-for="status in allStatuses"
+            :key="status.enum"
+            :label="status.name"
+            :value="status.enum"
+          )
         el-select.sm_shadow-md.rounded.float-right.w-48(
+          ref="tagFilter"
+          v-if="lists.length"
           v-model="selectedListIDs"
-          placeholder="Filter by manga lists"
+          placeholder="Filter by tags"
           :disabled="listsLoading"
           multiple
           collapse-tags
@@ -75,7 +88,6 @@
             base-button(
               ref="addMangaEntryModalButton"
               @click="dialogVisible = true"
-              :disabled="!lists.length"
             )
               i.el-icon-plus.mr-1
               | Add Manga
@@ -95,7 +107,6 @@
         @closeDialog="importDialogVisible = false"
       )
       add-manga-entry(
-        v-if="lists.length"
         ref='addMangaEntryModal'
         :visible="dialogVisible"
         @dialogClosed='dialogVisible = false'
@@ -156,6 +167,7 @@
       return {
         selectedEntries: [],
         selectedListIDs: [],
+        selectedStatus: 1,
         entriesSelected: false,
         searchTerm: '',
         dialogVisible: false,
@@ -173,11 +185,16 @@
       ...mapState('lists', [
         'entries',
         'lists',
+        'statuses',
         'listsLoading',
       ]),
       ...mapGetters('lists', [
         'getEntriesByListIDs',
+        'getEntriesByStatus',
       ]),
+      allStatuses() {
+        return [{ enum: -1, name: 'All' }].concat(this.statuses);
+      },
       selectedEntriesIDs() {
         return this.selectedEntries.map((entry) => entry.id);
       },
@@ -206,6 +223,11 @@
 
           filtered = filtered.filter((e) => taggedEntries.includes(e));
         }
+        if (this.selectedStatus) {
+          const statusEntries = this.getEntriesByStatus(this.selectedStatus);
+
+          filtered = filtered.filter((e) => statusEntries.includes(e));
+        }
         if (this.searchTerm.length) {
           filtered = filtered.filter(
             (entry) => entry.attributes.title.toLowerCase()
@@ -221,11 +243,6 @@
 
       await this.getLists();
       await this.getEntries();
-
-      const readingList = this.lists.find(
-        (list) => list.attributes.name === 'Reading'
-      );
-      this.selectedListIDs.push(readingList.id);
 
       this.setListsLoading(false);
     },
