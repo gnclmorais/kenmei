@@ -20,6 +20,7 @@
           'bg-blue-100 text-blue-800': this.type === 'primary',
           'bg-green-100 text-green-800': this.type === 'success',
           'bg-gray-100 text-gray-800': this.type === 'secondary',
+          'bg-yellow-100 text-yellow-800': this.type === 'warning-light',
           'bg-orange-100 text-orange-800': this.type === 'warning',
           'bg-red-100 text-red-800': this.type === 'danger',
         };
