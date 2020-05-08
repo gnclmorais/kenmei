@@ -13,17 +13,12 @@ describe('AddMangaEntry.vue', () => {
   let store;
   let addMangaEntry;
 
-  const mangaList = factories.list.build();
-
   beforeEach(() => {
     store = new Vuex.Store({
       modules: {
         lists: {
           namespaced: true,
-          state: {
-            lists: [mangaList],
-            entries: [],
-          },
+          state: lists.state,
           mutations: lists.mutations,
           getters: lists.getters,
         },
@@ -31,18 +26,6 @@ describe('AddMangaEntry.vue', () => {
     });
 
     addMangaEntry = shallowMount(AddMangaEntry, { store, localVue });
-  });
-
-  describe(':lifecycle', () => {
-    it(':mounted() - sets manga list to Reading', () => {
-      addMangaEntry = shallowMount(AddMangaEntry, {
-        store,
-        localVue,
-        data() { return { listID: '' }; },
-      });
-
-      expect(addMangaEntry.vm.listID).toEqual(mangaList.id);
-    });
   });
 
   describe('when adding new MangaDex entry', () => {
@@ -55,13 +38,11 @@ describe('AddMangaEntry.vue', () => {
     });
 
     afterEach(() => {
-      expect(addMangaEntrySpy).toHaveBeenCalledWith(
-        'example.url/manga/1', mangaList.id
-      );
+      expect(addMangaEntrySpy).toHaveBeenCalledWith('example.url/manga/1', 1);
     });
 
     describe('when no manga sources are tracked', () => {
-      it('adds new Manga entry to the list', async () => {
+      it('adds new Manga entry', async () => {
         const mangaEntry = factories.entry.build();
 
         addMangaEntrySpy.mockResolvedValue({ data: mangaEntry });
@@ -84,7 +65,6 @@ describe('AddMangaEntry.vue', () => {
           id: 2,
           manga_source_id: 2,
           manga_series_id: oldEntry.manga_series_id,
-          manga_list_id: oldEntry.manga_list_id,
           attributes: {
             tracked_entries: [
               {
