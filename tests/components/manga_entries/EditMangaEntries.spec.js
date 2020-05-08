@@ -46,13 +46,13 @@ describe('EditMangaEntries.vue', () => {
       });
 
 
-      it('prefills manga list', async () => {
+      it('prefills status', async () => {
         editMangaEntries.setProps({ selectedEntries: [entry1] });
 
         await nextTick();
 
-        expect(editMangaEntries.vm.$data.listID).toEqual(
-          entry1.manga_list_id.toString()
+        expect(editMangaEntries.vm.$data.selectedStatus).toEqual(
+          entry1.attributes.status
         );
       });
 
@@ -84,7 +84,7 @@ describe('EditMangaEntries.vue', () => {
           await flushPromises();
 
           expect(editMangaEntries.vm.$data).toEqual({
-            listID: entry1.manga_list_id.toString(),
+            selectedStatus: entry1.attributes.status,
             mangaSourceID: null,
             availableSources: [],
             loadingSources: true,
@@ -113,13 +113,15 @@ describe('EditMangaEntries.vue', () => {
 
     afterEach(() => {
       expect(updateMangaEntryMock).toHaveBeenCalledWith(
-        1, { manga_list_id: '2', manga_source_id: 1 }
+        1, { status: 2, manga_source_id: 1 }
       );
     });
 
     it('uses updateMangaEntry endpoint', async () => {
-      editMangaEntries.setData({ listID: '2', mangaSourceID: 1 });
-      const updatedEntry = factories.entry.build({ id: 1, manga_list_id: 2 });
+      editMangaEntries.setData({ selectedStatus: 2, mangaSourceID: 1 });
+      const updatedEntry = factories.entry.build({
+        id: 1, attributes: { status: 2 },
+      });
 
       updateMangaEntryMock.mockResolvedValue(updatedEntry);
 
@@ -146,20 +148,20 @@ describe('EditMangaEntries.vue', () => {
       });
 
       updatedMangaEntries = [
-        factories.entry.build({ id: 1, manga_list_id: 2 }),
-        factories.entry.build({ id: 2, manga_list_id: 2 }),
+        factories.entry.build({ id: 1, attributes: { status: 2 } }),
+        factories.entry.build({ id: 2, attributes: { status: 2 } }),
       ];
     });
 
     afterEach(() => {
       expect(updateMangaEntriesMock).toHaveBeenCalledWith(
-        [1, 2], { manga_list_id: '2' }
+        [1, 2], { status: 2 }
       );
     });
 
     describe('if update was successful', () => {
       beforeEach(() => {
-        editMangaEntries.setData({ listID: '2' });
+        editMangaEntries.setData({ selectedStatus: 2 });
 
         updateMangaEntriesMock.mockResolvedValue(updatedMangaEntries);
       });
@@ -182,7 +184,7 @@ describe('EditMangaEntries.vue', () => {
         expect(infoMessageMock).toHaveBeenCalledWith('2 entries updated');
       });
 
-      it('changes manga entries manga list', async () => {
+      it('changes manga entries status', async () => {
         editMangaEntries.vm.updateMangaEntries();
 
         await flushPromises();
@@ -195,7 +197,7 @@ describe('EditMangaEntries.vue', () => {
       it("shows couldn't update message and keeps same entries", async () => {
         const errorMessageMock = jest.spyOn(Message, 'error');
 
-        editMangaEntries.setData({ listID: '2' });
+        editMangaEntries.setData({ selectedStatus: 10 });
         updateMangaEntriesMock.mockResolvedValue(false);
 
         editMangaEntries.vm.updateMangaEntries();
