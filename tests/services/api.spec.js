@@ -9,12 +9,12 @@ describe('API', () => {
   describe('addMangaEntry()', () => {
     it('makes a request to the API and returns manga if found', async () => {
       const mangaURL = 'example.url/123';
-      const mangaListID = 1;
+      const status = 1;
       const mockData = factories.entry.build();
 
       axios.post.mockResolvedValue({ status: 200, data: mockData });
 
-      const data = await apiService.addMangaEntry(mangaURL, mangaListID);
+      const data = await apiService.addMangaEntry(mangaURL, status);
       expect(data).toEqual(mockData);
     });
 
