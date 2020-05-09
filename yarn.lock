@@ -5129,6 +5129,13 @@ find@^0.2.4:
   dependencies:
     traverse-chain "~0.1.0"
 
+fishery@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/fishery/-/fishery-0.3.0.tgz#8f1d24f69600e38e0707943e62300cad42ae1f16"
+  integrity sha512-hY2LTDq213KquLftAVgvQOcZmtx5Kr0JadWvNJgnT0NkjH0MB+Xvg6XIxbMFwkDed0CyYpcAUThgj0qWVigmbw==
+  dependencies:
+    lodash.merge "^4.6.2"
+
 flat-cache@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/flat-cache/-/flat-cache-2.0.1.tgz#5d296d6f04bda44a4630a301413bdbc2ec085ec0"
@@ -9944,11 +9951,6 @@ rollbar@^2.5.2:
     uuid "3.0.x"
   optionalDependencies:
     decache "^3.0.5"
-
-rosie@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/rosie/-/rosie-2.0.1.tgz#c250c4787ce450b72aa9eff26509f68589814fa2"
-  integrity sha1-wlDEeHzkULcqqe/yZQn2hYmBT6I=
 
 rsvp@^4.8.4:
   version "4.8.5"
