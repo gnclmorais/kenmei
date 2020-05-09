@@ -20,8 +20,6 @@ global.mount = vueTestUtils.mount;
 global.shallowMount = vueTestUtils.shallowMount;
 // https://vue-test-utils.vuejs.org/api/#createlocalvue
 global.createLocalVue = vueTestUtils.createLocalVue;
-// Helps to test async behaviour
-global.nextTick = Vue.nextTick;
 // Enable factories globally
 global.factories = factories;
 

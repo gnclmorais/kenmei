@@ -63,9 +63,7 @@ describe('BaseNavDark.vue', () => {
         expect(nav.vm.$data.activeSignOnComponent).toContain('TheSignIn');
         expect(nav.vm.$data.signOnVisible).toBeFalsy();
 
-        nav.find({ ref: 'signUpButton' }).trigger('click');
-
-        await nextTick();
+        await nav.find({ ref: 'signUpButton' }).trigger('click');
 
         expect(nav.vm.$data.activeSignOnComponent).toContain('TheSignUp');
         expect(nav.vm.$data.signOnVisible).toBeTruthy();
@@ -130,9 +128,7 @@ describe('BaseNavDark.vue', () => {
           expect(profileDropdown.isVisible()).toBeTruthy();
           expect(menuDropdown.isVisible()).toBeTruthy();
 
-          nav.find('.desktop-links').trigger('click');
-
-          await nextTick();
+          await nav.find('.desktop-links').trigger('click');
 
           expect(profileDropdown.isVisible()).toBeFalsy();
           expect(menuDropdown.isVisible()).toBeFalsy();

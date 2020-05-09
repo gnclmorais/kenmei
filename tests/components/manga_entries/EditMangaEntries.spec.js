@@ -47,9 +47,7 @@ describe('EditMangaEntries.vue', () => {
 
 
       it('prefills status', async () => {
-        editMangaEntries.setProps({ selectedEntries: [entry1] });
-
-        await nextTick();
+        await editMangaEntries.setProps({ selectedEntries: [entry1] });
 
         expect(editMangaEntries.vm.$data.selectedStatus).toEqual(
           entry1.attributes.status

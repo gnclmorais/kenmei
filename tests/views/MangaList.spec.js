@@ -86,9 +86,7 @@ describe('MangaList.vue', () => {
     });
 
     it('shows add manga entry modal', async () => {
-      mangaList.find({ ref: 'addMangaEntryModalButton' }).trigger('click');
-
-      await nextTick();
+      await mangaList.find({ ref: 'addMangaEntryModalButton' }).trigger('click');
 
       expect(modal.isVisible()).toBeTruthy();
     });
@@ -125,18 +123,14 @@ describe('MangaList.vue', () => {
     });
 
     it('shows edit manga entries modal', async () => {
-      mangaList.find({ ref: 'editMangaEntriesButton' }).trigger('click');
-
-      await nextTick();
+      await mangaList.find({ ref: 'editMangaEntriesButton' }).trigger('click');
 
       expect(modal.isVisible()).toBeTruthy();
     });
 
     describe('@events', () => {
       it('@cancelEdit - closes edit manga entries dialog', async () => {
-        mangaList.setData({ editDialogVisible: true });
-
-        await nextTick();
+        await mangaList.setData({ editDialogVisible: true });
 
         mangaList.find(EditMangaEntries).vm.$emit('cancelEdit');
 
@@ -144,9 +138,7 @@ describe('MangaList.vue', () => {
       });
 
       it('@editComplete - resets selected manga entries and closes modal', async () => {
-        mangaList.setData({ editDialogVisible: true });
-
-        await nextTick();
+        await mangaList.setData({ editDialogVisible: true });
 
         mangaList.find(EditMangaEntries).vm.$emit('editComplete');
 
@@ -271,9 +263,7 @@ describe('MangaList.vue', () => {
       expect(editButton.isVisible()).not.toBeTruthy();
       expect(reportButton.isVisible()).not.toBeTruthy();
 
-      mangaList.find(TheMangaList).vm.$emit('seriesSelected', [entry1]);
-
-      await nextTick();
+      await mangaList.find(TheMangaList).vm.$emit('seriesSelected', [entry1]);
 
       expect(deleteButton.isVisible()).toBeTruthy();
       expect(editButton.isVisible()).toBeTruthy();
@@ -304,9 +294,7 @@ describe('MangaList.vue', () => {
       it('filters entries based on tags', async () => {
         const mangaList = shallowMount(MangaList, { store, localVue });
 
-        mangaList.setData({ selectedListIDs: [list2.id] });
-
-        await nextTick();
+        await mangaList.setData({ selectedListIDs: [list2.id] });
 
         expect(mangaList.vm.filteredEntries).toEqual([entry2]);
       });
@@ -316,9 +304,7 @@ describe('MangaList.vue', () => {
       it('filters entries based on status enum', async () => {
         const mangaList = shallowMount(MangaList, { store, localVue });
 
-        mangaList.setData({ selectedStatus: 2 });
-
-        await nextTick();
+        await mangaList.setData({ selectedStatus: 2 });
 
         expect(mangaList.vm.filteredEntries).toEqual([entry3]);
       });
