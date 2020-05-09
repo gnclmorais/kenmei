@@ -1,8 +1,6 @@
 import axios from 'axios';
 import * as apiService from '@/services/api';
 
-import mangaEntryFactory from '../factories/mangaEntry';
-
 describe('API', () => {
   afterEach(() => {
     jest.restoreAllMocks();
@@ -12,7 +10,7 @@ describe('API', () => {
     it('makes a request to the API and returns manga if found', async () => {
       const mangaURL = 'example.url/123';
       const mangaListID = 1;
-      const mockData = mangaEntryFactory.build();
+      const mockData = factories.entry.build();
 
       axios.post.mockResolvedValue({ status: 200, data: mockData });
 
@@ -35,7 +33,7 @@ describe('API', () => {
     let attributes;
 
     beforeEach(() => {
-      mangaEntry = mangaEntryFactory.build();
+      mangaEntry = factories.entry.build();
       attributes = {
         last_chapter_read: mangaEntry.attributes.last_chapter_available,
         last_chapter_read_url: mangaEntry.links.last_chapter_available_url,
@@ -77,7 +75,7 @@ describe('API', () => {
     let attributes;
 
     beforeEach(() => {
-      mangaEntries = mangaEntryFactory.buildList(2);
+      mangaEntries = factories.entry.buildList(2);
       ids = mangaEntries.map((entry) => entry.id);
       attributes = {
         last_chapter_read: mangaEntries[0].attributes.last_chapter_available,

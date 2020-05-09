@@ -1,11 +1,11 @@
-import { Factory } from 'rosie';
+import { Factory } from 'fishery';
 
-export default new Factory()
-  .sequence('id')
-  .attr('manga_source_id', 1)
-  .attr('manga_series_id', 1)
-  .attr('manga_list_id', 1)
-  .attr('attributes', {
+export default Factory.define(({ sequence }) => ({
+  id: sequence,
+  manga_source_id: 1,
+  manga_series_id: 1,
+  manga_list_id: 1,
+  attributes: {
     title: 'Manga Title',
     status: 1,
     last_chapter_read: '1',
@@ -18,9 +18,10 @@ export default new Factory()
         manga_series_id: 1,
       },
     ],
-  })
-  .attr('links', {
+  },
+  links: {
     series_url: 'example.url/manga/1',
     last_chapter_read_url: 'example.url/chapter/1',
     last_chapter_available_url: 'example.url/chapter/2',
-  });
+  },
+}));

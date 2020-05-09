@@ -9,9 +9,6 @@ import EditMangaEntries from '@/components/manga_entries/EditMangaEntries.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
 
-import mangaEntryFactory from '../factories/mangaEntry';
-import mangaListFactory from '../factories/mangaList';
-
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
@@ -22,22 +19,22 @@ localVue.directive('tippy', true);
 
 describe('MangaList.vue', () => {
   let store;
-  let mangaList;
+  let list;
   let entry1;
   let entry2;
 
   beforeEach(() => {
-    mangaList = mangaListFactory.build({ id: '1' });
+    list = factories.list.build({ id: '1' });
 
-    entry1 = mangaEntryFactory.build({ id: 1 });
-    entry2 = mangaEntryFactory.build({ id: 2 });
+    entry1 = factories.entry.build({ id: 1 });
+    entry2 = factories.entry.build({ id: 2 });
 
     store = new Vuex.Store({
       modules: {
         lists: {
           namespaced: true,
           state: {
-            lists: [mangaList],
+            lists: [list],
             entries: [entry1, entry2],
           },
           actions: lists.actions,
@@ -174,7 +171,7 @@ describe('MangaList.vue', () => {
 
     describe('when entry has multiple sources tracked', () => {
       it('shows deleteMangaEntries modal', () => {
-        const entry3 = mangaEntryFactory.build({
+        const entry3 = factories.entry.build({
           id: 3,
           attributes: { tracked_entries: [{ id: 3 }, { id: 12 }] },
         });
@@ -273,10 +270,10 @@ describe('MangaList.vue', () => {
   });
   describe(':data', () => {
     it(':searchTerm - if present, filters manga entries', () => {
-      const entry1 = mangaEntryFactory.build(
+      const entry1 = factories.entry.build(
         { attributes: { title: 'Boku no Hero' } }
       );
-      const entry2 = mangaEntryFactory.build(
+      const entry2 = factories.entry.build(
         { attributes: { title: 'Attack on Titan' } }
       );
 
@@ -312,7 +309,7 @@ describe('MangaList.vue', () => {
           lists: {
             namespaced: true,
             state: {
-              lists: mangaListFactory.buildList(1),
+              lists: factories.list.buildList(1),
               entries: [entry1, entry2],
             },
             actions,
@@ -333,11 +330,11 @@ describe('MangaList.vue', () => {
     });
 
     it(':created() - sets default lists filter as Reading', async () => {
-      const list = shallowMount(MangaList, { store, localVue });
+      const mangaList = shallowMount(MangaList, { store, localVue });
 
       await flushPromises();
 
-      expect(list.vm.selectedListIDs).toContain(mangaList.id);
+      expect(mangaList.vm.selectedListIDs).toContain(list.id);
     });
   });
 });

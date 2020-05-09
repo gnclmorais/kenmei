@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import fs from 'fs';
 import path from 'path';
+import { factories } from './factories';
 
 // ===
 // Utility functions
@@ -21,6 +22,8 @@ global.shallowMount = vueTestUtils.shallowMount;
 global.createLocalVue = vueTestUtils.createLocalVue;
 // Helps to test async behaviour
 global.nextTick = Vue.nextTick;
+// Enable factories globally
+global.factories = factories;
 
 // ===
 // Register global components

@@ -52,6 +52,7 @@ module.exports = {
         shallowMount: false,
         createLocalVue: false,
         nextTick: false,
+        factories: false,
       },
     },
   ],

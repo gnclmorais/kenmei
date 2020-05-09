@@ -6,9 +6,6 @@ import MangaList from '@/components/TheMangaList.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
 
-import mangaEntryFactory from '../factories/mangaEntry';
-import mangaListFactory from '../factories/mangaList';
-
 const localVue = createLocalVue();
 
 localVue.directive('loading', true);
@@ -19,7 +16,7 @@ describe('TheMangaList.vue', () => {
   let mangaList;
   let store;
 
-  const defaultEntries = mangaEntryFactory.buildList(1);
+  const defaultEntries = factories.entry.buildList(1);
 
   beforeEach(() => {
     store = new Vuex.Store({
@@ -28,12 +25,12 @@ describe('TheMangaList.vue', () => {
           namespaced: true,
           state: {
             lists: [
-              mangaListFactory.build(),
-              mangaListFactory.build(
+              factories.list.build(),
+              factories.list.build(
                 { id: '2', attributes: { name: 'Completed' } }
               ),
             ],
-            entries: [mangaEntryFactory.build({ id: '1' })],
+            entries: [factories.entry.build({ id: '1' })],
           },
           mutations: lists.mutations,
           getters: lists.getters,
@@ -51,8 +48,8 @@ describe('TheMangaList.vue', () => {
 
   describe('when showing entries', () => {
     it('displays manga list name for each entry', async () => {
-      const entry1 = mangaEntryFactory.build({ id: '1' });
-      const entry2 = mangaEntryFactory.build({ id: '2', manga_list_id: 2 });
+      const entry1 = factories.entry.build({ id: '1' });
+      const entry2 = factories.entry.build({ id: '2', manga_list_id: 2 });
 
       mangaList.setData({ sortedData: [entry1, entry2] });
 
@@ -93,11 +90,14 @@ describe('TheMangaList.vue', () => {
 
     it('mutates the state and shows success message', async () => {
       const infoMessageMock = jest.spyOn(Message, 'info');
-      const mangaEntry = mangaEntryFactory.build({ id: 1 });
-
-      mangaEntryFactory.attributes.title = 'Manga Title';
-      mangaEntryFactory.attributes.last_chapter_read = '2';
-      mangaEntryFactory.attributes.last_chapter_available = '2';
+      const mangaEntry = factories.entry.build({
+        id: 1,
+        attributes: {
+          title: 'Manga Title',
+          last_chapter_read: '2',
+          last_chapter_available: '2',
+        },
+      });
 
       updateMangaEntryMock.mockResolvedValue(mangaEntry);
 
@@ -128,8 +128,8 @@ describe('TheMangaList.vue', () => {
   });
 
   describe('@events', () => {
-    const entry1 = mangaEntryFactory.build({ id: '1' });
-    const entry2 = mangaEntryFactory.build({ id: '2' });
+    const entry1 = factories.entry.build({ id: '1' });
+    const entry2 = factories.entry.build({ id: '2' });
 
     beforeEach(() => {
       mangaList.setData({ sortedData: [entry1, entry2] });
@@ -151,10 +151,9 @@ describe('TheMangaList.vue', () => {
 
   describe('when no last chapter is available', () => {
     it('Released at column shows Unknown', async () => {
-      const entry = mangaEntryFactory.build();
-
-      entry.attributes.title = 'Manga Title';
-      entry.attributes.last_released_at = null;
+      const entry = factories.entry.build({
+        attributes: { title: 'Manga Title', last_released_at: null },
+      });
 
       mangaList.setProps({ tableData: [entry] });
 
@@ -166,7 +165,7 @@ describe('TheMangaList.vue', () => {
     it('Latest Chapter column shows no chapters', async () => {
       mangaList.setProps({
         tableData: [
-          mangaEntryFactory.build(
+          factories.entry.build(
             { links: { last_chapter_available_url: null } }
           ),
         ],
@@ -180,9 +179,9 @@ describe('TheMangaList.vue', () => {
 
   describe(':props', () => {
     it(':tableData - sanitizes manga title to convert special characters', async () => {
-      const entry = mangaEntryFactory.build();
-
-      entry.attributes.title = '&Uuml;bel Blatt';
+      const entry = factories.entry.build({
+        attributes: { title: '&Uuml;bel Blatt' },
+      });
 
       mangaList.setProps({ tableData: [entry] });
 
@@ -192,7 +191,7 @@ describe('TheMangaList.vue', () => {
     });
 
     it(':tableData - shows sites tracked if more than one', async () => {
-      const newMangaEntry = mangaEntryFactory.build();
+      const newMangaEntry = factories.entry.build();
 
       newMangaEntry.attributes.tracked_entries.push({
         id: 2,

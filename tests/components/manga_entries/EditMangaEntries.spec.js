@@ -6,18 +6,14 @@ import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
 import * as mangaSources from '@/services/endpoints/MangaSources';
 
-import mangaEntryFactory from '../../factories/mangaEntry';
-import mangaSourceFactory from '../../factories/mangaSource';
-import mangaListFactory from '../../factories/mangaList';
-
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
 
 describe('EditMangaEntries.vue', () => {
   let store;
-  const entry1 = mangaEntryFactory.build({ id: 1 });
-  const entry2 = mangaEntryFactory.build({ id: 2 });
+  const entry1 = factories.entry.build({ id: 1 });
+  const entry2 = factories.entry.build({ id: 2 });
 
   beforeEach(() => {
     store = new Vuex.Store({
@@ -26,8 +22,8 @@ describe('EditMangaEntries.vue', () => {
           namespaced: true,
           state: {
             lists: [
-              mangaListFactory.build({ id: '1' }),
-              mangaListFactory.build({ id: '2' }),
+              factories.list.build({ id: '1' }),
+              factories.list.build({ id: '2' }),
             ],
             entries: [entry1, entry2],
           },
@@ -62,7 +58,7 @@ describe('EditMangaEntries.vue', () => {
 
       describe('when single entry selected', () => {
         it('loads available sources', async () => {
-          const availableSources = mangaSourceFactory.buildList(1);
+          const availableSources = factories.source.buildList(1);
           const getMangaSourcesSpy = jest.spyOn(mangaSources, 'getMangaSources');
 
           getMangaSourcesSpy.mockResolvedValue({ data: availableSources });
@@ -123,7 +119,7 @@ describe('EditMangaEntries.vue', () => {
 
     it('uses updateMangaEntry endpoint', async () => {
       editMangaEntries.setData({ listID: '2', mangaSourceID: 1 });
-      const updatedEntry = mangaEntryFactory.build({ id: 1, manga_list_id: 2 });
+      const updatedEntry = factories.entry.build({ id: 1, manga_list_id: 2 });
 
       updateMangaEntryMock.mockResolvedValue(updatedEntry);
 
@@ -150,8 +146,8 @@ describe('EditMangaEntries.vue', () => {
       });
 
       updatedMangaEntries = [
-        mangaEntryFactory.build({ id: 1, manga_list_id: 2 }),
-        mangaEntryFactory.build({ id: 2, manga_list_id: 2 }),
+        factories.entry.build({ id: 1, manga_list_id: 2 }),
+        factories.entry.build({ id: 2, manga_list_id: 2 }),
       ];
     });
 
