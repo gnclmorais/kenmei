@@ -85,7 +85,7 @@
       @dialogClosed="signOnVisible = false"
       size="xs"
     )
-      template(slot='body')
+      template(#body)
         component(
           :is='activeSignOnComponent'
           @componentChanged='activeSignOnComponent = $event'

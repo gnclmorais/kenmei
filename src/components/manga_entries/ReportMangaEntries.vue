@@ -5,7 +5,7 @@
     size="sm"
     @dialogClosed="$emit('closeDialog')"
   )
-    template(slot='body')
+    template(#body)
       .mt-3.text-center.sm_mt-0.sm_text-left
         el-select.rounded.w-full(
           v-model="currentIssue"
@@ -25,7 +25,7 @@
           template(v-else)
             | Select this option, if manga titles are duplicated. They will be
             | manually updated so that only a single manga is shown.
-    template(slot='actions')
+    template(#actions)
       span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
         base-button(
           ref="reportEntriesButton"

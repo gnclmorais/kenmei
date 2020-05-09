@@ -27,10 +27,6 @@ exports[`LandingPage.vue renders the page 1`] = `
   />
   <base-modal-stub
     size="xs"
-  >
-    <template>
-      <thesignup-stub />
-    </template>
-  </base-modal-stub>
+  />
 </div>
 `;

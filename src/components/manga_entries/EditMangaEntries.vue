@@ -5,7 +5,7 @@
     size="sm"
     @dialogClosed="$emit('cancelEdit')"
   )
-    template(slot='body')
+    template(#body)
       .flex.flex-col.w-full
         .mt-3.text-center.sm_mt-0.sm_text-left.w-full
           label.block.text-sm.leading-5.font-medium.text-gray-700
@@ -34,7 +34,7 @@
                 :label="source.name"
                 :value="source.id"
               )
-    template(slot='actions')
+    template(#actions)
       span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
         base-button(
           ref="updateEntryButton"

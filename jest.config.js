@@ -37,4 +37,11 @@ module.exports = {
     'tests/fixtures/',
   ],
   coverageReporters: ['lcov', 'text-summary'],
+  globals: {
+    'vue-jest': {
+      pug: {
+        doctype: 'html',
+      },
+    },
+  },
 };

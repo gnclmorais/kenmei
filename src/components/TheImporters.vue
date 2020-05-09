@@ -5,7 +5,7 @@
     size="sm"
     @dialogClosed="$emit('closeDialog')"
   )
-    template(slot='body')
+    template(#body)
       base-action-completed(
         v-if="mangaDexImportInitiated || trackrMoeimportInitiated"
         header="Import started"

@@ -1,6 +1,6 @@
 <template lang="pug">
   base-modal(:visible="visible" size="lg" @dialogClosed="$emit('dialogClosed')")
-    template(slot='body')
+    template(#body)
       .warning-icon
         svg.h-6.w-6.text-red-600.stroke-current(fill='none' viewbox='0 0 24 24')
           path(
@@ -17,7 +17,7 @@
             | Some entries have multiple sites being tracked.
             | If you want to delete them all, please proceed. Otherwise,
             | use the edit button to switch to a different source.
-    template(slot='actions')
+    template(#actions)
       span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
         base-button(type="danger" @click="$emit('confirmDeletion')")
           | Delete

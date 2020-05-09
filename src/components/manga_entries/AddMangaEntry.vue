@@ -5,7 +5,7 @@
     size="sm"
     @dialogClosed="closeModal()"
   )
-    template(slot='body')
+    template(#body)
       .flex.flex-col.w-full
         .mt-3.text-center.sm_mt-0.sm_text-left.w-full
           label.block.text-sm.font-medium.leading-5.text-gray-700(for='url')
@@ -32,7 +32,7 @@
                 :label="status.name"
                 :value="status.enum"
               )
-    template(slot='actions')
+    template(#actions)
       span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
         base-button(
           ref="addMangaButton"
