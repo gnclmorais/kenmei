@@ -5,9 +5,6 @@ import AddMangaEntry from '@/components/manga_entries/AddMangaEntry.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
 
-import mangaEntryFactory from '../../factories/mangaEntry';
-import mangaListFactory from '../../factories/mangaList';
-
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
@@ -16,7 +13,7 @@ describe('AddMangaEntry.vue', () => {
   let store;
   let addMangaEntry;
 
-  const mangaList = mangaListFactory.build();
+  const mangaList = factories.list.build();
 
   beforeEach(() => {
     store = new Vuex.Store({
@@ -65,7 +62,7 @@ describe('AddMangaEntry.vue', () => {
 
     describe('when no manga sources are tracked', () => {
       it('adds new Manga entry to the list', async () => {
-        const mangaEntry = mangaEntryFactory.build();
+        const mangaEntry = factories.entry.build();
 
         addMangaEntrySpy.mockResolvedValue({ data: mangaEntry });
 
@@ -80,10 +77,10 @@ describe('AddMangaEntry.vue', () => {
 
     describe('when other manga source is tracked', () => {
       it('replaces currently tracked manga entry with the new one', async () => {
-        const oldEntry = mangaEntryFactory.build();
+        const oldEntry = factories.entry.build();
         store.state.lists.entries = [oldEntry];
 
-        const newMangaEntry = mangaEntryFactory.build({
+        const newMangaEntry = factories.entry.build({
           id: 2,
           manga_source_id: 2,
           manga_series_id: oldEntry.manga_series_id,

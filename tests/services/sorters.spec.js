@@ -1,14 +1,12 @@
 import { unread, sortBy } from '@/services/sorters';
 
-import mangaEntryFactory from '../factories/mangaEntry';
-
 describe('Sorters', () => {
   let entry1;
   let entry2;
   let entry3;
 
   beforeEach(() => {
-    entry1 = mangaEntryFactory.build(
+    entry1 = factories.entry.build(
       {
         attributes: {
           title: 'a',
@@ -16,13 +14,9 @@ describe('Sorters', () => {
           last_chapter_available: '2',
           last_released_at: '2019-01-10T00:00:00.000Z',
         },
-        links: {
-          last_chapter_read_url: 'example.url/manga/1/chapter/1',
-          last_chapter_available_url: 'example.url/manga/1/chapter/2',
-        },
       }
     );
-    entry2 = mangaEntryFactory.build(
+    entry2 = factories.entry.build(
       {
         attributes: {
           title: 'b',
@@ -30,13 +24,9 @@ describe('Sorters', () => {
           last_chapter_available: '4',
           last_released_at: '2019-01-01T00:00:00.000Z',
         },
-        links: {
-          last_chapter_read_url: 'example.url/manga/1/chapter/1',
-          last_chapter_available_url: 'example.url/manga/1/chapter/2',
-        },
       }
     );
-    entry3 = mangaEntryFactory.build(
+    entry3 = factories.entry.build(
       {
         attributes: {
           title: 'C',
@@ -44,17 +34,13 @@ describe('Sorters', () => {
           last_chapter_available: '5',
           last_released_at: null,
         },
-        links: {
-          last_chapter_read_url: 'example.url/manga/1/chapter/1',
-          last_chapter_available_url: 'example.url/manga/1/chapter/2',
-        },
       }
     );
   });
   describe('unread', () => {
     describe('when last chapter availiable is different than last read', () => {
       it('returns true', () => {
-        const entry = mangaEntryFactory.build(
+        const entry = factories.entry.build(
           {
             links: {
               last_chapter_read_url: 'example.url/manga/1/chapter/4',
@@ -68,7 +54,7 @@ describe('Sorters', () => {
     });
     describe('when last read null and last released chapter availiable', () => {
       it('returns true', () => {
-        const entry = mangaEntryFactory.build(
+        const entry = factories.entry.build(
           {
             links: {
               last_chapter_read_url: null,
@@ -82,7 +68,7 @@ describe('Sorters', () => {
     });
     describe('when last available is null', () => {
       it('returns false', () => {
-        const entry = mangaEntryFactory.build(
+        const entry = factories.entry.build(
           {
             links: {
               last_chapter_read_url: 'example.url/manga/1/chapter/5',

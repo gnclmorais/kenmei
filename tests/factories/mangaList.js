@@ -1,17 +1,18 @@
-import { Factory } from 'rosie';
+import { Factory } from 'fishery';
 
-export default new Factory()
-  .attr('id', '1')
-  .attr('type', 'manga_list')
-  .attr('attributes', {
-    id: 1,
+export default Factory.define(({ sequence }) => ({
+  id: '1',
+  type: 'manga_list',
+  attributes: {
+    id: sequence,
     name: 'Reading',
-  })
-  .attr('relationships', {
+  },
+  relationships: {
     manga_entries: {
       data: {
         id: '1',
         type: 'manga_entry',
       },
     },
-  });
+  },
+}));

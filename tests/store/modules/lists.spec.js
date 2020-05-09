@@ -3,19 +3,16 @@ import flushPromises from 'flush-promises';
 import { Message } from 'element-ui';
 import lists from '@/store/modules/lists';
 
-import mangaEntryFactory from '../../factories/mangaEntry';
-import mangaListFactory from '../../factories/mangaList';
-
 describe('lists', () => {
   describe('getters', () => {
     describe('getEntriesByListIDs', () => {
       it('returns entries based on a list id', () => {
         const listIDs = ['1'];
-        const expectedReturn = mangaEntryFactory.build({ manga_list_id: '1' });
+        const expectedReturn = factories.entry.build({ manga_list_id: '1' });
         const state = {
           entries: [
             expectedReturn,
-            mangaEntryFactory.build({ manga_list_id: 2 }),
+            factories.entry.build({ manga_list_id: 2 }),
           ],
         };
 
@@ -27,9 +24,9 @@ describe('lists', () => {
 
     describe('findEntryFromIDs', () => {
       it('returns first found entry based on entry IDs being passed', () => {
-        const entry = mangaEntryFactory.build();
+        const entry = factories.entry.build();
         const state = {
-          entries: [entry, mangaEntryFactory.build()],
+          entries: [entry, factories.entry.build()],
         };
 
         const findEntryFromIDs = lists.getters.findEntryFromIDs(state);
@@ -40,7 +37,7 @@ describe('lists', () => {
 
     describe('findListByID', () => {
       it('returns list based on list ID provided', () => {
-        const list  = mangaListFactory.build({ id: 2 });
+        const list  = factories.list.build({ id: 2 });
         const state = { lists: [list] };
 
         const findListByID = lists.getters.findListByID(state);
@@ -53,7 +50,7 @@ describe('lists', () => {
   describe('mutations', () => {
     describe('setLists', () => {
       it('sets lists state', () => {
-        const newLists = mangaListFactory.buildList(1);
+        const newLists = factories.list.buildList(1);
         const state = { lists: [] };
 
         lists.mutations.setLists(state, newLists);
@@ -64,7 +61,7 @@ describe('lists', () => {
 
     describe('setEntries', () => {
       it('sets entries state', () => {
-        const newEntries = mangaEntryFactory.buildList(1);
+        const newEntries = factories.entry.buildList(1);
         const state = { entries: [] };
 
         lists.mutations.setEntries(state, newEntries);
@@ -75,8 +72,8 @@ describe('lists', () => {
 
     describe('addEntry', () => {
       it('adds a new manga entry to state', () => {
-        const newEntry = mangaEntryFactory.build({ id: 2 });
-        const state = { entries: mangaEntryFactory.buildList(1) };
+        const newEntry = factories.entry.build({ id: 2 });
+        const state = { entries: factories.entry.buildList(1) };
 
         lists.mutations.addEntry(state, newEntry);
 
@@ -86,16 +83,16 @@ describe('lists', () => {
 
     describe('updateEntry', () => {
       it('updates existing manga entry with the new state', () => {
-        let entryToUpdate = mangaEntryFactory.build(
+        let entryToUpdate = factories.entry.build(
           { id: 1, attributes: { title: 'Manga Title' } }
         );
-        let entry = mangaEntryFactory.build(
+        let entry = factories.entry.build(
           { id: 2, attributes: { title: 'Manga Title' } }
         );
 
         const state = { entries: [entryToUpdate, entry] };
 
-        const updatedEntry = mangaEntryFactory.build(
+        const updatedEntry = factories.entry.build(
           { id: 1, attributes: { title: 'Updated Title' } }
         );
 
@@ -111,13 +108,13 @@ describe('lists', () => {
 
     describe('replaceEntry', () => {
       it('replaces existing manga entry with the one passed', () => {
-        const currentEntry = mangaEntryFactory.build(
+        const currentEntry = factories.entry.build(
           { id: 1, attributes: { title: 'Manga Title' } }
         );
 
         const state = { entries: [currentEntry] };
 
-        const newEntry = mangaEntryFactory.build(
+        const newEntry = factories.entry.build(
           { id: 3, attributes: { title: 'Updated Title' } }
         );
 
@@ -130,12 +127,12 @@ describe('lists', () => {
 
     describe('removeEntries', () => {
       it('removes a manga entry', () => {
-        const entryToStay = mangaEntryFactory.build({ id: '1' });
+        const entryToStay = factories.entry.build({ id: '1' });
         const state = {
           entries: [
             entryToStay,
-            mangaEntryFactory.build({ id: '2' }),
-            mangaEntryFactory.build({ id: '3' }),
+            factories.entry.build({ id: '2' }),
+            factories.entry.build({ id: '3' }),
           ],
         };
 
@@ -170,8 +167,8 @@ describe('lists', () => {
     describe('getLists', () => {
       it('retrieves lists from the api', async () => {
         const axiosSpy     = jest.spyOn(axios, 'get');
-        const initLists    = mangaListFactory.buildList(1);
-        const entries      = mangaEntryFactory.buildList(1);
+        const initLists    = factories.list.buildList(1);
+        const entries      = factories.entry.buildList(1);
         const mockResponse = { data: initLists, included: entries };
 
         axiosSpy.mockResolvedValue({ status: 200, data: mockResponse });
@@ -208,7 +205,7 @@ describe('lists', () => {
     describe('getEntries', () => {
       it('retrieves manga entries from the api', async () => {
         const axiosSpy = jest.spyOn(axios, 'get');
-        const entries  = mangaEntryFactory.buildList(1);
+        const entries  = factories.entry.buildList(1);
 
         axiosSpy.mockResolvedValue({ status: 200, data: { data: entries } });
 

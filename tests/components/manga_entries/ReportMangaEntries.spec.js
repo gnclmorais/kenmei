@@ -3,8 +3,6 @@ import flushPromises from 'flush-promises';
 import ReportMangaEntries from '@/components/manga_entries/ReportMangaEntries.vue';
 import * as mangaEntriesErrors from '@/services/endpoints/MangaEntriesErrors';
 
-import mangaEntryFactory from '../../factories/mangaEntry';
-
 describe('ReportMangaEntries.vue', () => {
   let reportMangaEntries;
   let postMangaEntriesErrorsMock;
@@ -17,7 +15,7 @@ describe('ReportMangaEntries.vue', () => {
         };
       },
       propsData: {
-        selectedEntries: [mangaEntryFactory.build({ id: 1 })],
+        selectedEntries: [factories.entry.build({ id: 1 })],
       },
     });
   });
@@ -41,7 +39,7 @@ describe('ReportMangaEntries.vue', () => {
     expect(button.attributes('disabled')).toBeTruthy();
 
     reportMangaEntries.setProps({
-      selectedEntries: mangaEntryFactory.buildList(2),
+      selectedEntries: factories.entry.buildList(2),
     });
 
     await nextTick();

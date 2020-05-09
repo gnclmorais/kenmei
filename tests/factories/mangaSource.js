@@ -1,6 +1,7 @@
-import { Factory } from 'rosie';
+import { Factory } from 'fishery';
 
-export default new Factory()
-  .sequence('id')
-  .attr('manga_series_id', 1)
-  .attr('name', 'MangaDex');
+export default Factory.define(({ sequence }) => ({
+  id: sequence,
+  manga_series_id: 1,
+  name: 'MangaDex',
+}));

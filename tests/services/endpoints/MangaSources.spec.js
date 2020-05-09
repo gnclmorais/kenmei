@@ -1,8 +1,6 @@
 import axios from 'axios';
 import * as resource from '@/services/endpoints/MangaSources';
 
-import mangaSourceFactory from '../../factories/mangaSource';
-
 describe('MangaSources', () => {
   afterEach(() => {
     jest.restoreAllMocks();
@@ -11,7 +9,7 @@ describe('MangaSources', () => {
   describe('getMangaSources()', () => {
     it('makes a request to the resource and returns data', async () => {
       const getMangaSourcesSpy = jest.spyOn(axios, 'get');
-      const data = mangaSourceFactory.build();
+      const data = factories.source.build();
 
       getMangaSourcesSpy.mockResolvedValue({ status: 200, data });
 
