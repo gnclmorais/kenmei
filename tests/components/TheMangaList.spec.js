@@ -52,9 +52,7 @@ describe('TheMangaList.vue', () => {
       const entry1 = factories.entry.build({ id: '1' });
       const entry2 = factories.entry.build({ id: '2', attributes: { status: 4 } });
 
-      mangaList.setProps({ tableData: [entry1, entry2] });
-
-      await nextTick();
+      await mangaList.setProps({ tableData: [entry1, entry2] });
 
       const rows = mangaList.findAll('.el-table__row');
 
@@ -156,23 +154,19 @@ describe('TheMangaList.vue', () => {
         attributes: { title: 'Manga Title', last_released_at: null },
       });
 
-      mangaList.setProps({ tableData: [entry] });
-
-      await flushPromises();
+      await mangaList.setProps({ tableData: [entry] });
 
       expect(mangaList.text()).toContain('Unknown');
     });
 
     it('Latest Chapter column shows no chapters', async () => {
-      mangaList.setProps({
+      await mangaList.setProps({
         tableData: [
           factories.entry.build(
             { links: { last_chapter_available_url: null } }
           ),
         ],
       });
-
-      await flushPromises();
 
       expect(mangaList.text()).toContain('No chapters');
     });
@@ -184,9 +178,7 @@ describe('TheMangaList.vue', () => {
         attributes: { title: '&Uuml;bel Blatt' },
       });
 
-      mangaList.setProps({ tableData: [entry] });
-
-      await flushPromises();
+      await mangaList.setProps({ tableData: [entry] });
 
       expect(mangaList.find('.el-link--inner').text()).toContain('Übel Blatt');
     });
@@ -200,9 +192,7 @@ describe('TheMangaList.vue', () => {
         manga_series_id: 1,
       });
 
-      mangaList.setProps({ tableData: [newMangaEntry] });
-
-      await flushPromises();
+      await mangaList.setProps({ tableData: [newMangaEntry] });
 
       expect(mangaList.text()).toContain('2 sites tracked');
     });

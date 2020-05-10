@@ -151,7 +151,7 @@ describe('ResetPassword.vue', () => {
     });
 
     it('tests that passwords match each other', async () => {
-      resetPassword.setData({
+      await resetPassword.setData({
         tokenValid: true,
         user: {
           password: 'password',
@@ -159,26 +159,20 @@ describe('ResetPassword.vue', () => {
         },
       });
 
-      await nextTick();
-
-      resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
-
-      await nextTick();
+      await resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
 
       expect(resetPassword.text()).toContain('Passwords do not match');
     });
 
     describe('with valid params', () => {
       it('updates the password, sets current user and redirects to manga list', async () => {
-        resetPassword.setData({
+        await resetPassword.setData({
           tokenValid: true,
           user: {
             password: 'password',
             password_confirmation: 'password',
           },
         });
-
-        await nextTick();
 
         const user = { user_id: 1, email: 'test1@example.com' };
 
@@ -197,15 +191,13 @@ describe('ResetPassword.vue', () => {
 
     describe('with invalid params', () => {
       it('shows validation errors', async () => {
-        resetPassword.setData({
+        await resetPassword.setData({
           tokenValid: true,
           user: {
             password: 'password',
             password_confirmation: 'password',
           },
         });
-
-        await nextTick();
 
         const errorMessageSpy = jest.spyOn(Message, 'error');
 

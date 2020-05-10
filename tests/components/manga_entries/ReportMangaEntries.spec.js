@@ -23,26 +23,21 @@ describe('ReportMangaEntries.vue', () => {
   it('shows correct helper text depending on issue type', async () => {
     expect(reportMangaEntries.text()).toContain('outdated or incorrect');
 
-    reportMangaEntries.setData({ currentIssue: 1 });
-
-    await nextTick();
+    await reportMangaEntries.setData({ currentIssue: 1 });
 
     expect(reportMangaEntries.text()).toContain('manga titles are duplicated');
   });
 
   it('disables submit button if only one entry selected for duplicated report', async () => {
     const button = reportMangaEntries.find({ ref: 'reportEntriesButton' });
-    reportMangaEntries.setData({ currentIssue: 1 });
 
-    await nextTick();
+    await reportMangaEntries.setData({ currentIssue: 1 });
 
     expect(button.attributes('disabled')).toBeTruthy();
 
-    reportMangaEntries.setProps({
+    await reportMangaEntries.setProps({
       selectedEntries: factories.entry.buildList(2),
     });
-
-    await nextTick();
 
     expect(button.attributes('disabled')).toBeFalsy();
   });

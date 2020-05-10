@@ -76,9 +76,7 @@ describe('TheSignUp.vue', () => {
 
     describe(':user - is invalid', () => {
       it('shows validation errors if form is invalid', async () => {
-        signUp.find({ ref: 'signUpSubmit' }).trigger('click');
-
-        await nextTick();
+        await signUp.find({ ref: 'signUpSubmit' }).trigger('click');
 
         expect(signUp.text()).toContain("Email can't be blank");
       });
@@ -104,7 +102,7 @@ describe('TheSignUp.vue', () => {
       });
 
       it('tests that passwords match each other', async () => {
-        signUp.setData({
+        await signUp.setData({
           user: {
             email: 'text@example.com',
             password: 'pass',
@@ -112,11 +110,7 @@ describe('TheSignUp.vue', () => {
           },
         });
 
-        await nextTick();
-
-        signUp.find({ ref: 'signUpSubmit' }).trigger('click');
-
-        await nextTick();
+        await signUp.find({ ref: 'signUpSubmit' }).trigger('click');
 
         expect(signUp.text()).toContain('Passwords do not match');
       });
