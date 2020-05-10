@@ -10,10 +10,9 @@
         )
       header
         base-nav-light
-      .flex-1.overflow-x-hidden
-        main.min-h-45
-          transition(name="slide-left" mode="out-in")
-            router-view
+      .flex-1.overflow-x-hidden.min-h-45
+        transition(name="slide-left" mode="out-in")
+          router-view
       base-footer.flex-shrink-0
 </template>
 
