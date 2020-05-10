@@ -9,17 +9,14 @@
       .flex.flex-col.w-full
         .mt-3.text-center.sm_mt-0.sm_text-left.w-full
           label.block.text-sm.leading-5.font-medium.text-gray-700
-            | List Name
+            | Status
           .mt-1.relative.rounded-md.shadow-sm.w-auto
-            el-select.rounded.w-full.mt-3(
-              v-model="listID"
-              placeholder="Select new list"
-            )
+            el-select.rounded.w-full.mt-3(v-model="selectedStatus")
               el-option(
-                v-for="list in lists"
-                :key="list.id"
-                :label="list.attributes.name"
-                :value="list.id"
+                v-for="status in statuses"
+                :key="status.enum"
+                :label="status.name"
+                :value="status.enum"
               )
         .mt-5.text-center.sm_text-left.w-full(v-if="!isBulkUpdate")
           label.block.text-sm.leading-5.font-medium.text-gray-700
@@ -73,7 +70,7 @@
     },
     data() {
       return {
-        listID: null,
+        selectedStatus: 1,
         mangaSourceID: null,
         availableSources: [],
         loadingSources: false,
@@ -82,7 +79,7 @@
     },
     computed: {
       ...mapState('lists', [
-        'lists',
+        'statuses',
       ]),
       selectedEntry() {
         return this.selectedEntries[0];
@@ -96,12 +93,9 @@
     },
     watch: {
       selectedEntries(entries, oldEntries) {
-        if (entries.length > 0 && entries !== oldEntries) {
-          // TODO: Remove this when we move to filters
-          // TODO: Remove toString() when list serializer returns an int
-          this.listID = this.selectedEntry.manga_list_id.toString();
-
-          if (!this.isBulkUpdate) { this.loadAvailableSources(); }
+        if (entries.length && entries !== oldEntries && !this.isBulkUpdate) {
+          this.loadAvailableSources();
+          this.selectedStatus = this.selectedEntry.attributes.status;
         }
       },
     },
@@ -133,7 +127,7 @@
       },
       async updateMangaEntries() {
         this.loading = true;
-        const params  = { manga_list_id: this.listID };
+        const params  = { status: this.selectedStatus };
 
         if (!this.isBulkUpdate) { params.manga_source_id = this.mangaSourceID; }
 

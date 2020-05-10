@@ -36,13 +36,13 @@
               | {{ scope.row.attributes.tracked_entries.length }} sites tracked
       el-table-column(
         prop="attributes.status"
-        label="Manga List"
+        label="Status"
         width="150"
         align="center"
       )
         template(slot-scope="scope")
           base-badge(
-            :text="entryListName(scope.row)"
+            :text="entryStatusName(scope.row)"
             :type="entryType(scope.row)"
           )
       el-table-column(
@@ -119,7 +119,7 @@
 </template>
 
 <script>
-  import { mapState, mapGetters, mapMutations } from 'vuex';
+  import { mapState, mapMutations } from 'vuex';
   import {
     Table, TableColumn, Link, Button, Message, Pagination,
   } from 'element-ui';
@@ -163,10 +163,8 @@
     },
     computed: {
       ...mapState('lists', [
+        'statuses',
         'listsLoading',
-      ]),
-      ...mapGetters('lists', [
-        'findListByID',
       ]),
       currentPageEntries() {
         const page = this.currentPage - 1;
@@ -186,13 +184,15 @@
       ...mapMutations('lists', [
         'updateEntry',
       ]),
-      entryListName(entry) {
-        return this.findListByID(entry.manga_list_id.toString()).attributes.name;
+      entryStatusName(e) {
+        return this.statuses.find((s) => s.enum === e.attributes.status).name;
       },
       entryType(entry) {
         const { status } = entry.attributes;
 
-        return { 1: 'success', 2: 'warning', 5: 'danger' }[status];
+        return {
+          1: 'success', 2: 'warning', 3: 'warning-light', 5: 'danger'
+        }[status];
       },
       async setLastRead(entry) {
         this.entryUpdated = entry;
