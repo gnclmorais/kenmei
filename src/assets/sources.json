@@ -53,10 +53,10 @@
     "logo": "deathtolls_logo.jpg"
   },
   {
-    "name": "One Shot Scans",
-    "url": "https://oneshotscans.com/",
-    "status": "Down",
-    "logo": "one_shot_scans_logo.jpg"
+    "name": "KKJ Scans",
+    "url": "https://kkjscans.co/",
+    "status": "In Development",
+    "logo": "kkj_scans_logo.jpg"
   },
   {
     "name": "Reaper Scans",
@@ -87,6 +87,12 @@
     "url": "http://www.world-three.org/",
     "status": "In Development",
     "logo": "world_three_logo.jpg"
+  },
+  {
+    "name": "One Shot Scans",
+    "url": "https://oneshotscans.com/",
+    "status": "Down",
+    "logo": "one_shot_scans_logo.jpg"
   },
   {
     "name": "WebToon",
