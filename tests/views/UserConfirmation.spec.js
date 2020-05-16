@@ -71,7 +71,7 @@ describe('UserConfirmation.vue', () => {
 
         expect(router.currentRoute.name).toBe('manga-list');
         expect(mutations.setCurrentUser).toHaveBeenCalledWith(
-          { currentUser: null }, user
+          { currentUser: null, dissmissedBannerID: null }, user
         );
       });
     });

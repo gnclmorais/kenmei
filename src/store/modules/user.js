@@ -3,6 +3,7 @@ import { secure, plain } from '@/modules/axios';
 
 const state = {
   currentUser: null,
+  dissmissedBannerID: null,
 };
 
 const getters = {
@@ -48,6 +49,9 @@ const actions = {
 const mutations = {
   setCurrentUser(state, data) {
     state.currentUser = data;
+  },
+  dismissUpdateBanner(state, data) {
+    state.dissmissedBannerID = data;
   },
 };
 
