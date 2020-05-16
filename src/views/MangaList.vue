@@ -230,7 +230,7 @@
       this.setListsLoading(false);
     },
     mounted() {
-      VueScrollTo.scrollTo('header');
+      VueScrollTo.scrollTo('#home');
     },
     methods: {
       ...mapActions('lists', [

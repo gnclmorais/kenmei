@@ -39,7 +39,7 @@
       };
     },
     mounted() {
-      VueScrollTo.scrollTo('header');
+      VueScrollTo.scrollTo('#home');
     },
     methods: {
       sourceStatusColour(status) {
