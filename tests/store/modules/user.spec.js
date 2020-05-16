@@ -18,11 +18,24 @@ describe('user', () => {
     describe('setCurrentUser', () => {
       it('sets current user state', () => {
         const newUser = { user_id: 1 };
-        const state = { currentUser: null };
+        const state = { currentUser: null, dissmissedBannerID: null };
 
         user.mutations.setCurrentUser(state, newUser);
 
-        expect(state).toEqual({ currentUser: newUser });
+        expect(state).toEqual({
+          currentUser: newUser,
+          dissmissedBannerID: null,
+        });
+      });
+    });
+
+    describe('dismissUpdateBanner', () => {
+      it('sets the id for the banner to be dismissed', () => {
+        const state = { currentUser: null, dissmissedBannerID: null };
+
+        user.mutations.dismissUpdateBanner(state, 1);
+
+        expect(state).toEqual({ currentUser: null, dissmissedBannerID: 1 });
       });
     });
   });

@@ -2,18 +2,6 @@
   .flex.flex-col.items-center
     .flex.flex-col.w-full.max-w-7xl.py-6
       .mx-5.mb-5.max-sm_mx-2
-        a.no-underline(
-          href="https://news.kenmei.co/monthly-updates/2020/april"
-          target="_blank"
-        )
-          el-alert.cursor-pointer(
-            title="April Progress Update"
-            type="info"
-            :description="alertMessage"
-            :closable="false"
-            show-icon
-          )
-      .mx-5.mb-5.max-sm_mx-2
         el-select.ml-3.sm_shadow-md.rounded.float-right.w-40(
           v-model="selectedStatus"
           placeholder="Filter by status"
@@ -137,7 +125,7 @@
     mapActions, mapState, mapMutations, mapGetters,
   } from 'vuex';
   import {
-    Message, Button, Input, Select, Option, Alert,
+    Message, Button, Input, Select, Option,
   } from 'element-ui';
 
   import Importers from '@/components/TheImporters';
@@ -161,7 +149,6 @@
       'el-input': Input,
       'el-select': Select,
       'el-option': Option,
-      'el-alert': Alert,
     },
     data() {
       return {
@@ -175,10 +162,6 @@
         editDialogVisible: false,
         deleteDialogVisible: false,
         reportDialogVisible: false,
-        alertMessage: `
-          There is a new update format in town - monthly progress reports.
-          Click to find out more.
-        `,
       };
     },
     computed: {
@@ -247,7 +230,7 @@
       this.setListsLoading(false);
     },
     mounted() {
-      VueScrollTo.scrollTo('header');
+      VueScrollTo.scrollTo('#home');
     },
     methods: {
       ...mapActions('lists', [

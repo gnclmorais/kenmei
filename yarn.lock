@@ -11519,6 +11519,11 @@ vue-scrollto@^2.18.1:
   dependencies:
     bezier-easing "2.1.0"
 
+vue-slide-toggle@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/vue-slide-toggle/-/vue-slide-toggle-1.1.1.tgz#a7949aeb3faa470ccf427bfa4920e45daf138953"
+  integrity sha512-RFDnoE23nV0uutLPtYcNqQMNjR01a97uy31WuLDyu4KX5z2NYAYgxe3S0G+ATtctFt5ce5U2A+/GE6BBwEvgfA==
+
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"
