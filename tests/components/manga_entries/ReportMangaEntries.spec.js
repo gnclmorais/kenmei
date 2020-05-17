@@ -33,13 +33,13 @@ describe('ReportMangaEntries.vue', () => {
 
     await reportMangaEntries.setData({ currentIssue: 1 });
 
-    expect(button.attributes('disabled')).toBeTruthy();
+    expect(button.element).toHaveAttribute('disabled');
 
     await reportMangaEntries.setProps({
       selectedEntries: factories.entry.buildList(2),
     });
 
-    expect(button.attributes('disabled')).toBeFalsy();
+    expect(button.element).not.toHaveAttribute('disabled');
   });
 
   describe('when reporting issues', () => {
