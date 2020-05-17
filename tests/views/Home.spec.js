@@ -53,9 +53,7 @@ describe('Home.vue', () => {
 
       home.setData({ updateBanner: { id: 1 } });
 
-      expect(home.find({ ref: 'banner' }).attributes('style')).toContain(
-        'height: 0px;'
-      );
+      expect(home.find({ ref: 'banner' }).element).toHaveStyle('height: 0px');
     });
   });
 });
