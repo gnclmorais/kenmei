@@ -53,25 +53,25 @@ describe('BaseModal.vue', () => {
       it('xs - sets body to be extra small', async () => {
         await baseModal.setProps({ size: 'xs' });
 
-        expect(body.classes()).toContain('sm_max-w-xs');
+        expect(body.element).toHaveClass('sm_max-w-xs');
       });
 
       it('sm - sets body to be small', async () => {
         await baseModal.setProps({ size: 'sm' });
 
-        expect(body.classes()).toContain('sm_max-w-sm');
+        expect(body.element).toHaveClass('sm_max-w-sm');
       });
 
       it('md - sets body to be medium', async () => {
         await baseModal.setProps({ size: 'md' });
 
-        expect(body.classes()).toContain('sm_max-w-md');
+        expect(body.element).toHaveClass('sm_max-w-md');
       });
 
       it('lg - sets body to be large', async () => {
         await baseModal.setProps({ size: 'lg' });
 
-        expect(body.classes()).toContain('sm_max-w-lg');
+        expect(body.element).toHaveClass('sm_max-w-lg');
       });
     });
   });

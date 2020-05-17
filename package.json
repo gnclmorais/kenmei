@@ -36,6 +36,7 @@
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.7.0",
     "@vue/cli-plugin-babel": "~4.2.3",
     "@vue/cli-plugin-eslint": "~4.2.3",
     "@vue/cli-plugin-unit-jest": "~4.2.3",
