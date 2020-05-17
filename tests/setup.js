@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import fs from 'fs';
 import path from 'path';
+import '@testing-library/jest-dom';
 import { factories } from './factories';
 
 // ===
