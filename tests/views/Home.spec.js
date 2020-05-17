@@ -37,7 +37,7 @@ describe('Home.vue', () => {
         stubs: ['router-link', 'router-view'],
       });
 
-      expect(home.find('base-banner-stub').isVisible()).toBeTruthy();
+      expect(home.find('base-banner-stub').element).toBeVisible();
     });
   });
 

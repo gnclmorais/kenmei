@@ -88,7 +88,7 @@ describe('MangaList.vue', () => {
     it('shows add manga entry modal', async () => {
       await mangaList.find({ ref: 'addMangaEntryModalButton' }).trigger('click');
 
-      expect(modal.isVisible()).toBeTruthy();
+      expect(modal.element).toBeVisible();
     });
 
     describe('@events', () => {
@@ -125,7 +125,7 @@ describe('MangaList.vue', () => {
     it('shows edit manga entries modal', async () => {
       await mangaList.find({ ref: 'editMangaEntriesButton' }).trigger('click');
 
-      expect(modal.isVisible()).toBeTruthy();
+      expect(modal.element).toBeVisible();
     });
 
     describe('@events', () => {
@@ -259,15 +259,15 @@ describe('MangaList.vue', () => {
       const editButton = mangaList.find({ ref: 'editMangaEntriesButton' });
       const reportButton = mangaList.find({ ref: 'reportMangaEntriesButton' });
 
-      expect(deleteButton.isVisible()).not.toBeTruthy();
-      expect(editButton.isVisible()).not.toBeTruthy();
-      expect(reportButton.isVisible()).not.toBeTruthy();
+      expect(deleteButton.element).not.toBeVisible();
+      expect(editButton.element).not.toBeVisible();
+      expect(reportButton.element).not.toBeVisible();
 
       await mangaList.find(TheMangaList).vm.$emit('seriesSelected', [entry1]);
 
-      expect(deleteButton.isVisible()).toBeTruthy();
-      expect(editButton.isVisible()).toBeTruthy();
-      expect(reportButton.isVisible()).toBeTruthy();
+      expect(deleteButton.element).toBeVisible();
+      expect(editButton.element).toBeVisible();
+      expect(reportButton.element).toBeVisible();
       expect(mangaList.vm.$data.selectedEntries).toContain(entry1);
     });
   });

@@ -125,13 +125,13 @@ describe('BaseNavLight.vue', () => {
           const profileDropdown = nav.find('.profile-dropdown');
           const menuDropdown    = nav.find('.menu-dropdown');
 
-          expect(profileDropdown.isVisible()).toBeTruthy();
-          expect(menuDropdown.isVisible()).toBeTruthy();
+          expect(profileDropdown.element).toBeVisible();
+          expect(menuDropdown.element).toBeVisible();
 
           await nav.find('.desktop-links').trigger('click');
 
-          expect(profileDropdown.isVisible()).toBeFalsy();
-          expect(menuDropdown.isVisible()).toBeFalsy();
+          expect(profileDropdown.element).not.toBeVisible();
+          expect(menuDropdown.element).not.toBeVisible();
         });
       });
     });
