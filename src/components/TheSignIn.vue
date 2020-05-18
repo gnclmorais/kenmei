@@ -22,7 +22,7 @@
         @keyup.enter.native='submitForm'
       )
     el-form-item.mb-0
-      el-checkbox(v-model="remembered") Remember Me (2 months)
+      el-checkbox(v-model="user.remember_me") Remember Me (2 months)
       base-button(ref='signInSubmit' @click='submitForm') Sign In
     .text-center
       el-link.mt-4(
@@ -61,8 +61,8 @@
         user: {
           email: '',
           password: '',
+          remember_me: false,
         },
-        remembered: false,
         rules: {
           email: [
             {
