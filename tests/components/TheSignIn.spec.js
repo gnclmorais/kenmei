@@ -46,16 +46,43 @@ describe('TheSignIn.vue', () => {
   });
 
   describe(':props', () => {
-    it.skip('delegates to store to sign in user if form is valid', async () => {
-      signIn.setData({ email: 'text@example.com', password: 'password' });
+    describe('when form is valid', () => {
+      it('delegates to store to sign in user', async () => {
+        const userData = {
+          email: 'text@example.com',
+          password: 'password',
+          remember_me: true,
+        };
+        const actions = { signIn: jest.fn() };
+        const store = new Vuex.Store({
+          modules: {
+            user: {
+              namespaced: true,
+              state: user.state,
+              actions,
+              getters: user.getters,
+            },
+          },
+        });
 
-      signIn.find({ ref: 'signInSubmit' }).trigger('click');
+        signIn = mount(TheSignIn, {
+          store,
+          localVue,
+          data() { return { user: userData }; },
+        });
+
+        signIn.find({ ref: 'signInSubmit' }).trigger('click');
+
+        expect(actions.signIn).toHaveBeenCalledWith(expect.anything(), userData);
+      });
     });
 
-    it('shows validation errors if form is invalid', async () => {
-      await signIn.find({ ref: 'signInSubmit' }).trigger('click');
+    describe('when form is invalid', () => {
+      it('shows validation errors', async () => {
+        await signIn.find({ ref: 'signInSubmit' }).trigger('click');
 
-      expect(signIn.text()).toContain("Password can't be blank");
+        expect(signIn.text()).toContain("Password can't be blank");
+      });
     });
   });
 });
