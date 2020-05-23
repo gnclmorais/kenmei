@@ -20,7 +20,6 @@
     "he": "^1.2.0",
     "jest-mock-axios": "^3.2.0",
     "lodash": "^4.17.15",
-    "p-limit": "^2.2.2",
     "pug-plain-loader": "^1.0.0",
     "qs": "^6.9.3",
     "v-click-outside": "^3.0.1",
