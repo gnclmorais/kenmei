@@ -3,7 +3,7 @@ import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
 import MangaList from '@/views/MangaList.vue';
 import TheMangaList from '@/components/TheMangaList.vue';
-import TheImporters from '@/components/TheImporters.vue';
+import BulkActions from '@/components/BulkActions.vue';
 import AddMangaEntry from '@/components/manga_entries/AddMangaEntry.vue';
 import EditMangaEntries from '@/components/manga_entries/EditMangaEntries.vue';
 import lists from '@/store/modules/lists';
@@ -123,7 +123,7 @@ describe('MangaList.vue', () => {
     });
 
     it('shows edit manga entries modal', async () => {
-      await mangaList.find({ ref: 'editMangaEntriesButton' }).trigger('click');
+      await mangaList.find(BulkActions).vm.$emit('edit');
 
       expect(modal.element).toBeVisible();
     });
@@ -248,26 +248,15 @@ describe('MangaList.vue', () => {
     let mangaList;
 
     beforeEach(() => {
-      mangaList = shallowMount(MangaList, {
-        store,
-        localVue,
-      });
+      mangaList = shallowMount(MangaList, { store, localVue });
     });
 
     it('@seriesSelected - toggles bulk actions and sets selected series', async () => {
-      const deleteButton = mangaList.find({ ref: 'removeSeriesButton' });
-      const editButton = mangaList.find({ ref: 'editMangaEntriesButton' });
-      const reportButton = mangaList.find({ ref: 'reportMangaEntriesButton' });
-
-      expect(deleteButton.element).not.toBeVisible();
-      expect(editButton.element).not.toBeVisible();
-      expect(reportButton.element).not.toBeVisible();
+      expect(mangaList.find('bulk-actions-stub').element).not.toBeVisible();
 
       await mangaList.find(TheMangaList).vm.$emit('seriesSelected', [entry1]);
 
-      expect(deleteButton.element).toBeVisible();
-      expect(editButton.element).toBeVisible();
-      expect(reportButton.element).toBeVisible();
+      expect(mangaList.find('bulk-actions-stub').element).toBeVisible();
       expect(mangaList.vm.$data.selectedEntries).toContain(entry1);
     });
   });
