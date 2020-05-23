@@ -29,13 +29,19 @@
             :value="list.id"
           )
       .mx-5.mb-5.max-sm_mx-2
-        .el-input.el-input--prefix.sm_shadow-md.rounded.float-right.w-64
-          input.el-input__inner(
-            placeholder="Input manga title"
-            v-model='debouncedSearchTerm'
-          )
-          span.el-input__prefix
-            i.el-input__icon.el-icon-search
+        .mt-3.text-center.sm_mt-0.sm_text-left.w-64.float-right
+          .mt-1.relative.rounded-md.shadow-sm
+            .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
+              svg.h-5.w-5.text-gray-400(fill='currentColor' viewbox='0 0 20 20')
+                path(
+                  fill-rule='evenodd'
+                  d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'
+                  clip-rule='evenodd'
+                )
+            input.form-input.block.w-full.pl-10.sm_text-sm.sm_leading-5(
+              v-model="debouncedSearchTerm"
+              placeholder='Input manga title'
+            )
       .mx-5.mb-5.max-sm_mx-2.max-sm_flex.max-sm_flex-col
         .bulk-actions.inline-block.max-sm_mb-5.max-sm_float-right
           el-button.sm_shadow(
