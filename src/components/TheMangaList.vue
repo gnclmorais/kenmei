@@ -109,7 +109,7 @@
             v-tippy
           )
     .flex.flex-row.justify-center(v-if="tableData.length > 0")
-      el-pagination.sm_shadow-lg.my-5.p-0(
+      el-pagination(
         layout="prev, pager, next"
         :page-size="50"
         :current-page.sync="currentPage"
@@ -231,6 +231,11 @@
 <style media="screen" lang="scss">
   .el-pagination {
     width: fit-content;
+    @apply my-5 p-0;
+
+    @screen sm {
+      @apply shadow-lg;
+    }
   }
   .btn-prev {
     @apply rounded-l;
