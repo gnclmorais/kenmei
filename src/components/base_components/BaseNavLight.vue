@@ -244,10 +244,6 @@
 
   .router-link-active.desktop-link {
     @apply border-blue-500 text-gray-900;
-
-    &:focus {
-      @apply outline-none border-blue-700;
-    }
   }
 
   .mobile-link {
