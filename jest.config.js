@@ -33,6 +33,7 @@ module.exports = {
   coveragePathIgnorePatterns: [
     '/node_modules/',
     'src/modules/',
+    'src/components/icons',
     'tests/factories/',
     'tests/fixtures/',
   ],
