@@ -6,6 +6,7 @@ import { Message } from 'element-ui';
 import TheSignUp from '@/components/TheSignUp.vue';
 
 import user from '@/store/modules/user';
+import * as resource from '@/services/endpoints/auth/registrations';
 
 const localVue = createLocalVue();
 
@@ -54,23 +55,17 @@ describe('TheSignUp.vue', () => {
         });
       });
 
-      it.skip('delegates to store to sign in user if form is valid', async () => {
-        signUp.find({ ref: 'signUpSubmit' }).trigger('click');
-      });
+      it('delegates to the endpoint service and shows confirmation message', async () => {
+        const createUserSpy = jest.spyOn(resource, 'create');
 
-      it('POSTs to registrations endpoint and show confirmation message', async () => {
-        const axiosSpy = jest.spyOn(axios, 'post');
-
-        axiosSpy.mockResolvedValue({ status: 200 });
+        createUserSpy.mockResolvedValue({ status: 200 });
 
         signUp.vm.signUp();
 
         await flushPromises();
 
-        expect(axiosSpy).toHaveBeenCalledWith(
-          '/api/v1/registrations/',
-          { user: signUp.vm.$data.user }
-        );
+        expect(createUserSpy).toHaveBeenCalledWith(signUp.vm.$data.user);
+        expect(signUp.text()).toContain('Signed up successfully');
       });
     });
 
@@ -82,7 +77,7 @@ describe('TheSignUp.vue', () => {
       });
 
       it('shows server-side errors if request failed', async () => {
-        const axiosSpy        = jest.spyOn(axios, 'post');
+        const createUserSpy   = jest.spyOn(resource, 'create');
         const errorMessageSpy = jest.spyOn(Message, 'error');
 
         const mockResponse = {
@@ -91,7 +86,7 @@ describe('TheSignUp.vue', () => {
           },
         };
 
-        axiosSpy.mockRejectedValue(mockResponse);
+        createUserSpy.mockResolvedValue({ status: 404, mockResponse });
 
         signUp.vm.signUp();
 
