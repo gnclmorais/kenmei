@@ -43,40 +43,12 @@
               placeholder='Input manga title'
             )
       .mx-5.mb-5.max-sm_mx-2.max-sm_flex.max-sm_flex-col
-        .bulk-actions.inline-block.max-sm_mb-5.max-sm_float-right
-          el-button.sm_shadow(
-            v-show="entriesSelected"
-            content="Delete"
-            ref="removeSeriesButton"
-            icon="el-icon-delete"
-            type="danger"
-            size="medium"
-            @click="deleteEntries"
-            circle
-            v-tippy
-          )
-          el-button.sm_shadow(
-            v-show="entriesSelected"
-            content="Edit"
-            ref="editMangaEntriesButton"
-            icon="el-icon-edit-outline"
-            type="info"
-            size="medium"
-            @click="editDialogVisible = true"
-            circle
-            v-tippy
-          )
-          el-button.sm_shadow(
-            v-show="entriesSelected"
-            content="Report manga issues"
-            ref="reportMangaEntriesButton"
-            icon="el-icon-document-delete"
-            type="warning"
-            size="medium"
-            @click="reportDialogVisible = true"
-            circle
-            v-tippy
-          )
+        bulk-actions.mb-3.sm_mb-0(
+          v-show="entriesSelected"
+          @delete="deleteEntries"
+          @edit="editDialogVisible = true"
+          @report="reportDialogVisible = true"
+        )
         .actions.inline-block.float-right.sm_flex.sm_flex-row-reverse
           span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
             base-button(
@@ -131,10 +103,11 @@
     mapActions, mapState, mapMutations, mapGetters,
   } from 'vuex';
   import {
-    Message, Button, Input, Select, Option,
+    Message, Input, Select, Option,
   } from 'element-ui';
 
   import Importers from '@/components/TheImporters';
+  import BulkActions from '@/components/BulkActions';
   import AddMangaEntry from '@/components/manga_entries/AddMangaEntry';
   import DeleteMangaEntries from '@/components/manga_entries/DeleteMangaEntries';
   import EditMangaEntries from '@/components/manga_entries/EditMangaEntries';
@@ -146,12 +119,12 @@
     name: 'MangaList',
     components: {
       Importers,
+      BulkActions,
       AddMangaEntry,
       EditMangaEntries,
       DeleteMangaEntries,
       ReportMangaEntries,
       TheMangaList,
-      'el-button': Button,
       'el-input': Input,
       'el-select': Select,
       'el-option': Option,
@@ -288,9 +261,3 @@
     },
   };
 </script>
-
-<style media="screen" lang="scss">
-  .el-button.float-right + .el-button.float-right {
-    @apply ml-0;
-  }
-</style>

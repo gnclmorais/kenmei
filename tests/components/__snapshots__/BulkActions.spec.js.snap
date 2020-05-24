@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BulkActions.vue renders renders bulk actions button group 1`] = `
+<transition-stub enterclass="opacity-0 transform translate-y-8" leavetoclass="opacity-0 transform translate-y-8" enteractiveclass="slide-transition" leaveactiveclass="slide-transition"><span class="relative z-0 inline-flex shadow-sm"><button class="group rounded-l-md"><trashicon-stub class="-ml-1 mr-2 h-5 w-5 text-gray-400 group-hover_text-red-400"></trashicon-stub><span class="group-hover_text-red-400">Delete</span></button><button class="group -ml-px">
+    <editicon-stub class="-ml-1 mr-2 h-5 w-5 text-gray-400 group-hover_text-gray-800"></editicon-stub><span class="group-hover_text-gray-800">Edit</span>
+  </button><button class="group -ml-px rounded-r-md">
+    <warningicon-stub class="-ml-1 mr-2 h-5 w-5 text-gray-400 group-hover_text-yellow-400"></warningicon-stub><span class="group-hover_text-yellow-400">Report</span>
+  </button></span></transition-stub>
+`;
