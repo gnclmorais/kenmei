@@ -58,7 +58,7 @@
     Form, FormItem, Input, Message, Divider, Link,
   } from 'element-ui';
 
-  import { plain } from '@/modules/axios';
+  import { create } from '@/services/endpoints/auth/registrations';
 
   export default {
     components: {
@@ -137,9 +137,7 @@
       async signUp() {
         this.$emit('loading', true);
 
-        const response = await plain
-          .post('/api/v1/registrations/', { user: this.user })
-          .catch((e) => e.response);
+        const response = await create(this.user);
 
         if (response.status === 200) {
           this.confirmationInitiated = true;
