@@ -61,13 +61,11 @@
 
   import { secure } from '@/modules/axios';
 
-  import ProgressBar from '@/components/ProgressBar';
   import { processList } from '@/services/importer';
   import { postTrackrMoe } from '@/services/endpoints/importers';
 
   export default {
     components: {
-      ProgressBar,
       'el-input': Input,
       'el-link': Link,
       'el-upload': Upload,
