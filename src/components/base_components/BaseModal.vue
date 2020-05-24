@@ -1,24 +1,10 @@
 <template lang="pug">
   transition(leave-active-class='duration-300')
     .modal(v-show="visible")
-      transition(
-        enter-active-class='ease-out duration-200'
-        enter-class='opacity-0'
-        enter-to-class='opacity-100'
-        leave-active-class='ease-in duration-200'
-        leave-class='opacity-100'
-        leave-to-class='opacity-0'
-      )
+      transition(name="overlay-fade")
         .fixed.inset-0.transition-opacity(ref="modalMask" v-show="visible")
           .absolute.inset-0.bg-gray-500.opacity-75
-      transition(
-        enter-active-class='ease-out duration-300'
-        enter-class='opacity-0 translate-y-4 sm_translate-y-0 sm_scale-95'
-        enter-to-class='opacity-100 translate-y-0 sm_scale-100'
-        leave-active-class='ease-in duration-200'
-        leave-class='opacity-100 translate-y-0 sm_scale-100'
-        leave-to-class='opacity-0 translate-y-4 sm_translate-y-0 sm_scale-95'
-      )
+      transition(name="modal-slide")
         .modal-body(v-show="visible" v-loading="loading" :class="classes")
           .bg-white.px-4.pt-5.pb-4.sm_p-6.sm_pb-4
             .sm_flex.sm_items-from
@@ -114,5 +100,50 @@
     @screen sm {
       @apply px-6 flex flex-row-reverse;
     }
+  }
+
+  .modal-slide-enter-active {
+    @apply ease-out duration-300;
+  }
+
+  .modal-slide-leave-active {
+    @apply ease-out duration-200;
+  }
+
+  .modal-slide-enter,
+  .modal-slide-leave-to {
+    @apply opacity-0 translate-y-4;
+
+    @screen sm {
+      @apply translate-y-0 scale-95;
+    }
+  }
+
+  .modal-slide-enter-to,
+  .modal-slide-leave {
+    @apply opacity-100 translate-y-0;
+
+    @screen sm {
+      @apply scale-100;
+    }
+  }
+
+  .overlay-fade-enter-active,
+  .overlay-fade-leave-active {
+    @apply ease-out duration-200;
+  }
+
+  .overlay-fade-leave-active {
+    @apply ease-out duration-200;
+  }
+
+  .overlay-fade-enter,
+  .overlay-fade-leave-to {
+    @apply opacity-0;
+  }
+
+  .overlay-fade-enter-to,
+  .overlay-fade-leave {
+    @apply opacity-100;
   }
 </style>
