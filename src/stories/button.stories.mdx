@@ -1,0 +1,22 @@
+import { Meta, Props, Story, Preview } from '@storybook/addon-docs/blocks';
+import { action } from "@storybook/addon-actions";
+import { linkTo } from '@storybook/addon-links'
+
+import BaseButton from '@/components/base_components/BaseButton.vue';
+
+<Meta title="MDX|Button" component={BaseButton} />
+
+# Button
+
+<Props of={BaseButton} />
+
+This is a simple button with some text in it.
+
+<Preview>
+  <Story name="With Text">
+    {{
+        components: { BaseButton },
+        template: '<base-button>Hello Button</base-button>'
+    }}
+  </Story>
+</Preview>
