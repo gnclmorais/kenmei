@@ -22,6 +22,9 @@ module.exports = {
       full: '100%',
     },
     extend: {
+      transitionDelay: {
+        0: '0ms',
+      },
       colors: {
         'el-green': '#67C23A',
         'el-green-light': '#85CE61',
