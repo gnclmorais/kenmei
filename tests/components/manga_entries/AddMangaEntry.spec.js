@@ -28,6 +28,26 @@ describe('AddMangaEntry.vue', () => {
     addMangaEntry = shallowMount(AddMangaEntry, { store, localVue });
   });
 
+  describe(':props', () => {
+    describe(':currentStatus', () => {
+      it('sets initial selectedStatus', async () => {
+        expect(addMangaEntry.vm.selectedStatus).toBe(1);
+
+        await addMangaEntry.setProps({ currentStatus: 2 });
+
+        expect(addMangaEntry.vm.selectedStatus).toBe(2);
+      });
+
+      it('sets selectedStatus as Reading if currentStatus is All', async () => {
+        expect(addMangaEntry.vm.selectedStatus).toBe(1);
+
+        await addMangaEntry.setProps({ currentStatus: -1 });
+
+        expect(addMangaEntry.vm.selectedStatus).toBe(1);
+      });
+    });
+  });
+
   describe('when adding new MangaDex entry', () => {
     let addMangaEntrySpy;
 

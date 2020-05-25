@@ -75,6 +75,7 @@
       add-manga-entry(
         ref='addMangaEntryModal'
         :visible="dialogVisible"
+        :currentStatus="selectedStatus"
         @dialogClosed='dialogVisible = false'
       )
       edit-manga-entries(

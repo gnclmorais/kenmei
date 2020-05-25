@@ -60,6 +60,10 @@
         type: Boolean,
         default: false,
       },
+      currentStatus: {
+        type: Number,
+        default: 1,
+      },
     },
     data() {
       return {
@@ -75,6 +79,11 @@
       ...mapGetters('lists', [
         'findEntryFromIDs',
       ]),
+    },
+    watch: {
+      currentStatus(status) {
+        this.selectedStatus = status === -1 ? 1 : status;
+      },
     },
     methods: {
       ...mapMutations('lists', [
