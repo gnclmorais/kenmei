@@ -132,20 +132,10 @@
       ]),
     },
     mounted() {
-      if (this.signedIn) {
-        document.addEventListener('click', (event) => {
-          event.stopPropagation();
-
-          const { profile } = this.$refs;
-
-          if (this.profileVisible && !profile.contains(event.target)) {
-            this.profileVisible = false;
-          }
-
-
-          if (this.menuVisible) { this.menuVisible = false; }
-        });
-      }
+      document.addEventListener('click', this.handleClickOutside);
+    },
+    destroyed() {
+      document.removeEventListener('click', this.handleClickOutside);
     },
     methods: {
       ...mapActions('user', [
@@ -154,6 +144,17 @@
       openSignOnWith(comp) {
         this.activeSignOnComponent = comp;
         this.signOnVisible = true;
+      },
+      handleClickOutside(event) {
+        event.stopPropagation();
+
+        const { profile } = this.$refs;
+
+        if (this.profileVisible && !profile.contains(event.target)) {
+          this.profileVisible = false;
+        }
+
+        if (this.menuVisible) { this.menuVisible = false; }
       },
     },
   };
