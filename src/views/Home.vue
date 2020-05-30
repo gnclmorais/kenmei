@@ -1,7 +1,7 @@
 <template lang="pug">
   #home.h-full
     landing-page(v-if="landing")
-    .min-h-full.flex.flex-col.bg-blue-300(v-else)
+    .min-h-full.flex.flex-col.bg-gray-50(v-else)
       vue-slide-toggle(ref="banner" :open="bannerVisible" :duration="500")
         base-banner(
           :text="updateBanner.message"
@@ -14,7 +14,7 @@
         main.min-h-45
           transition(name="slide-left" mode="out-in")
             router-view
-      base-footer(dark).flex-shrink-0
+      base-footer.flex-shrink-0
 </template>
 
 <script>

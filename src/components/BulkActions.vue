@@ -6,7 +6,7 @@
     leave-to-class='opacity-0 transform translate-y-8'
   )
     span.relative.z-0.inline-flex.shadow-sm
-      button.group(
+      button.w-full.flex.justify-center.group(
         v-for='(button, index) in buttons'
         @click="$emit(button.action)"
         :key="index"

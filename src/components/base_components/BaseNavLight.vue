@@ -1,5 +1,5 @@
 <template lang="pug">
-  nav.z-20.bg-white.shadow
+  nav.relative.z-20.bg-white.shadow
     .max-w-7xl.mx-auto.px-2.sm_px-6.lg_px-8
       .relative.flex.justify-between.h-16
         .absolute.inset-y-0.left-0.flex.items-center.sm_hidden
