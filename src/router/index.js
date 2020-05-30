@@ -3,10 +3,17 @@ import Router from 'vue-router';
 import { Message } from 'element-ui';
 import store from '@/store/index';
 
+import NotFound from '@/views/NotFound.vue';
+
 Vue.use(Router);
 
 export default new Router({
   routes: [
+    {
+      // Catch all 404 page
+      path: '*',
+      component: NotFound,
+    },
     {
       path: '/about',
       name: 'about',
