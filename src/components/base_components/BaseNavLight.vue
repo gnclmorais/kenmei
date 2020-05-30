@@ -150,8 +150,10 @@
         event.stopPropagation();
 
         const { profile } = this.$refs;
+        const isInternalLink = () => profile.contains(event.target)
+          && event.target.tagName === 'A';
 
-        if (this.profileVisible && !profile.contains(event.target)) {
+        if (this.profileVisible && (isInternalLink() || !profile.contains(event.target))) {
           this.profileVisible = false;
         }
 
