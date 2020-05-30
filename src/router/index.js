@@ -16,6 +16,10 @@ export default new Router({
       component: NotFound,
     },
     {
+      path: '/',
+      component: () => import(/* webpackChunkName: "manga_list" */ '@/views/MangaList.vue'),
+    },
+    {
       path: '/about',
       name: 'about',
       beforeEnter() { Message.info('Under development'); }

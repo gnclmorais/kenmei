@@ -60,7 +60,7 @@
       },
     },
     created() {
-      this.landing = window.location.hash === '#/';
+      this.landing = window.location.pathname === '/';
     },
     methods: {
       ...mapMutations('user', [
