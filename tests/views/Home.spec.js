@@ -9,6 +9,7 @@ localVue.use(Vuex);
 
 // To avoid missing directive Vue warnings
 localVue.directive('loading', true);
+localVue.directive('scroll-to', true);
 
 describe('Home.vue', () => {
   let store;
@@ -30,28 +31,34 @@ describe('Home.vue', () => {
   });
 
   describe('when dissmissedBannerID is null', () => {
-    it('shows banner', () => {
+    it('shows banner', async () => {
       const home = shallowMount(Home, {
         store,
         localVue,
         stubs: ['router-link', 'router-view'],
       });
 
+      await home.setData({ landing: false });
+
       expect(home.find('base-banner-stub').element).toBeVisible();
     });
   });
 
   describe('when dissmissedBannerID matches updateBanner ID', () => {
-    it('hides banner', () => {
+    it('hides banner', async () => {
       store.state.user.dissmissedBannerID = 1;
-
       const home = mount(Home, {
         store,
         localVue,
+        data() {
+          return {
+            landing: false,
+          };
+        },
         stubs: ['router-link', 'router-view'],
       });
 
-      home.setData({ updateBanner: { id: 1 } });
+      await home.setData({ updateBanner: { id: 1 }, landing: false });
 
       expect(home.find({ ref: 'banner' }).element).toHaveStyle('height: 0px');
     });

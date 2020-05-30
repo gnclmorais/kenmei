@@ -8,11 +8,16 @@ import NotFound from '@/views/NotFound.vue';
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       // Catch all 404 page
       path: '*',
       component: NotFound,
+    },
+    {
+      path: '/',
+      component: () => import(/* webpackChunkName: "manga_list" */ '@/views/MangaList.vue'),
     },
     {
       path: '/about',
