@@ -59,16 +59,16 @@
     "logo": "kkj_scans_logo.jpg"
   },
   {
+    "name": "Nonames Scans",
+    "url": "https://the-nonames.com/",
+    "status": "Supported",
+    "logo": "no_names_scans_logo.jpg"
+  },
+  {
     "name": "Reaper Scans",
     "url": "https://reaperscans.com/",
     "status": "In Development",
     "logo": "reaper_scans_logo.jpg"
-  },
-  {
-    "name": "Nonames Scans",
-    "url": "https://the-nonames.com/",
-    "status": "In Development",
-    "logo": "no_names_scans_logo.jpg"
   },
   {
     "name": "Silent Sky",
