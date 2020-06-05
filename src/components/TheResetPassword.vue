@@ -1,10 +1,5 @@
 <template lang="pug">
-  el-form(
-    ref='resetPasswordForm'
-    :rules='rules'
-    :model='user'
-    label-position='top'
-  )
+  .w-full
     template(v-if="resetInitiated")
       base-action-completed(
         header="Password reset completed"
@@ -13,20 +8,18 @@
         @completeAction="$emit('signOnFinished')"
       )
     template(v-else)
-      el-form-item.mb-6(prop='email')
-        p.leading-normal.text-gray-600.mb-3
-          | Enter your email address below
-          | and we'll send you a link to reset your password.
-        el-input(
-          placeholder='Email'
-          type='email'
-          v-model.trim='user.email'
-          @keyup.enter.native='submitForm'
-          prefix-icon="el-icon-message"
-        )
-      el-form-item.mb-0
-        base-button(ref='resetPasswordSubmit' @click='submitForm')
-          | Reset Password
+      base-form-input(
+        v-model.trim="$v.user.email.$model"
+        :validator="$v.user.email"
+        label="Email"
+        placeholder="you@example.com"
+        helperText="Enter your email address and we'll send you a link to reset your password."
+        @keyup.enter.native='resetPassword'
+      )
+        template(slot='icon')
+          icon-mail.h-5.w-5
+      base-button.mt-5(ref='resetPasswordSubmit' @click='resetPassword')
+        | Reset Password
       .text-center
         el-divider.my-4
         span.text-sm
@@ -40,17 +33,13 @@
 </template>
 
 <script>
-  import {
-    Form, FormItem, Input, Link, Message, Divider,
-  } from 'element-ui';
+  import { required, email } from 'vuelidate/lib/validators';
+  import { Link, Message, Divider } from 'element-ui';
 
   import { plain } from '@/modules/axios';
 
   export default {
     components: {
-      'el-form': Form,
-      'el-form-item': FormItem,
-      'el-input': Input,
       'el-link': Link,
       'el-divider': Divider,
     },
@@ -60,31 +49,21 @@
           email: '',
         },
         resetInitiated: false,
-        rules: {
-          email: [
-            {
-              required: true,
-              message: "Email can't be blank",
-              trigger: 'blur',
-            },
-            {
-              type: 'email',
-              message: 'Please input correct email address',
-              trigger: 'blur',
-            },
-          ],
-        },
       };
     },
-    methods: {
-      submitForm() {
-        this.$refs.resetPasswordForm.validate((valid) => {
-          if (valid) { this.resetPassword(); }
-
-          return false;
-        });
+    validations: {
+      user: {
+        email: {
+          required,
+          email,
+        },
       },
+    },
+    methods: {
       async resetPassword() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
+        
         this.$emit('loading', true);
 
         const response = await plain
