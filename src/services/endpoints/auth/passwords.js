@@ -1,4 +1,4 @@
-import { plain } from '@/modules/axios';
+import { plain, secure } from '@/modules/axios';
 
 const baseURL = '/auth/passwords';
 
@@ -7,8 +7,19 @@ export const create = (email) => plain
   .then((request) => request)
   .catch((request) => request.response);
 
-export const update = (user, resetPasswordToken) => plain
-  .put(baseURL, { user, reset_password_token: resetPasswordToken })
+export const update = (user) => secure
+  .put(baseURL, {
+    user: {
+      password: user.password,
+      password_confirmation: user.passwordConfirmation,
+      current_password: user.currentPassword,
+    },
+  })
+  .then((request) => request)
+  .catch((request) => request.response);
+
+export const reset = (user, resetPasswordToken) => plain
+  .put(`${baseURL}/reset`, { user, reset_password_token: resetPasswordToken })
   .then((request) => request)
   .catch((request) => request.response);
 
