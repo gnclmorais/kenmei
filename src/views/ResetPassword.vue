@@ -46,7 +46,7 @@
   import { Form, FormItem, Input, Message } from 'element-ui';
   import { mapGetters, mapMutations } from 'vuex';
 
-  import { edit, update } from '@/services/endpoints/auth/passwords';
+  import { edit, reset } from '@/services/endpoints/auth/passwords';
 
   export default {
     components: {
@@ -121,7 +121,7 @@
         });
       },
       async submitNewPassword() {
-        const response = await update(this.user, this.resetPasswordToken);
+        const response = await reset(this.user, this.resetPasswordToken);
 
         if (response.status === 200) {
           this.setCurrentUser({

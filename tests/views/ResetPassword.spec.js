@@ -130,12 +130,12 @@ describe('ResetPassword.vue', () => {
     });
   });
 
-  describe('when updating the password', () => {
+  describe('when reseting the password', () => {
     let router;
-    let updatePasswordSpy;
+    let resetPasswordSpy;
 
     beforeEach(() => {
-      updatePasswordSpy = jest.spyOn(resource, 'update');
+      resetPasswordSpy = jest.spyOn(resource, 'reset');
       router = new VueRouter({
         routes: [{ path: '/manga-list', name: 'manga-list' }],
       });
@@ -176,7 +176,7 @@ describe('ResetPassword.vue', () => {
 
         const user = { user_id: 1, email: 'test1@example.com' };
 
-        updatePasswordSpy.mockResolvedValue({ status: 200, data: user });
+        resetPasswordSpy.mockResolvedValue({ status: 200, data: user });
 
         resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
 
@@ -201,7 +201,7 @@ describe('ResetPassword.vue', () => {
 
         const errorMessageSpy = jest.spyOn(Message, 'error');
 
-        updatePasswordSpy.mockResolvedValue(
+        resetPasswordSpy.mockResolvedValue(
           { status: 500, data: { error: 'Wrong user' } }
         );
 
