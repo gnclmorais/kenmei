@@ -39,24 +39,65 @@ describe('confirmations', () => {
 
     beforeEach(() => {
       updateSpy = jest.spyOn(axios, 'put');
-      user = { id: 1 };
+      user = {
+        id: 1,
+        password: 'new-password',
+        passwordConfirmation: 'new-password',
+        currentPassword: 'password',
+      };
     });
 
-    it('makes a request to the resource and returns request', async () => {
+    it('makes a request to the resource and returns response', async () => {
       updateSpy.mockResolvedValue({ status: 200 });
 
-      const successful = await resource.update(user, 'token');
+      const successful = await resource.update(user);
 
       expect(successful.status).toBe(200);
       expect(updateSpy).toHaveBeenCalledWith(
-        '/auth/passwords', { user, reset_password_token: 'token' }
+        '/auth/passwords',
+        {
+          user: {
+            password: 'new-password',
+            password_confirmation: 'new-password',
+            current_password: 'password',
+          },
+        }
       );
     });
 
     it('makes a request to the resource and returns response if failed', async () => {
       updateSpy.mockRejectedValue({ response: { status: 500 } });
 
-      const successful = await resource.update(user, '');
+      const successful = await resource.update({});
+
+      expect(successful.status).toBe(500);
+    });
+  });
+
+  describe('reset()', () => {
+    let user;
+    let resetSpy;
+
+    beforeEach(() => {
+      resetSpy = jest.spyOn(axios, 'put');
+      user = { id: 1 };
+    });
+
+    it('makes a request to the resource and returns response', async () => {
+      resetSpy.mockResolvedValue({ status: 200 });
+
+      const successful = await resource.reset(user, 'token');
+
+      expect(successful.status).toBe(200);
+      expect(resetSpy).toHaveBeenCalledWith(
+        '/auth/passwords/reset', { user, reset_password_token: 'token' }
+      );
+    });
+
+    it('makes a request to the resource and returns response if failed', async () => {
+      resetSpy.mockRejectedValue({ response: { status: 500 } });
+
+      const successful = await resource.reset(user, '');
 
       expect(successful.status).toBe(500);
     });
