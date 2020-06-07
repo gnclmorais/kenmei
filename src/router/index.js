@@ -85,12 +85,17 @@ export default new Router({
       name: 'User Confirmation',
       component: () => import(/* webpackChunkName: "user_confirmation" */ '@/views/UserConfirmation.vue'),
       props: true,
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings.vue'),
       beforeEnter: (to, from, next) => {
         if (store.getters["user/signedIn"]) {
-          Message.info("You've already signed in");
-          next('/manga-list');
-        } else {
           next();
+        } else {
+          Message.error('Please sign in first');
+          next('/');
         }
       },
     },

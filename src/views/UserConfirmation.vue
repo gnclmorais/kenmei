@@ -49,6 +49,7 @@
           this.setCurrentUser({
             user_id: response.data.user_id,
             email: response.data.email,
+            unconfirmedEmail: response.data.unconfirmedEmail,
           });
           localStorage.access = response.data.access;
 
