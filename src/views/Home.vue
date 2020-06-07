@@ -35,10 +35,10 @@
       return {
         landing: false,
         updateBanner: {
-          id: 1,
-          link: 'https://news.kenmei.co/monthly-updates/2020/april',
+          id: 2,
+          link: 'https://news.kenmei.co/monthly-updates/2020/may',
           message: `
-            There is a new update format in town - monthly progress reports.
+            New settings page, UI updates and lots more in latest update
           `,
         },
       };
