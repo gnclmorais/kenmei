@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SettingsMangaListTags.vue when mounted and API returns tags shows list of tags 1`] = `
+<ul>
+  <li class="flex items-center px-4 py-4 sm_px-6">
+    <div class="min-w-0 flex-1 flex items-center">
+      <div class="min-w-0 flex-1 items-center grid grid-col-1 space-y-4 sm_space-y-0 sm_grid-cols-4 sm_gap-4">
+        <div class="col-span-1">
+          <base-badge-stub text="Isekai" type="primary" class="float-left"></base-badge-stub>
+        </div>
+        <div class="col-span-2 text-sm leading-5 text-gray-500"><span>MC ends up in another world</span></div>
+        <div class="col-span-1 text-sm leading-5 text-gray-500"><span class="font-bold">1</span> manga entries</div>
+      </div>
+    </div>
+    <base-dropdown-stub items="[object Object],[object Object]" size="lg"></base-dropdown-stub>
+  </li>
+</ul>
+`;
