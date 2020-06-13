@@ -23,33 +23,24 @@
 </template>
 
 <script>
-  import trashIcon from './icons/heroTrash';
-  import editIcon from './icons/heroEdit';
-  import warningIcon from './icons/heroWarning';
-
   export default {
-    components: {
-      trashIcon,
-      editIcon,
-      warningIcon,
-    },
     data() {
       return {
         buttons: [
           {
             text: 'Delete',
             action: 'delete',
-            icon: 'trashIcon',
+            icon: 'IconTrash',
           },
           {
             text: 'Edit',
             action: 'edit',
-            icon: 'editIcon',
+            icon: 'IconEdit',
           },
           {
             text: 'Report',
             action: 'report',
-            icon: 'warningIcon',
+            icon: 'IconWarning',
           },
 
         ],
