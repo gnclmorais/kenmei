@@ -40,6 +40,20 @@ globalComponentFiles.forEach((fileName) => {
 });
 
 // ===
+// Register global icons
+// ===
+
+const globalIconFiles = fs
+  .readdirSync(path.join(__dirname, '../src/components/icons'));
+
+globalIconFiles.forEach((fileName) => {
+  const componentName   = fileName.replace(/^\.\//, '').replace(/\.\w+$/, '');
+  const componentConfig = require(`../src/components/icons/${fileName}`);
+
+  Vue.component(componentName, componentConfig.default || componentConfig);
+});
+
+// ===
 // Configure Vue
 // ===
 
