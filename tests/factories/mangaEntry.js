@@ -4,7 +4,7 @@ export default Factory.define(({ sequence }) => ({
   id: sequence,
   manga_source_id: 1,
   manga_series_id: 1,
-  manga_list_id: 1,
+  user_tag_ids: [],
   attributes: {
     title: 'Manga Title',
     status: 1,

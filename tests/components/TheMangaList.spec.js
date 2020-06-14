@@ -24,11 +24,9 @@ describe('TheMangaList.vue', () => {
         lists: {
           namespaced: true,
           state: {
-            lists: [
-              factories.list.build(),
-              factories.list.build(
-                { id: '2', attributes: { name: 'Completed' } }
-              ),
+            tags: [
+              factories.userTag.build(),
+              factories.userTag.build({ id: 2, name: 'Completed' }),
             ],
             entries: defaultEntries,
             statuses: lists.state.statuses,

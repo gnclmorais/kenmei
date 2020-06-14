@@ -21,9 +21,9 @@ describe('EditMangaEntries.vue', () => {
         lists: {
           namespaced: true,
           state: {
-            lists: [
-              factories.list.build({ id: '1' }),
-              factories.list.build({ id: '2' }),
+            tags: [
+              factories.tag.build({ id: 1 }),
+              factories.tag.build({ id: 2 }),
             ],
             entries: [entry1, entry2],
           },

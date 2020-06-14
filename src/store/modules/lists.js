@@ -7,7 +7,7 @@ export const getEntryIndex = (state, id) => state.entries.findIndex(
 );
 
 const state = {
-  lists: [],
+  tags: [],
   entries: [],
   statuses: [
     { enum: 1, name: 'Reading' },
@@ -16,14 +16,12 @@ const state = {
     { enum: 4, name: 'Completed' },
     { enum: 5, name: 'Dropped' },
   ],
-  listsLoading: false,
+  tagsLoading: false,
 };
 
 const getters = {
-  // TODO: Rename to getEntriesByTagIDs when renaming manga lists to tags
-  getEntriesByListIDs: (state) => (listIDs) => state.entries.filter(
-    (entry) => entry.manga_list_id
-      && listIDs.includes(entry.manga_list_id.toString())
+  getEntriesByTagIDs: (state) => (tagIDs) => state.entries.filter(
+    (entry) => tagIDs.every((id) => entry.user_tag_ids.includes(id))
   ),
   getEntriesByStatus: (state) => (status) => state.entries.filter(
     (entry) => status === -1 || entry.attributes.status === status
@@ -34,10 +32,10 @@ const getters = {
 };
 
 const actions = {
-  getLists({ commit }) {
-    return secure.get('/api/v1/manga_lists/')
+  getTags({ commit }) {
+    return secure.get('/api/v1/user_tags/')
       .then((response) => {
-        commit('setLists', response.data.data);
+        commit('setTags', response.data);
       })
       .catch((request) => { Message.error(request.response.data.error); });
   },
@@ -51,8 +49,8 @@ const actions = {
 };
 
 const mutations = {
-  setLists(state, data) {
-    state.lists = data;
+  setTags(state, data) {
+    state.tags = data;
   },
   setEntries(state, data) {
     state.entries = data;
@@ -71,8 +69,8 @@ const mutations = {
       (mangaEntry, _index, _arr) => !entryIDs.includes(mangaEntry.id)
     );
   },
-  setListsLoading(state, data) {
-    state.listsLoading = data;
+  setTagsLoading(state, data) {
+    state.tagsLoading = data;
   },
 };
 
