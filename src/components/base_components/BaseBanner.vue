@@ -3,8 +3,7 @@
     .max-w-screen-xl.mx-auto.py-3.px-3.sm_px-6.lg_px-8
       .pr-16.sm_text-center.sm_px-16
         p.font-medium.text-white
-          span.md_hidden
-            | New update released!
+          span.md_hidden(v-text="mobileText")
           span.hidden.md_inline(v-text="text")
           span.block.sm_ml-2.sm_inline-block(v-if="link")
             a.text-white.font-bold.hover_underline(:href='link' target="_blank")
@@ -30,6 +29,10 @@
       text: {
         type: String,
         required: true,
+      },
+      mobileText: {
+        type: String,
+        default: 'New update released!',
       },
       link: {
         type: String,
