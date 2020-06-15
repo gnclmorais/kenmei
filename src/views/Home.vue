@@ -6,6 +6,7 @@
         base-banner(
           :text="updateBanner.message"
           :link="updateBanner.link"
+          mobileText="Join our Discord for behind the scenes"
           @close="dismissUpdateBanner(updateBanner.id)"
         )
       header
@@ -35,10 +36,11 @@
       return {
         landing: false,
         updateBanner: {
-          id: 2,
-          link: 'https://news.kenmei.co/monthly-updates/2020/may',
+          id: 3,
+          link: 'https://discord.gg/XeTFtYW',
           message: `
-            New settings page, UI updates and lots more in latest update
+            Join our Discord, where you can provide feedback and find fellow
+            manga fans
           `,
         },
       };
