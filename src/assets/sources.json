@@ -65,6 +65,12 @@
     "logo": "no_names_scans_logo.jpg"
   },
   {
+    "name": "Edelgarde Scans",
+    "url": "https://edelgardescans.com/",
+    "status": "Supported",
+    "logo": "edelgarde-scans.jpg"
+  },
+  {
     "name": "Reaper Scans",
     "url": "https://reaperscans.com/",
     "status": "In Development",
