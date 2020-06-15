@@ -19,17 +19,17 @@
             .rounded-lg.bg-white.shadow-lg.sm_grid.sm_grid-cols-3
               .border-b.border-gray-100.p-6.text-center.sm_border-0.sm_border-r
                 p.text-5xl.leading-none.font-extrabold.text-blue-600
-                  | 9574
+                  | 10077
                 p.mt-2.text-lg.leading-6.font-medium.text-gray-500
                   | Manga Series Tracked
               .border-t.border-b.border-gray-100.p-6.text-center.sm_border-0.sm_border-l.sm_border-r
                 p.text-5xl.leading-none.font-extrabold.text-blue-600
-                  | 59468
+                  | 63994
                 p.mt-2.text-lg.leading-6.font-medium.text-gray-500
                   | Manga Entries Created
               .border-t.border-gray-100.p-6.text-center.sm_border-0.sm_border-l
                 p.text-5xl.leading-none.font-extrabold.text-blue-600
-                  | 12
+                  | 13
                 p.mt-2.text-lg.leading-6.font-medium.text-gray-500
                   | Supported Sites
 </template>
