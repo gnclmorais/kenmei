@@ -11,7 +11,7 @@
           label.block.text-sm.leading-5.font-medium.text-gray-700
             | Status
           .mt-1.relative.rounded-md.shadow-sm.w-auto
-            el-select.rounded.w-full.mt-3(v-model="selectedStatus")
+            el-select.rounded.w-full(v-model="selectedStatus")
               el-option(
                 v-for="status in statuses"
                 :key="status.enum"
@@ -22,7 +22,7 @@
           label.block.text-sm.leading-5.font-medium.text-gray-700
             | Manga Source Name
           .mt-1.relative.rounded-md.shadow-sm.w-auto
-            el-select.rounded.w-full.mt-3(
+            el-select.rounded.w-full(
               v-model="mangaSourceID"
               placeholder="Select new source"
               :disabled="loadingSources"
