@@ -129,14 +129,6 @@ describe('MangaList.vue', () => {
     });
 
     describe('@events', () => {
-      it('@cancelEdit - closes edit manga entries dialog', async () => {
-        await mangaList.setData({ editDialogVisible: true });
-
-        mangaList.find(EditMangaEntries).vm.$emit('cancelEdit');
-
-        expect(mangaList.vm.$data.editDialogVisible).toBeFalsy();
-      });
-
       it('@editComplete - resets selected manga entries and closes modal', async () => {
         await mangaList.setData({ editDialogVisible: true });
 

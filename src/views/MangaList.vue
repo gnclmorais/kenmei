@@ -82,7 +82,6 @@
         ref='editMangaEntryModal'
         :visible='editDialogVisible'
         :selectedEntries='selectedEntries'
-        @cancelEdit='editDialogVisible = false'
         @editComplete="resetEntries('editDialogVisible')"
       )
       delete-manga-entries(
