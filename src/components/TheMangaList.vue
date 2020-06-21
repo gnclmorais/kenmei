@@ -1,122 +1,123 @@
 <template lang="pug">
   #mangaTable
-    el-table(
-      ref="mangaListTable"
-      :data="currentPageEntries"
-      v-loading='tagsLoading'
-      @selection-change="handleSelectionChange"
-      @sort-change="applySorting"
-    )
-      template(slot='empty')
-        span.mt-2.leading-normal
-          template(v-if='entries.length || tagsLoading')
-            | No entries found.
-            | Try changing your filters
-          template(v-else)
-            | You haven't imported manga yet. Add a new manga series by pressing
-            | Add Manga and providing a URL. Or press Import, to import your
-            | manga from TrackrMoe or MangaDex
-      el-table-column(type="selection" width="35")
-      el-table-column(
-        prop="newReleases"
-        width="30"
-        align="center"
-        sortable="custom"
-        label-class-name="p-0"
-      )
-        template(slot-scope="scope")
-          .new-chapter-dot(v-if="unread(scope.row)")
-      el-table-column(
-        prop="attributes.title"
-        label="Title"
-        sortable="custom"
-        width="400"
-      )
-        template(slot-scope="scope")
-          el-link.break-normal(
-            :href="scope.row.links.series_url"
-            :underline="false"
-            target="_blank"
-          )
-            | {{ scope.row.attributes.title | sanitize }}
-            .font-normal.text-sm.leading-5.text-gray-500(
-              v-if="scope.row.attributes.tracked_entries.length > 1"
-            )
-              | {{ scope.row.attributes.tracked_entries.length }} sites tracked
-      el-table-column(
-        prop="attributes.status"
-        label="Status"
-        width="150"
-        align="center"
-      )
-        template(slot-scope="scope")
-          base-badge(
-            :text="entryStatusName(scope.row)"
-            :type="entryType(scope.row)"
-          )
-      el-table-column(
-        prop="attributes.last_chapter_read"
-        label="Last Chapter Read"
-        align="center"
-      )
-        template(v-if='scope.row.attributes' slot-scope="scope")
-          el-link.break-normal(
-            v-if="scope.row.links.last_chapter_read_url"
-            :href="scope.row.links.last_chapter_read_url"
-            :underline="false"
-            target="_blank"
-          )
-            | {{ scope.row.attributes.last_chapter_read }}
-          template(v-else)
-            | {{ scope.row.attributes.last_chapter_read }}
-      el-table-column(
-        prop="links.last_chapter_available_url"
-        label="Latest Chapter"
-        align="center"
-      )
-        template(v-if='scope.row.attributes' slot-scope="scope")
-          el-link(
-            v-if="scope.row.links.last_chapter_available_url"
-            :href="scope.row.links.last_chapter_available_url"
-            :underline="false"
-            target="_blank"
-          )
-            | {{ scope.row.attributes.last_chapter_available }}
-          template(v-else)
-            | No chapters
-      el-table-column(
-        prop="attributes.last_released_at"
-        label="Released"
-        align="center"
-        sortable="custom"
-      )
-        template(v-if='scope.row.attributes' slot-scope="scope")
-          template(v-if='scope.row.attributes.last_released_at')
-            | {{ scope.row.attributes.last_released_at | timeAgo }}
-          template(v-else)
-            | Unknown
-      el-table-column(width="100" class-name="actions")
-        template(slot-scope="scope")
-          el-button(
-            ref="editEntryButton"
-            content="Edit"
-            icon="el-icon-edit-outline"
-            size="mini"
-            @click="editMangaEntry(scope.row)"
-            circle
-            v-tippy
-          )
-          el-button(
-            content="Set last read to the latest chapter"
-            v-if="unread(scope.row)"
-            ref="updateEntryButton"
-            icon="el-icon-check"
-            size="mini"
-            @click="setLastRead(scope.row)"
-            :loading="entryUpdated === scope.row"
-            circle
-            v-tippy
-          )
+    manga-entries-grid(:entries="currentPageEntries")
+    //- el-table(
+    //-   ref="mangaListTable"
+    //-   :data="currentPageEntries"
+    //-   v-loading='listsLoading'
+    //-   @selection-change="handleSelectionChange"
+    //-   @sort-change="applySorting"
+    //- )
+    //-   template(slot='empty')
+    //-     span.mt-2.leading-normal
+    //-       template(v-if='entries.length || listsLoading')
+    //-         | No entries found.
+    //-         | Try changing your filters
+    //-       template(v-else)
+    //-         | You haven't imported manga yet. Add a new manga series by pressing
+    //-         | Add Manga and providing a URL. Or press Import, to import your
+    //-         | manga from TrackrMoe or MangaDex
+    //-   el-table-column(type="selection" width="35")
+    //-   el-table-column(
+    //-     prop="newReleases"
+    //-     width="30"
+    //-     align="center"
+    //-     sortable="custom"
+    //-     label-class-name="p-0"
+    //-   )
+    //-     template(slot-scope="scope")
+    //-       .new-chapter-dot(v-if="unread(scope.row)")
+    //-   el-table-column(
+    //-     prop="attributes.title"
+    //-     label="Title"
+    //-     sortable="custom"
+    //-     width="400"
+    //-   )
+    //-     template(slot-scope="scope")
+    //-       el-link.break-normal(
+    //-         :href="scope.row.links.series_url"
+    //-         :underline="false"
+    //-         target="_blank"
+    //-       )
+    //-         | {{ scope.row.attributes.title | sanitize }}
+    //-         .font-normal.text-sm.leading-5.text-gray-500(
+    //-           v-if="scope.row.attributes.tracked_entries.length > 1"
+    //-         )
+    //-           | {{ scope.row.attributes.tracked_entries.length }} sites tracked
+    //-   el-table-column(
+    //-     prop="attributes.status"
+    //-     label="Status"
+    //-     width="150"
+    //-     align="center"
+    //-   )
+    //-     template(slot-scope="scope")
+    //-       base-badge(
+    //-         :text="entryStatusName(scope.row)"
+    //-         :type="entryType(scope.row)"
+    //-       )
+    //-   el-table-column(
+    //-     prop="attributes.last_chapter_read"
+    //-     label="Last Chapter Read"
+    //-     align="center"
+    //-   )
+    //-     template(v-if='scope.row.attributes' slot-scope="scope")
+    //-       el-link.break-normal(
+    //-         v-if="scope.row.links.last_chapter_read_url"
+    //-         :href="scope.row.links.last_chapter_read_url"
+    //-         :underline="false"
+    //-         target="_blank"
+    //-       )
+    //-         | {{ scope.row.attributes.last_chapter_read }}
+    //-       template(v-else)
+    //-         | {{ scope.row.attributes.last_chapter_read }}
+    //-   el-table-column(
+    //-     prop="links.last_chapter_available_url"
+    //-     label="Latest Chapter"
+    //-     align="center"
+    //-   )
+    //-     template(v-if='scope.row.attributes' slot-scope="scope")
+    //-       el-link(
+    //-         v-if="scope.row.links.last_chapter_available_url"
+    //-         :href="scope.row.links.last_chapter_available_url"
+    //-         :underline="false"
+    //-         target="_blank"
+    //-       )
+    //-         | {{ scope.row.attributes.last_chapter_available }}
+    //-       template(v-else)
+    //-         | No chapters
+    //-   el-table-column(
+    //-     prop="attributes.last_released_at"
+    //-     label="Released"
+    //-     align="center"
+    //-     sortable="custom"
+    //-   )
+    //-     template(v-if='scope.row.attributes' slot-scope="scope")
+    //-       template(v-if='scope.row.attributes.last_released_at')
+    //-         | {{ scope.row.attributes.last_released_at | timeAgo }}
+    //-       template(v-else)
+    //-         | Unknown
+    //-   el-table-column(width="100" class-name="actions")
+    //-     template(slot-scope="scope")
+    //-       el-button(
+    //-         ref="editEntryButton"
+    //-         content="Edit"
+    //-         icon="el-icon-edit-outline"
+    //-         size="mini"
+    //-         @click="editMangaEntry(scope.row)"
+    //-         circle
+    //-         v-tippy
+    //-       )
+    //-       el-button(
+    //-         content="Set last read to the latest chapter"
+    //-         v-if="unread(scope.row)"
+    //-         ref="updateEntryButton"
+    //-         icon="el-icon-check"
+    //-         size="mini"
+    //-         @click="setLastRead(scope.row)"
+    //-         :loading="entryUpdated === scope.row"
+    //-         circle
+    //-         v-tippy
+    //-       )
     .flex.flex-row.justify-center(v-if="tableData.length > 0")
       el-pagination(
         layout="prev, pager, next"
@@ -139,10 +140,13 @@
   import { updateMangaEntry } from '@/services/api';
   import { unread, sortBy } from '@/services/sorters';
 
+  import MangaEntriesGrid from '@/components/MangaEntriesGrid';
+
   dayjs.extend(relativeTime);
 
   export default {
     components: {
+      MangaEntriesGrid,
       'el-table': Table,
       'el-table-column': TableColumn,
       'el-link': Link,
@@ -186,7 +190,7 @@
         if (newVal === oldVal) { return; }
 
         this.sortedData = newVal;
-        this.$refs.mangaListTable.sort('newReleases', 'ascending');
+      //   this.$refs.mangaListTable.sort('newReleases', 'ascending');
       },
     },
     methods: {
