@@ -50,6 +50,8 @@ secure.interceptors.response.use(null, (error) => {
         delete localStorage.vuex;
 
         window.location.reload(true);
+
+        return plain.request(error.response.config);
       });
   }
   return Promise.reject(error);
