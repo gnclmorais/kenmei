@@ -93,10 +93,18 @@
     },
     watch: {
       selectedEntries(entries, oldEntries) {
-        if (entries.length && entries !== oldEntries && !this.isBulkUpdate) {
-          this.loadAvailableSources();
-          this.selectedStatus = this.selectedEntry.attributes.status;
+        if (entries.length) {
+          if (entries !== oldEntries && !this.isBulkUpdate) {
+            this.selectedStatus = this.selectedEntry.attributes.status;
+          }
+        } else {
+          this.availableSources = [];
+          this.mangaSourceID = null;
+          this.selectedStatus = 1;
         }
+      },
+      visible(val) {
+        if (val && !this.isBulkUpdate) { this.loadAvailableSources(); }
       },
     },
     methods: {
