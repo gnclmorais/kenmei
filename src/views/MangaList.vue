@@ -16,13 +16,21 @@
           )
         el-select.w-full.mt-3.sm_mt-0.sm_ml-3.sm_w-48(
           ref="tagFilter"
-          v-if="tags.length"
           v-model="selectedTagIDs"
           placeholder="Filter by tags"
           :disabled="tagsLoading"
           multiple
           collapse-tags
         )
+          template(slot='empty')
+            .relative.p-3.font-normal.text-sm.text-center
+              span.text-gray-400
+                | No tags found. Create new tags in
+              router-link.inline.text-blue-500.hover_text-blue-600(
+                to="settings"
+                exact
+              )
+                |  Settings
           el-option(
             v-for="tag in tags"
             :key="tag.id"
