@@ -3,7 +3,7 @@
     :visible="visible"
     :loading="loading"
     size="sm"
-    @dialogClosed="$emit('cancelEdit')"
+    @dialogClosed="$emit('editComplete')"
   )
     template(slot='body')
       .flex.flex-col.w-full
@@ -11,7 +11,7 @@
           label.block.text-sm.leading-5.font-medium.text-gray-700
             | Status
           .mt-1.relative.rounded-md.shadow-sm.w-auto
-            el-select.rounded.w-full.mt-3(v-model="selectedStatus")
+            el-select.rounded.w-full(v-model="selectedStatus")
               el-option(
                 v-for="status in statuses"
                 :key="status.enum"
@@ -22,7 +22,7 @@
           label.block.text-sm.leading-5.font-medium.text-gray-700
             | Manga Source Name
           .mt-1.relative.rounded-md.shadow-sm.w-auto
-            el-select.rounded.w-full.mt-3(
+            el-select.rounded.w-full(
               v-model="mangaSourceID"
               placeholder="Select new source"
               :disabled="loadingSources"
@@ -43,7 +43,7 @@
         )
           | Update
       span.mt-3.sm_mt-0.flex.w-full.rounded-md.shadow-sm.sm_w-auto
-        base-button(type="secondary" @click="$emit('cancelEdit')") Cancel
+        base-button(type="secondary" @click="$emit('editComplete')") Cancel
 </template>
 
 <script>
@@ -93,10 +93,18 @@
     },
     watch: {
       selectedEntries(entries, oldEntries) {
-        if (entries.length && entries !== oldEntries && !this.isBulkUpdate) {
-          this.loadAvailableSources();
-          this.selectedStatus = this.selectedEntry.attributes.status;
+        if (entries.length) {
+          if (entries !== oldEntries && !this.isBulkUpdate) {
+            this.selectedStatus = this.selectedEntry.attributes.status;
+          }
+        } else {
+          this.availableSources = [];
+          this.mangaSourceID = null;
+          this.selectedStatus = 1;
         }
+      },
+      visible(val) {
+        if (val && !this.isBulkUpdate) { this.loadAvailableSources(); }
       },
     },
     methods: {

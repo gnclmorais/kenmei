@@ -45,23 +45,49 @@ describe('EditMangaEntries.vue', () => {
         });
       });
 
+      describe('when single entry selected', () => {
+        it('prefills status', async () => {
+          await editMangaEntries.setProps({ selectedEntries: [entry1] });
 
-      it('prefills status', async () => {
-        await editMangaEntries.setProps({ selectedEntries: [entry1] });
+          expect(editMangaEntries.vm.$data.selectedStatus).toEqual(
+            entry1.attributes.status
+          );
+        });
+      });
 
-        expect(editMangaEntries.vm.$data.selectedStatus).toEqual(
-          entry1.attributes.status
-        );
+      describe('when entry deselected', () => {
+        it('resets data', async () => {
+          await editMangaEntries.setProps({ selectedEntries: [entry1] });
+          await editMangaEntries.setProps({ selectedEntries: [] });
+          
+          expect(editMangaEntries.vm.selectedStatus).toEqual(1);
+          expect(editMangaEntries.vm.availableSources).toEqual([]);
+          expect(editMangaEntries.vm.mangaSourceID).toEqual(null);
+        });
+      });
+    });
+
+    describe(':visible', () => {
+      let editMangaEntries;
+
+      beforeEach(() => {
+        editMangaEntries = shallowMount(EditMangaEntries, {
+          store,
+          localVue,
+          propsData: { selectedEntries: [entry1] },
+        });
       });
 
       describe('when single entry selected', () => {
         it('loads available sources', async () => {
           const availableSources = factories.source.buildList(1);
-          const getMangaSourcesSpy = jest.spyOn(mangaSources, 'getMangaSources');
+          const getMangaSourcesSpy = jest.spyOn(
+            mangaSources, 'getMangaSources'
+          );
 
           getMangaSourcesSpy.mockResolvedValue({ data: availableSources });
 
-          editMangaEntries.setProps({ selectedEntries: [entry1] });
+          editMangaEntries.setProps({ visible: true });
 
           await flushPromises();
 
@@ -73,11 +99,13 @@ describe('EditMangaEntries.vue', () => {
 
         it("shows error when available sources didn't load", async () => {
           const errorMessageMock = jest.spyOn(Message, 'error');
-          const getMangaSourcesSpy = jest.spyOn(mangaSources, 'getMangaSources');
+          const getMangaSourcesSpy = jest.spyOn(
+            mangaSources, 'getMangaSources'
+          );
 
           getMangaSourcesSpy.mockResolvedValue(false);
 
-          editMangaEntries.setProps({ selectedEntries: [entry1] });
+          editMangaEntries.setProps({ visible: true });
 
           await flushPromises();
 
