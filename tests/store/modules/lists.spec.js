@@ -5,21 +5,25 @@ import lists from '@/store/modules/lists';
 
 describe('lists', () => {
   describe('getters', () => {
-    describe('getEntriesByListIDs', () => {
-      it('returns entries based on a list id', () => {
-        const listIDs = ['1'];
-        const expectedReturn = factories.entry.build({ manga_list_id: '1' });
+    describe('getEntriesByTagIDs', () => {
+      it('returns entries that has all tag ids specified', () => {
+        const singleTag = factories.entry.build({ user_tag_ids: [1] });
+        const bothTags = factories.entry.build({ user_tag_ids: [1, 2] });
         const state = {
           entries: [
-            expectedReturn,
-            factories.entry.build({ manga_list_id: null }),
-            factories.entry.build({ manga_list_id: 2 }),
+            singleTag,
+            bothTags,
+            factories.entry.build({ user_tag_ids: [3] }),
           ],
         };
 
-        const getEntriesByListIDs = lists.getters.getEntriesByListIDs(state);
+        let getEntriesByTagIDs = lists.getters.getEntriesByTagIDs(state);
 
-        expect(getEntriesByListIDs(listIDs)).toEqual([expectedReturn]);
+        expect(getEntriesByTagIDs([1])).toEqual([singleTag, bothTags]);
+
+        getEntriesByTagIDs = lists.getters.getEntriesByTagIDs(state);
+
+        expect(getEntriesByTagIDs([1, 2])).toEqual([bothTags]);
       });
     });
 
@@ -66,14 +70,14 @@ describe('lists', () => {
   });
 
   describe('mutations', () => {
-    describe('setLists', () => {
-      it('sets lists state', () => {
-        const newLists = factories.list.buildList(1);
-        const state = { lists: [] };
+    describe('setTags', () => {
+      it('sets tags state', () => {
+        const newTags = factories.userTag.buildList(1);
+        const state = { tags: [] };
 
-        lists.mutations.setLists(state, newLists);
+        lists.mutations.setTags(state, newTags);
 
-        expect(state.lists).toEqual(newLists);
+        expect(state.tags).toEqual(newTags);
       });
     });
 
@@ -160,13 +164,13 @@ describe('lists', () => {
       });
     });
 
-    describe('setListsLoading', () => {
-      it('sets lists state', () => {
-        const state = { listsLoading: false };
+    describe('setTagsLoading', () => {
+      it('sets tagsLoading state', () => {
+        const state = { tagsLoading: false };
 
-        lists.mutations.setListsLoading(state, true);
+        lists.mutations.setTagsLoading(state, true);
 
-        expect(state.listsLoading).toBeTruthy();
+        expect(state.tagsLoading).toBeTruthy();
       });
     });
   });
@@ -182,41 +186,39 @@ describe('lists', () => {
       jest.restoreAllMocks();
     });
 
-    describe('getLists', () => {
-      it('retrieves lists from the api', async () => {
-        const axiosSpy     = jest.spyOn(axios, 'get');
-        const initLists    = factories.list.buildList(1);
-        const entries      = factories.entry.buildList(1);
-        const mockResponse = { data: initLists, included: entries };
+    describe('getTags', () => {
+      it('retrieves tags from the api', async () => {
+        const axiosSpy  = jest.spyOn(axios, 'get');
+        const initLists = factories.userTag.buildList(1);
 
-        axiosSpy.mockResolvedValue({ status: 200, data: mockResponse });
+        axiosSpy.mockResolvedValue({ status: 200, data: initLists });
 
-        lists.actions.getLists({ commit });
+        lists.actions.getTags({ commit });
 
         await flushPromises();
 
-        expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_lists/');
-        expect(commit).toHaveBeenCalledWith('setLists', initLists);
+        expect(axiosSpy).toHaveBeenCalledWith('/api/v1/user_tags/');
+        expect(commit).toHaveBeenCalledWith('setTags', initLists);
       });
 
       it('shows error message if request has failed', async () => {
         const axiosSpy        = jest.spyOn(axios, 'get');
         const errorMessageSpy = jest.spyOn(Message, 'error');
         const mockResponse    = {
-          response: { data: { error: 'Lists not found' } },
+          response: { data: { error: 'Tags not found' } },
         };
 
         axiosSpy.mockRejectedValue(mockResponse);
 
-        lists.actions.getLists({ commit });
+        lists.actions.getTags({ commit });
 
         await flushPromises();
 
-        expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_lists/');
+        expect(axiosSpy).toHaveBeenCalledWith('/api/v1/user_tags/');
         expect(errorMessageSpy).toHaveBeenLastCalledWith(
           mockResponse.response.data.error
         );
-        expect(commit).not.toHaveBeenCalledWith('setLists', mockResponse);
+        expect(commit).not.toHaveBeenCalledWith('setTags', mockResponse);
       });
     });
 

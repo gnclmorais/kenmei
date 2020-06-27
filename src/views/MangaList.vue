@@ -6,7 +6,7 @@
         el-select.w-full.sm_w-40(
           v-model="selectedStatus"
           placeholder="Filter by status"
-          :disabled="listsLoading"
+          :disabled="tagsLoading"
         )
           el-option(
             v-for="status in allStatuses"
@@ -16,18 +16,26 @@
           )
         el-select.w-full.mt-3.sm_mt-0.sm_ml-3.sm_w-48(
           ref="tagFilter"
-          v-if="lists.length"
-          v-model="selectedListIDs"
+          v-model="selectedTagIDs"
           placeholder="Filter by tags"
-          :disabled="listsLoading"
+          :disabled="tagsLoading"
           multiple
           collapse-tags
         )
+          template(slot='empty')
+            .relative.p-3.font-normal.text-sm.text-center
+              span.text-gray-400
+                | No tags found. Create new tags in
+              router-link.inline.text-blue-500.hover_text-blue-600(
+                to="settings"
+                exact
+              )
+                |  Settings
           el-option(
-            v-for="list in lists"
-            :key="list.id"
-            :label="list.attributes.name"
-            :value="list.id"
+            v-for="tag in tags"
+            :key="tag.id"
+            :label="tag.name"
+            :value="tag.id"
           )
         .mt-3.text-center.w-full.float-right.sm_mt-0.sm_text-left.sm_w-64
           .relative.rounded-md.shadow-sm
@@ -132,7 +140,7 @@
     data() {
       return {
         selectedEntries: [],
-        selectedListIDs: [],
+        selectedTagIDs: [],
         selectedStatus: 1,
         entriesSelected: false,
         searchTerm: '',
@@ -146,12 +154,12 @@
     computed: {
       ...mapState('lists', [
         'entries',
-        'lists',
+        'tags',
         'statuses',
-        'listsLoading',
+        'tagsLoading',
       ]),
       ...mapGetters('lists', [
-        'getEntriesByListIDs',
+        'getEntriesByTagIDs',
         'getEntriesByStatus',
       ]),
       allStatuses() {
@@ -180,8 +188,8 @@
       filteredEntries() {
         let filtered = this.entries;
 
-        if (this.selectedListIDs.length) {
-          const taggedEntries = this.getEntriesByListIDs(this.selectedListIDs);
+        if (this.selectedTagIDs.length) {
+          const taggedEntries = this.getEntriesByTagIDs(this.selectedTagIDs);
 
           filtered = filtered.filter((e) => taggedEntries.includes(e));
         }
@@ -201,24 +209,24 @@
       },
     },
     async created() {
-      this.setListsLoading(true);
+      this.setTagsLoading(true);
 
-      await this.getLists();
+      await this.getTags();
       await this.getEntries();
 
-      this.setListsLoading(false);
+      this.setTagsLoading(false);
     },
     mounted() {
       VueScrollTo.scrollTo('#home');
     },
     methods: {
       ...mapActions('lists', [
-        'getLists',
+        'getTags',
         'getEntries',
       ]),
       ...mapMutations('lists', [
         'removeEntries',
-        'setListsLoading',
+        'setTagsLoading',
       ]),
       handleSelection(selectedEntries) {
         this.entriesSelected = selectedEntries.length > 0;

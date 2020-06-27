@@ -21,9 +21,9 @@ describe('EditMangaEntries.vue', () => {
         lists: {
           namespaced: true,
           state: {
-            lists: [
-              factories.list.build({ id: '1' }),
-              factories.list.build({ id: '2' }),
+            tags: [
+              factories.userTag.build({ id: 1 }),
+              factories.userTag.build({ id: 2 }),
             ],
             entries: [entry1, entry2],
           },
@@ -59,7 +59,7 @@ describe('EditMangaEntries.vue', () => {
         it('resets data', async () => {
           await editMangaEntries.setProps({ selectedEntries: [entry1] });
           await editMangaEntries.setProps({ selectedEntries: [] });
-          
+
           expect(editMangaEntries.vm.selectedStatus).toEqual(1);
           expect(editMangaEntries.vm.availableSources).toEqual([]);
           expect(editMangaEntries.vm.mangaSourceID).toEqual(null);
@@ -113,6 +113,7 @@ describe('EditMangaEntries.vue', () => {
             selectedStatus: entry1.attributes.status,
             mangaSourceID: null,
             availableSources: [],
+            selectedTagIDs: [],
             loadingSources: true,
             loading: false,
           });
@@ -139,7 +140,7 @@ describe('EditMangaEntries.vue', () => {
 
     afterEach(() => {
       expect(updateMangaEntryMock).toHaveBeenCalledWith(
-        1, { status: 2, manga_source_id: 1 }
+        1, { status: 2, manga_source_id: 1, user_tag_ids: [] }
       );
     });
 
@@ -181,7 +182,7 @@ describe('EditMangaEntries.vue', () => {
 
     afterEach(() => {
       expect(updateMangaEntriesMock).toHaveBeenCalledWith(
-        [1, 2], { status: 2 }
+        [1, 2], { status: 2, user_tag_ids: [] }
       );
     });
 

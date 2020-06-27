@@ -3,13 +3,13 @@
     el-table(
       ref="mangaListTable"
       :data="currentPageEntries"
-      v-loading='listsLoading'
+      v-loading='tagsLoading'
       @selection-change="handleSelectionChange"
       @sort-change="applySorting"
     )
       template(slot='empty')
         span.mt-2.leading-normal
-          template(v-if='entries.length || listsLoading')
+          template(v-if='entries.length || tagsLoading')
             | No entries found.
             | Try changing your filters
           template(v-else)
@@ -174,7 +174,7 @@
       ...mapState('lists', [
         'entries',
         'statuses',
-        'listsLoading',
+        'tagsLoading',
       ]),
       currentPageEntries() {
         const page = this.currentPage - 1;

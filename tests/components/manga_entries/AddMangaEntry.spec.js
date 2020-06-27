@@ -89,13 +89,13 @@ describe('AddMangaEntry.vue', () => {
             tracked_entries: [
               {
                 id: oldEntry.id,
-                manga_source_id: oldEntry.manga_series_id,
-                manga_series_id: oldEntry.manga_list_id,
+                manga_source_id: oldEntry.manga_source_id,
+                manga_series_id: oldEntry.manga_series_id,
               },
               {
                 id: 2,
                 manga_source_id: 2,
-                manga_series_id: oldEntry.manga_list_id,
+                manga_series_id: oldEntry.manga_series_id,
               },
             ],
           },

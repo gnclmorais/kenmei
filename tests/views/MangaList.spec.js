@@ -19,26 +19,26 @@ localVue.directive('tippy', true);
 
 describe('MangaList.vue', () => {
   let store;
-  let list1;
-  let list2;
+  let tag1;
+  let tag2;
   let entry1;
   let entry2;
   let entry3;
 
   beforeEach(() => {
-    list1 = factories.list.build({ id: '1' });
-    list2 = factories.list.build({ id: '2' });
+    tag1 = factories.userTag.build({ id: 1 });
+    tag2 = factories.userTag.build({ id: 2 });
 
     entry1 = factories.entry.build({
       id: 1, attributes: { title: 'Boku no Hero', status: 1 },
     });
     entry2 = factories.entry.build({
       id: 2,
-      manga_list_id: list2.id,
+      user_tag_ids: [tag2.id],
       attributes: { title: 'Attack on Titan', status: 1 },
     });
     entry3 = factories.entry.build({
-      id: 3, manga_list_id: null, attributes: { title: 'Berserk', status: 2 },
+      id: 3, attributes: { title: 'Berserk', status: 2 },
     });
 
     store = new Vuex.Store({
@@ -46,7 +46,7 @@ describe('MangaList.vue', () => {
         lists: {
           namespaced: true,
           state: {
-            lists: [list1],
+            tags: [tag1, tag2],
             entries: [entry1, entry2, entry3],
             statuses: lists.state.statuses,
           },
@@ -271,11 +271,11 @@ describe('MangaList.vue', () => {
       expect(mangaList.vm.filteredEntries).toEqual([entry2]);
     });
 
-    describe(':selectedListIDs', () => {
+    describe(':selectedTagIDs', () => {
       it('filters entries based on tags', async () => {
         const mangaList = shallowMount(MangaList, { store, localVue });
 
-        await mangaList.setData({ selectedListIDs: [list2.id] });
+        await mangaList.setData({ selectedTagIDs: [tag2.id] });
 
         expect(mangaList.vm.filteredEntries).toEqual([entry2]);
       });
@@ -295,13 +295,13 @@ describe('MangaList.vue', () => {
     let actions;
 
     beforeEach(() => {
-      actions = { getLists: jest.fn(), getEntries: jest.fn() };
+      actions = { getTags: jest.fn(), getEntries: jest.fn() };
       store = new Vuex.Store({
         modules: {
           lists: {
             namespaced: true,
             state: {
-              lists: factories.list.buildList(1),
+              tags: factories.userTag.buildList(1),
               entries: [entry1, entry2],
               statuses: lists.state.statuses,
             },
@@ -313,12 +313,12 @@ describe('MangaList.vue', () => {
       });
     });
 
-    it(':created() - loads lists and entries, while toggling loading', async () => {
+    it(':created() - loads tags and entries, while toggling loading', async () => {
       shallowMount(MangaList, { store, localVue });
 
       await flushPromises();
 
-      expect(actions.getLists).toHaveBeenCalled();
+      expect(actions.getTags).toHaveBeenCalled();
       expect(actions.getEntries).toHaveBeenCalled();
     });
   });
