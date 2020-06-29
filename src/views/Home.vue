@@ -6,7 +6,7 @@
         base-banner(
           :text="updateBanner.message"
           :link="updateBanner.link"
-          mobileText="Join our Discord for behind the scenes"
+          :mobileText="updateBanner.mobileText"
           @close="dismissUpdateBanner(updateBanner.id)"
         )
       header
@@ -36,12 +36,13 @@
       return {
         landing: false,
         updateBanner: {
-          id: 3,
-          link: 'https://discord.gg/XeTFtYW',
+          id: 4,
+          link: 'https://ko-fi.com/kenmei',
           message: `
-            Join our Discord, where you can provide feedback and find fellow
-            manga fans
+            Ko-fi donations are now open. Consider supporting the project by
+            donating a dollar or more
           `,
+          mobileText: 'Consider supporting the project on Ko-fi',
         },
       };
     },
