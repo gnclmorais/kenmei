@@ -18,3 +18,6 @@ Kenmei is the best cross-site manga tracker on the web. It helps you keep track 
 * [Supported sites](https://www.kenmei.co/#/supported-sites)
 * [Changelog and Development updates](http://news.kenmei.co)
 
+## Consider supporting the project
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/B0B81VBGS)
+
