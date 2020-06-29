@@ -112,6 +112,11 @@
             href: 'https://github.com/doutatsu/kenmei',
             icon: 'icon-github',
           },
+          kofi: {
+            heading: 'Ko-fi',
+            href: 'https://ko-fi.com/kenmei',
+            icon: 'icon-kofi',
+          },
         }),
       },
       linkGroupOne: {
