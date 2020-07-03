@@ -36,13 +36,13 @@
       return {
         landing: false,
         updateBanner: {
-          id: 4,
-          link: 'https://ko-fi.com/kenmei',
+          id: 5,
+          link: 'https://news.kenmei.co/monthly-updates/2020/june',
           message: `
-            Ko-fi donations are now open. Consider supporting the project by
-            donating a dollar or more
+            Custom user tags, new manga sources and more in the latest monthly
+            update
           `,
-          mobileText: 'Consider supporting the project on Ko-fi',
+          mobileText: 'Check out the latest monthly update',
         },
       };
     },
