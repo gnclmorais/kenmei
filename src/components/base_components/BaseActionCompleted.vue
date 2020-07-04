@@ -1,16 +1,8 @@
 <template lang="pug">
-  #action-completed
+  .w-full#action-completed
     div
-      .mx-auto.flex.items-center.justify-center.h-12.w-12.rounded-full.bg-green-100
-        svg.h-6.w-6.text-green-600.stroke-current(
-          fill='none'
-          viewbox='0 0 24 24'
-        )
-          path(
-            stroke-linecap='round'
-            stroke-linejoin='round'
-            stroke-width='2' d='M5 13l4 4L19 7'
-          )
+      .icon(:class="classes")
+        component.h-6.w-6(:is="iconName")
       .mt-3.text-center.sm_mt-5
         h3.text-lg.leading-6.font-medium.text-gray-900(v-text="header")
         .mt-2
@@ -28,6 +20,10 @@
         type: String,
         required: true,
       },
+      type: {
+        type: String,
+        default: 'success',
+      },
       text: {
         type: String,
         required: true,
@@ -37,5 +33,25 @@
         required: true,
       },
     },
+    computed: {
+      classes() {
+        return {
+          'bg-green-100 text-green-600': this.type === 'success',
+          'bg-red-100 text-red-600': this.type === 'danger',
+        };
+      },
+      iconName() {
+        return {
+          success: 'icon-check',
+          danger: 'icon-warning',
+        }[this.type];
+      },
+    },
   };
 </script>
+
+<style media="screen" lang="scss" scoped>
+  .icon {
+    @apply mx-auto flex items-center justify-center h-12 w-12 rounded-full;
+  }
+</style>
