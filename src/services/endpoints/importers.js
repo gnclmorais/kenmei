@@ -1,8 +1,13 @@
 import { secure } from '@/modules/axios';
 
-/* eslint-disable import/prefer-default-export */
+const baseURL = '/api/v1/importers';
+
 export const postTrackrMoe = (filteredLists) => secure
   .post('/api/v1/importers/trackr_moe', { lists: filteredLists })
-  .then(() => true)
-  .catch(() => false);
-/* eslint-enable import/prefer-default-export */
+  .then((response) => response)
+  .catch((request) => request.response);
+
+export const postMDList = (url) => secure
+  .post(`${baseURL}/mangadex`, { url })
+  .then((response) => response)
+  .catch((request) => request.response);
