@@ -7,9 +7,10 @@
   )
     template(slot='body')
       base-action-completed(
-        v-if="mangaDexImportInitiated || trackrMoeimportInitiated"
-        header="Import started"
-        text="You will receive an email when your manga list have been imported."
+        v-if="importInitiated"
+        :type="type"
+        :header="completedActionHeader"
+        :text="completedActionText"
         buttonText="Go back to dashboard"
         @completeAction="$emit('closeDialog')"
       )
@@ -55,14 +56,13 @@
 </template>
 
 <script>
+  import debounce from 'lodash/debounce';
   import {
-    Tabs, TabPane, Input, Link, Upload, Message, Loading,
+    Tabs, TabPane, Input, Link, Upload, Message,
   } from 'element-ui';
 
-  import { secure } from '@/modules/axios';
-
   import { processList } from '@/services/importer';
-  import { postTrackrMoe } from '@/services/endpoints/importers';
+  import { postTrackrMoe, postMDList } from '@/services/endpoints/importers';
 
   export default {
     components: {
@@ -82,8 +82,10 @@
       return {
         activeTab: 'trackrMoe',
         importURL: '',
-        mangaDexImportInitiated: false,
-        trackrMoeimportInitiated: false,
+        completedActionText: '',
+        completedActionHeader: '',
+        type: '',
+        importInitiated: false,
         loading: false,
       };
     },
@@ -92,24 +94,40 @@
         return this.importURL.match(/(mangadex.(cc|org)\/list[/])\d+$/) !== null;
       },
     },
+    watch: {
+      visible: debounce(function(newVal) { //eslint-disable-line
+        if (!newVal) {
+          // Reset data to initial state
+          Object.assign(this.$data, this.$options.data.call(this));
+        }
+      }, 250),
+    },
     methods: {
-      importMangaDex() {
+      async importMangaDex() {
         this.loading = true;
 
-        secure.post('/api/v1/importers/mangadex', { url: this.importURL })
-          .then(() => {
-            this.mangaDexImportInitiated = true;
-          })
-          .catch((_error) => {
-            Message.error(
-              'Something went wrong, try again later or contact hi@kenmei.co'
-            );
-          })
-          .then(() => {
-            this.loading = false;
-          });
+        const response = await postMDList(this.importURL);
+
+        if (response.status === 200) {
+          this.completedActionHeader = 'Import started';
+          this.type = 'success';
+          this.completedActionText = response.data;
+        } else if (response.status === 404) {
+          this.completedActionHeader = 'List is private';
+          this.type = 'danger';
+          this.completedActionText = response.data;
+        } else {
+          this.completedActionHeader = 'Something went wrong';
+          this.type = 'danger';
+          this.completedActionText = 'Try again later or contact hi@kenmei.co';
+        }
+
+        this.loading = false;
+        this.importInitiated = true;
       },
       async processMangaDexList(list) {
+        this.loading = true;
+
         const filteredLists = {};
         const listsToImport = processList(list);
 
@@ -122,18 +140,20 @@
             }));
         });
 
-        const loading    = Loading.service({ target: '.el-upload-dragger' });
-        const successful = await postTrackrMoe(filteredLists);
+        const response = await postTrackrMoe(filteredLists);
 
-        if (successful) {
-          this.trackrMoeimportInitiated = true;
+        if (response.status === 200) {
+          this.completedActionHeader = 'Import started';
+          this.type = 'success';
+          this.completedActionText = response.data;
         } else {
-          Message.error(
-            'Something went wrong, try again later or contact hi@kenmei.co'
-          );
+          this.completedActionHeader = 'Something went wrong';
+          this.type = 'danger';
+          this.completedActionText = 'Try again later or contact hi@kenmei.co';
         }
 
-        loading.close();
+        this.loading = false;
+        this.importInitiated = true;
       },
       processUpload(file) {
         const reader = new FileReader();

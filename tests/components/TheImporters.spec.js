@@ -1,6 +1,4 @@
 import Vuex from 'vuex';
-import { Message } from 'element-ui';
-import axios from 'axios';
 import flushPromises from 'flush-promises';
 import TheImporters from '@/components/TheImporters.vue';
 import lists from '@/store/modules/lists';
@@ -14,6 +12,56 @@ localVue.use(Vuex);
 localVue.directive('loading', true);
 
 describe('TheImporters.vue', () => {
+  describe('when closing dialog', () => {
+    let store;
+    let importers;
+
+    beforeEach(() => {
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: {
+              lists: [],
+              entries: [],
+            },
+            actions: lists.actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
+      });
+      importers = shallowMount(TheImporters, {
+        store,
+        localVue,
+        propsData: { visible: true },
+      });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it.skip('resets data to original state', async () => {
+      // Can't get this to work at the moment. Known issue, might be fine in Jest 27
+      // https://github.com/facebook/jest/issues/3465
+
+      jest.useFakeTimers('modern');
+
+      await importers.setData({
+        importURL: 'https://mangadex.org/list/007',
+        activeTab: 'mangaDex',
+        loading: true,
+      });
+
+      await importers.setProps({ visible: false });
+
+      expect(importers.vm.importURL).toEqual('');
+      expect(importers.vm.activeTab).toEqual('trackrMoe');
+      expect(importers.vm.loading).toEqual(false);
+    });
+  });
+
   describe('when importing MangaDex entries from Trackr.moe JSON', () => {
     let importedList;
     let store;
@@ -80,29 +128,33 @@ describe('TheImporters.vue', () => {
           importersEndpoint, 'postTrackrMoe'
         );
 
-        postTrackrMoeMock.mockResolvedValue(true);
+        postTrackrMoeMock.mockResolvedValue({
+          status: 200,
+          data: 'You will receive an email',
+        });
 
         importers.vm.processMangaDexList(importedList);
 
         await flushPromises();
 
         expect(importers.text()).toContain('Import started');
+        expect(importers.text()).toContain('You will receive an email');
       });
 
       it('shows Something went wrong message if import failed', async () => {
-        const errorMessageMock  = jest.spyOn(Message, 'error');
         const postTrackrMoeMock = jest.spyOn(
           importersEndpoint, 'postTrackrMoe'
         );
 
-        postTrackrMoeMock.mockResolvedValue(false);
+        postTrackrMoeMock.mockResolvedValue({ status: 500 });
 
         importers.vm.processMangaDexList(importedList);
 
         await flushPromises();
 
-        expect(errorMessageMock).toHaveBeenCalledWith(
-          'Something went wrong, try again later or contact hi@kenmei.co'
+        expect(importers.text()).toContain('Something went wrong');
+        expect(importers.text()).toContain(
+          'Try again later or contact hi@kenmei.co'
         );
       });
     });
@@ -140,36 +192,57 @@ describe('TheImporters.vue', () => {
       jest.restoreAllMocks();
     });
 
-    it('queues MangaDex MDList import if successful', async () => {
-      const axiosSpy = jest.spyOn(axios, 'post');
+    describe('and request status is success', () => {
+      it('shows success message', async () => {
+        const postMDListSpy = jest.spyOn(importersEndpoint, 'postMDList');
 
-      axiosSpy.mockResolvedValue({ status: 200 });
+        postMDListSpy.mockResolvedValue({
+          status: 200,
+          data: 'You will receive an email',
+        });
 
-      importers.vm.importMangaDex();
+        importers.vm.importMangaDex();
 
-      await flushPromises();
+        await flushPromises();
 
-      expect(axiosSpy).toHaveBeenCalledWith(
-        '/api/v1/importers/mangadex', { url: 'https://mangadex.org/list/007' }
-      );
-
-      expect(importers.text()).toContain('Import started');
+        expect(importers.text()).toContain('Import started');
+        expect(importers.text()).toContain('You will receive an email');
+      });
     });
 
-    it('shows Something went wrong message if import failed', async () => {
-      const errorMessageMock = jest.spyOn(Message, 'error');
-      const axiosSpy         = jest.spyOn(axios, 'post');
+    describe('and request status is not found', () => {
+      it('shows something went wrong message', async () => {
+        const postMDListSpy = jest.spyOn(importersEndpoint, 'postMDList');
 
-      axiosSpy.mockRejectedValue();
+        postMDListSpy.mockResolvedValue({
+          status: 404,
+          data: 'MDList not found',
+        });
 
-      importers.vm.importMangaDex();
+        importers.vm.importMangaDex();
 
-      await flushPromises();
+        await flushPromises();
 
-      expect(errorMessageMock).toHaveBeenCalledWith(
-        'Something went wrong, try again later or contact hi@kenmei.co'
-      );
-      expect(importers.text()).not.toContain('Your MangaDex MDList import');
+        expect(importers.text()).toContain('List is private');
+        expect(importers.text()).toContain('MDList not found');
+      });
+    });
+
+    describe('and request status is not handled', () => {
+      it('shows something went wrong message', async () => {
+        const postMDListSpy = jest.spyOn(importersEndpoint, 'postMDList');
+
+        postMDListSpy.mockResolvedValue({ status: 500 });
+
+        importers.vm.importMangaDex();
+
+        await flushPromises();
+
+        expect(importers.text()).toContain('Something went wrong');
+        expect(importers.text()).toContain(
+          'Try again later or contact hi@kenmei.co'
+        );
+      });
     });
   });
 });
