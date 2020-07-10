@@ -1,5 +1,5 @@
 <template lang="pug">
-  button.btn(
+  button(
     type='button'
     :class='classes'
     :disabled='disabled'
@@ -15,6 +15,10 @@
         type: String,
         default: 'primary',
       },
+      size: {
+        type: String,
+        default: 'md',
+      },
       disabled: {
         type: Boolean,
         default: false,
@@ -29,6 +33,11 @@
           'btn-info': this.type === 'info',
           'btn-warn': this.type === 'warning',
           'btn-danger': this.type === 'danger',
+          'btn-xl': this.size === 'xl',
+          'btn-lg': this.size === 'lg',
+          'btn-md': this.size === 'md',
+          'btn-sm': this.size === 'sm',
+          'btn-xs': this.size === 'xs',
           disabled: this.disabled,
         };
       },
@@ -37,17 +46,12 @@
 </script>
 
 <style lang="scss" scoped>
-  .btn {
-    @apply inline-flex justify-center w-full rounded-md border px-4 py-2;
-    @apply items-center text-base leading-6 font-medium shadow-sm;
-    @apply transition ease-in-out duration-150;
+  button {
+    @apply inline-flex justify-center w-full rounded-md border items-center;
+    @apply font-medium shadow-sm  transition ease-in-out duration-150;
 
     &:focus {
       @apply outline-none;
-    }
-
-    @screen sm {
-      @apply text-sm leading-5;
     }
   }
 
@@ -125,5 +129,25 @@
 
   .disabled {
     @apply opacity-50 cursor-not-allowed;
+  }
+
+  .btn-xl {
+    @apply px-6 py-3 text-base leading-6;
+  }
+
+  .btn-lg {
+    @apply px-4 py-2 text-base leading-6;
+  }
+
+  .btn-md {
+    @apply px-4 py-2 text-sm leading-5;
+  }
+
+  .btn-sm {
+    @apply px-3 py-2 text-sm leading-4;
+  }
+
+  .btn-xs {
+    @apply px-2.5 py-1.5 text-xs leading-4;
   }
 </style>

@@ -6,13 +6,15 @@
           template(v-if="signedIn")
             button.btn-menu(@click.stop='menuVisible = !menuVisible')
               base-hamburger-icon(:visible="menuVisible")
-        .desktop-links(:class="{ 'flex-initial pl-2': !signedIn }")
-          .flex-shrink-0
+          .flex-shrink-0.flex.items-center.ml-2
             router-link(to='/')
               img.block.lg_hidden.h-8.w-auto(
                 src='@/assets/dark-mark.svg'
                 alt='mark'
               )
+        .desktop-links(:class="{ 'flex-initial pl-2': !signedIn }")
+          .flex-shrink-0
+            router-link(to='/')
               img.hidden.lg_block.h-8.w-auto(
                 src='@/assets/dark-logo.svg'
                 alt='logo'
@@ -29,44 +31,51 @@
               )
         .profile(ref="profile")
           template(v-if="!signedIn")
-            base-button.text-sm.leading-5.font-medium(
+            base-button(
               ref="signInButton"
               type="secondary"
               @click="openSignOnWith('TheSignIn')"
             ) Sign In
-            base-button.text-sm.leading-5.font-medium.ml-3.bg-blue-500.hover_bg-blue-400(
+            base-button.ml-3(
               ref="signUpButton"
               @click="openSignOnWith('TheSignUp')"
             ) Register
-          .relative(v-else)
-            button.btn-avatar(@click='profileVisible = !profileVisible')
-              img.h-8.w-8.rounded-full(
-                src='@/assets/default-avatar.png'
-                alt='avatar'
-              )
-            transition(
-              enter-active-class='transition ease-out duration-100'
-              enter-class='transform opacity-0 scale-95'
-              enter-to-class='transform opacity-100 scale-100'
-              leave-active-class='transition ease-in duration-75'
-              leave-class='transform opacity-100 scale-100'
-              leave-to-class='transform opacity-0 scale-95'
-            )
-              .profile-dropdown(v-show='profileVisible')
-                .py-1.rounded-md.bg-white.shadow-xs
-                  .px-4.py-3
-                    p.text-sm.leading-5 Signed in as
-                    p.text-sm.leading-5.font-medium.text-gray-900(
-                      v-text="currentUser.email"
-                    )
-                  .border-t.border-gray-100
-                  router-link.profile-link(
-                    v-for='(link, index) in profileLinks'
-                    :key="index"
-                    :to='link.href'
-                    v-text="link.title"
-                    exact
+          template(v-else)
+            .flex-shrink-0
+              a(href="https://ko-fi.com/kenmei" target="_blank" rel="noreferrer")
+                base-button(size="xs")
+                  icon-cash.-ml-1.mr-2.h-5.w-5
+                  | Donate
+            .relative.ml-4
+              div
+                button.btn-avatar(@click='profileVisible = !profileVisible')
+                  img.h-8.w-8.rounded-full(
+                    src='@/assets/default-avatar.png'
+                    alt='avatar'
                   )
+              transition(
+                enter-active-class='transition ease-out duration-100'
+                enter-class='transform opacity-0 scale-95'
+                enter-to-class='transform opacity-100 scale-100'
+                leave-active-class='transition ease-in duration-75'
+                leave-class='transform opacity-100 scale-100'
+                leave-to-class='transform opacity-0 scale-95'
+              )
+                .profile-dropdown(v-show='profileVisible')
+                  .py-1.rounded-md.bg-white.shadow-xs
+                    .px-4.py-3
+                      p.text-sm.leading-5 Signed in as
+                      p.text-sm.leading-5.font-medium.text-gray-900(
+                        v-text="currentUser.email"
+                      )
+                    .border-t.border-gray-100
+                    router-link.profile-link(
+                      v-for='(link, index) in profileLinks'
+                      :key="index"
+                      :to='link.href'
+                      v-text="link.title"
+                      exact
+                    )
     .menu-dropdown.sm_hidden(v-if="signedIn" v-show="menuVisible")
       .px-2.pt-2.pb-3
         router-link.mobile-link(
