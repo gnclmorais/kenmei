@@ -36,13 +36,12 @@
       return {
         landing: false,
         updateBanner: {
-          id: 5,
-          link: 'https://news.kenmei.co/monthly-updates/2020/june',
+          id: 6,
+          link: 'https://forms.gle/ysLVQipBMHfzuMY6A',
           message: `
-            Custom user tags, new manga sources and more in the latest monthly
-            update
+            Provide feedback for Kenmei, by participating in the latest survey
           `,
-          mobileText: 'Check out the latest monthly update',
+          mobileText: 'Please provide feedback for the site',
         },
       };
     },
