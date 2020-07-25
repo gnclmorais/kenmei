@@ -62,7 +62,7 @@
     "name": "Nonames Scans",
     "url": "https://the-nonames.com/",
     "status": "Supported",
-    "logo": "no_names_scans_logo.jpg"
+    "logo": "no_names_scans.jpg"
   },
   {
     "name": "Edelgarde Scans",
@@ -74,7 +74,7 @@
     "name": "Secret Scans",
     "url": "https://secretscans.co/",
     "status": "Supported",
-    "logo": "secret-scans-logo.jpg"
+    "logo": "secret_scans_logo.jpg"
   },
   {
     "name": "Reaper Scans",
