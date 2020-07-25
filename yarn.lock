@@ -5149,10 +5149,10 @@ find@^0.2.4:
   dependencies:
     traverse-chain "~0.1.0"
 
-fishery@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/fishery/-/fishery-0.4.1.tgz#ba4fb0c79e68ace59e5ae42ae804c28fb54c501a"
-  integrity sha512-MwXwgm2LPBGZbTIxq7E0S8pfEBumrgKmOI4CiVnc6sAQn8xsxGMuEqfnUUyTEKYJRWtZV61YUgcMnmGhBFtiMA==
+fishery@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fishery/-/fishery-1.0.0.tgz#5b38ffc0d640ddd3af05b9ff7bd358a37f6ed589"
+  integrity sha512-DLQtxcSPlLQYY6J0tL/dl7DfPhrULHCAO6fFDGnrXqA830J6AW124fHarYOLnfvcSXNBEooBS/g65N/HecQYjQ==
   dependencies:
     lodash.merge "^4.6.2"
 
