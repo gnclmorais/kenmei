@@ -112,6 +112,10 @@
           this.completedActionHeader = 'Import started';
           this.type = 'success';
           this.completedActionText = response.data;
+        } else if (response.status === 400) {
+          this.completedActionHeader = 'Import currently in progress';
+          this.type = 'danger';
+          this.completedActionText = response.data;
         } else if (response.status === 404) {
           this.completedActionHeader = 'List is private';
           this.type = 'danger';
@@ -145,6 +149,10 @@
         if (response.status === 200) {
           this.completedActionHeader = 'Import started';
           this.type = 'success';
+          this.completedActionText = response.data;
+        } else if (response.status === 400) {
+          this.completedActionHeader = 'Import currently in progress';
+          this.type = 'danger';
           this.completedActionText = response.data;
         } else {
           this.completedActionHeader = 'Something went wrong';
