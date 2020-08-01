@@ -5149,12 +5149,12 @@ find@^0.2.4:
   dependencies:
     traverse-chain "~0.1.0"
 
-fishery@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/fishery/-/fishery-1.0.0.tgz#5b38ffc0d640ddd3af05b9ff7bd358a37f6ed589"
-  integrity sha512-DLQtxcSPlLQYY6J0tL/dl7DfPhrULHCAO6fFDGnrXqA830J6AW124fHarYOLnfvcSXNBEooBS/g65N/HecQYjQ==
+fishery@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/fishery/-/fishery-1.0.1.tgz#0c458ce8d5fc98327600fbb018611c026bbe3eba"
+  integrity sha512-VV8H4ZuCbZ9cCWkrYWLLPoAfpTp0t+hlJVoNWkRRHdXOgQ08wjd8ab9di8/Ed/QhgwxY3h7Y17HgDZ9osaHSSQ==
   dependencies:
-    lodash.merge "^4.6.2"
+    lodash.mergewith "^4.6.2"
 
 flat-cache@^2.0.1:
   version "2.0.1"
@@ -7272,6 +7272,11 @@ lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+
+lodash.mergewith@^4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/lodash.mergewith/-/lodash.mergewith-4.6.2.tgz#617121f89ac55f59047c7aec1ccd6654c6590f55"
+  integrity sha512-GK3g5RPZWTRSeLSpgP8Xhra+pnjBC56q9FZYe1d5RN3TJ35dbkGy3YqBSMbyCrlbi+CM9Z3Jk5yTL7RCsqboyQ==
 
 lodash.sortby@^4.7.0:
   version "4.7.0"
