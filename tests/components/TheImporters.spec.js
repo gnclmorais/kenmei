@@ -123,39 +123,63 @@ describe('TheImporters.vue', () => {
         expect(fileReaderReadTextMock).toHaveBeenCalled();
       });
 
-      it('shows success message', async () => {
-        const postTrackrMoeMock = jest.spyOn(
-          importersEndpoint, 'postTrackrMoe'
-        );
+      describe('and request status is success', () => {
+        it('shows success message', async () => {
+          const postTrackrMoeMock = jest.spyOn(
+            importersEndpoint, 'postTrackrMoe'
+          );
 
-        postTrackrMoeMock.mockResolvedValue({
-          status: 200,
-          data: 'You will receive an email',
+          postTrackrMoeMock.mockResolvedValue({
+            status: 200,
+            data: 'You will receive an email',
+          });
+
+          importers.vm.processMangaDexList(importedList);
+
+          await flushPromises();
+
+          expect(importers.text()).toContain('Import started');
+          expect(importers.text()).toContain('You will receive an email');
         });
-
-        importers.vm.processMangaDexList(importedList);
-
-        await flushPromises();
-
-        expect(importers.text()).toContain('Import started');
-        expect(importers.text()).toContain('You will receive an email');
       });
 
-      it('shows Something went wrong message if import failed', async () => {
-        const postTrackrMoeMock = jest.spyOn(
-          importersEndpoint, 'postTrackrMoe'
-        );
+      describe('and request status is bad request', () => {
+        it('shows that import is currently in progress', async () => {
+          const postTrackrMoeMock = jest.spyOn(
+            importersEndpoint, 'postTrackrMoe'
+          );
 
-        postTrackrMoeMock.mockResolvedValue({ status: 500 });
+          postTrackrMoeMock.mockResolvedValue({
+            status: 400,
+            data: 'Import in progress',
+          });
 
-        importers.vm.processMangaDexList(importedList);
+          importers.vm.processMangaDexList(importedList);
 
-        await flushPromises();
+          await flushPromises();
 
-        expect(importers.text()).toContain('Something went wrong');
-        expect(importers.text()).toContain(
-          'Try again later or contact hi@kenmei.co'
-        );
+          expect(importers.text()).toContain('Import currently in progress');
+          expect(importers.text()).toContain('Import in progress');
+        });
+      });
+
+      describe('and request status is not handled', () => {
+        it('shows Something went wrong message', async () => {
+          const postTrackrMoeMock = jest.spyOn(
+            importersEndpoint, 'postTrackrMoe'
+          );
+
+          postTrackrMoeMock.mockResolvedValue({ status: 500 });
+
+          importers.vm.processMangaDexList(importedList);
+
+          await flushPromises();
+
+          expect(importers.text()).toContain('Something went wrong');
+          expect(importers.text()).toContain(
+            'Try again later or contact hi@kenmei.co'
+          );
+        });
       });
     });
 
@@ -207,6 +231,24 @@ describe('TheImporters.vue', () => {
 
         expect(importers.text()).toContain('Import started');
         expect(importers.text()).toContain('You will receive an email');
+      });
+    });
+
+    describe('and request status is bad request', () => {
+      it('shows that import is currently in progress', async () => {
+        const postMDListSpy = jest.spyOn(importersEndpoint, 'postMDList');
+
+        postMDListSpy.mockResolvedValue({
+          status: 400,
+          data: 'Import in progress',
+        });
+
+        importers.vm.importMangaDex();
+
+        await flushPromises();
+
+        expect(importers.text()).toContain('Import currently in progress');
+        expect(importers.text()).toContain('Import in progress');
       });
     });
 
