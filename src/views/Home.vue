@@ -36,12 +36,13 @@
       return {
         landing: false,
         updateBanner: {
-          id: 6,
-          link: 'https://forms.gle/ysLVQipBMHfzuMY6A',
+          id: 7,
+          link: 'https://news.kenmei.co/monthly-updates/2020/july',
           message: `
-            Provide feedback for Kenmei, by participating in the latest survey
+            Survey results + various under the hood improvements in the 
+            latest monthly update
           `,
-          mobileText: 'Please provide feedback for the site',
+          mobileText: 'Check out the latest monthly update',
         },
       };
     },
