@@ -83,6 +83,12 @@
     "logo": "reaper_scans_logo.jpg"
   },
   {
+    "name": "Nani Scans",
+    "url": "https://naniscans.com/",
+    "status": "Supported",
+    "logo": "nani_scans_logo.jpg"
+  },
+  {
     "name": "Silent Sky",
     "url": "https://www.silentsky-scans.net/",
     "status": "In Development",
