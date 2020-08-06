@@ -89,6 +89,12 @@
     "logo": "nani_scans_logo.jpg"
   },
   {
+    "name": "Meraki Scans",
+    "url": "https://merakiscans.com/",
+    "status": "Supported",
+    "logo": "meraki-scans.jpg"
+  },
+  {
     "name": "Silent Sky",
     "url": "https://www.silentsky-scans.net/",
     "status": "In Development",
@@ -153,12 +159,6 @@
     "url": "https://lhtranslation.net/",
     "status": "Requested",
     "logo": "lhtranslations.jpg"
-  },
-  {
-    "name": "Merakiscans",
-    "url": "https://merakiscans.com/",
-    "status": "Requested",
-    "logo": "meraki-scans.jpg"
   },
   {
     "name": "MangaHere",
