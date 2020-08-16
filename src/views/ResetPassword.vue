@@ -43,7 +43,9 @@
 </template>
 
 <script>
-  import { Form, FormItem, Input, Message } from 'element-ui';
+  import {
+    Form, FormItem, Input, Message,
+  } from 'element-ui';
   import { mapGetters, mapMutations } from 'vuex';
 
   import { edit, reset } from '@/services/endpoints/auth/passwords';
