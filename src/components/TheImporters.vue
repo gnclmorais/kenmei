@@ -174,11 +174,11 @@
           } else if (json.reading) {
             Message.error(
               `You are trying to import partial list. Please use export from
-              Trakr.moe settings page.`
+              Trakr.moe settings page.`,
             );
           } else {
             Message.error(
-              'File is incorrect. Make sure you are uploading Trackr.moe export'
+              'File is incorrect. Make sure you are uploading Trackr.moe export',
             );
           }
         });

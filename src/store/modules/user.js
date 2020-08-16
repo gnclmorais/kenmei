@@ -24,7 +24,7 @@ const actions = {
       .catch((request) => {
         if (request.response.data.error === 'User unconfirmed') {
           Message.info(
-            'Please check your email inbox and confirm your account first'
+            'Please check your email inbox and confirm your account first',
           );
         } else {
           Message.error(request.response.data.error);

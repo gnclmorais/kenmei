@@ -230,7 +230,7 @@ describe('MangaList.vue', () => {
 
           expect(mangaList.vm.entries).toContain(entry1);
           expect(errorMessageMock).toHaveBeenCalledWith(
-            'Deletion failed. Try reloading the page before trying again'
+            'Deletion failed. Try reloading the page before trying again',
           );
         });
       });

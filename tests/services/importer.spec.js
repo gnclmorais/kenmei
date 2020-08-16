@@ -7,7 +7,7 @@ describe('Importer', () => {
       const filtered = Importer.processList(mangaList);
 
       expect(Object.keys(filtered)).toEqual(
-        ['Reading', 'On-Hold', 'Plan to Read']
+        ['Reading', 'On-Hold', 'Plan to Read'],
       );
     });
   });

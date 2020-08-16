@@ -108,7 +108,7 @@ describe('TheImporters.vue', () => {
     describe('when file is valid', () => {
       it('parses manga list', async () => {
         const file = new File(
-          [importedList], 'list.json', { type: 'application/json' }
+          [importedList], 'list.json', { type: 'application/json' },
         );
         const fileReaderReadTextMock = jest.spyOn(window, 'FileReader');
 
@@ -126,7 +126,7 @@ describe('TheImporters.vue', () => {
       describe('and request status is success', () => {
         it('shows success message', async () => {
           const postTrackrMoeMock = jest.spyOn(
-            importersEndpoint, 'postTrackrMoe'
+            importersEndpoint, 'postTrackrMoe',
           );
 
           postTrackrMoeMock.mockResolvedValue({
@@ -146,7 +146,7 @@ describe('TheImporters.vue', () => {
       describe('and request status is bad request', () => {
         it('shows that import is currently in progress', async () => {
           const postTrackrMoeMock = jest.spyOn(
-            importersEndpoint, 'postTrackrMoe'
+            importersEndpoint, 'postTrackrMoe',
           );
 
           postTrackrMoeMock.mockResolvedValue({
@@ -166,7 +166,7 @@ describe('TheImporters.vue', () => {
       describe('and request status is not handled', () => {
         it('shows Something went wrong message', async () => {
           const postTrackrMoeMock = jest.spyOn(
-            importersEndpoint, 'postTrackrMoe'
+            importersEndpoint, 'postTrackrMoe',
           );
 
           postTrackrMoeMock.mockResolvedValue({ status: 500 });
@@ -177,7 +177,7 @@ describe('TheImporters.vue', () => {
 
           expect(importers.text()).toContain('Something went wrong');
           expect(importers.text()).toContain(
-            'Try again later or contact hi@kenmei.co'
+            'Try again later or contact hi@kenmei.co',
           );
         });
       });
@@ -282,7 +282,7 @@ describe('TheImporters.vue', () => {
 
         expect(importers.text()).toContain('Something went wrong');
         expect(importers.text()).toContain(
-          'Try again later or contact hi@kenmei.co'
+          'Try again later or contact hi@kenmei.co',
         );
       });
     });

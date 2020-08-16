@@ -156,7 +156,7 @@
         window.open(
           'https://tinyletter.com/kenmei',
           'popupwindow',
-          'scrollbars=yes,width=800,height=600'
+          'scrollbars=yes,width=800,height=600',
         );
 
         return true;

@@ -106,16 +106,16 @@ describe('lists', () => {
     describe('updateEntry', () => {
       it('updates existing manga entry with the new state', () => {
         let entryToUpdate = factories.entry.build(
-          { id: 1, attributes: { title: 'Manga Title' } }
+          { id: 1, attributes: { title: 'Manga Title' } },
         );
         let entry = factories.entry.build(
-          { id: 2, attributes: { title: 'Manga Title' } }
+          { id: 2, attributes: { title: 'Manga Title' } },
         );
 
         const state = { entries: [entryToUpdate, entry] };
 
         const updatedEntry = factories.entry.build(
-          { id: 1, attributes: { title: 'Updated Title' } }
+          { id: 1, attributes: { title: 'Updated Title' } },
         );
 
         lists.mutations.updateEntry(state, updatedEntry);
@@ -131,13 +131,13 @@ describe('lists', () => {
     describe('replaceEntry', () => {
       it('replaces existing manga entry with the one passed', () => {
         const currentEntry = factories.entry.build(
-          { id: 1, attributes: { title: 'Manga Title' } }
+          { id: 1, attributes: { title: 'Manga Title' } },
         );
 
         const state = { entries: [currentEntry] };
 
         const newEntry = factories.entry.build(
-          { id: 3, attributes: { title: 'Updated Title' } }
+          { id: 3, attributes: { title: 'Updated Title' } },
         );
 
         lists.mutations.replaceEntry(state, { currentEntry, newEntry });
@@ -216,7 +216,7 @@ describe('lists', () => {
 
         expect(axiosSpy).toHaveBeenCalledWith('/api/v1/user_tags/');
         expect(errorMessageSpy).toHaveBeenLastCalledWith(
-          mockResponse.response.data.error
+          mockResponse.response.data.error,
         );
         expect(commit).not.toHaveBeenCalledWith('setTags', mockResponse);
       });
@@ -252,7 +252,7 @@ describe('lists', () => {
 
         expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_entries/');
         expect(errorMessageSpy).toHaveBeenLastCalledWith(
-          mockResponse.response.data.error
+          mockResponse.response.data.error,
         );
         expect(commit).not.toHaveBeenCalledWith('setEntries', mockResponse);
       });

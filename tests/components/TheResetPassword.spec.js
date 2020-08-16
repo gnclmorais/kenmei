@@ -35,7 +35,7 @@ describe('TheResetPassword.vue', () => {
 
       expect(axiosSpy).toHaveBeenCalledWith(
         '/auth/passwords',
-        { email: 'test@example.com' }
+        { email: 'test@example.com' },
       );
     });
 

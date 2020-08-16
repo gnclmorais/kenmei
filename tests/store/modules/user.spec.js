@@ -65,10 +65,10 @@ describe('user', () => {
 
         expect(axiosSpy).toHaveBeenCalledWith(
           '/api/v1/sessions/',
-          { user: mockData }
+          { user: mockData },
         );
         expect(commit).toHaveBeenCalledWith(
-          'setCurrentUser', { user_id: mockResponse.user_id }
+          'setCurrentUser', { user_id: mockResponse.user_id },
         );
       });
 
@@ -92,7 +92,7 @@ describe('user', () => {
 
         expect(commit).not.toHaveBeenCalledWith('setCurrentUser');
         expect(errorMessageSpy).toHaveBeenLastCalledWith(
-          mockResponse.response.data.error
+          mockResponse.response.data.error,
         );
       });
 
@@ -113,7 +113,7 @@ describe('user', () => {
 
         expect(commit).not.toHaveBeenCalledWith('setCurrentUser');
         expect(infoMessageSpy).toHaveBeenLastCalledWith(
-          'Please check your email inbox and confirm your account first'
+          'Please check your email inbox and confirm your account first',
         );
       });
     });
@@ -165,7 +165,7 @@ describe('user', () => {
 
         expect(commit).not.toHaveBeenCalledWith('setCurrentUser');
         expect(errorMessageMock).toHaveBeenLastCalledWith(
-          mockResponse.response.data.error
+          mockResponse.response.data.error,
         );
       });
     });

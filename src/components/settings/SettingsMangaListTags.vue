@@ -121,7 +121,7 @@
         const page = this.currentPage - 1;
         return this.tags.slice(
           page * this.tagsPerPage,
-          (page + 1) * this.tagsPerPage
+          (page + 1) * this.tagsPerPage,
         );
       },
     },

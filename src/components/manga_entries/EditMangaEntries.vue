@@ -144,14 +144,14 @@
       },
       selectedTags() {
         return this.tags.filter(
-          (tag) => this.selectedEntriesTagIDs.includes(tag.id)
+          (tag) => this.selectedEntriesTagIDs.includes(tag.id),
         ).map((tag) => tag.id);
       },
       async loadAvailableSources() {
         this.toggleLoading();
 
         const response = await getMangaSources(
-          this.selectedEntry.manga_series_id
+          this.selectedEntry.manga_series_id,
         );
 
         if (response) {
@@ -161,7 +161,7 @@
           this.mangaSourceID = this.selectedEntry.manga_source_id;
         } else {
           Message.error(
-            "Couldn't fetch available manga sites. Try refreshing the page"
+            "Couldn't fetch available manga sites. Try refreshing the page",
           );
         }
       },

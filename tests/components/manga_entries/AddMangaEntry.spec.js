@@ -118,7 +118,7 @@ describe('AddMangaEntry.vue', () => {
         const infoMessageMock = jest.spyOn(Message, 'info');
 
         addMangaEntrySpy.mockRejectedValue(
-          { response: { status: 404, data: 'Manga was not found' } }
+          { response: { status: 404, data: 'Manga was not found' } },
         );
 
         addMangaEntry.vm.mangaDexSearch();
@@ -133,7 +133,7 @@ describe('AddMangaEntry.vue', () => {
         const infoMessageMock = jest.spyOn(Message, 'info');
 
         addMangaEntrySpy.mockRejectedValue(
-          { response: { status: 406, data: 'Manga already added' } }
+          { response: { status: 406, data: 'Manga already added' } },
         );
 
         addMangaEntry.vm.mangaDexSearch();

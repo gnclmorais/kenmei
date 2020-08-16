@@ -58,7 +58,7 @@ describe('SettingsMangaListTags.vue', () => {
         await flushPromises();
 
         expect(errorMessageMock).toHaveBeenCalledWith(
-          'Something went wrong, try refreshing the page'
+          'Something went wrong, try refreshing the page',
         );
       });
     });
@@ -80,7 +80,7 @@ describe('SettingsMangaListTags.vue', () => {
     describe('and action is Edit', () => {
       it('shows modal with populated tag details', async () => {
         await mangaListTags.findAllComponents(BaseDropdown).at(1).vm.$emit(
-          'click', 'Edit'
+          'click', 'Edit',
         );
 
         expect(mangaListTags.vm.form.id).toEqual(tag2.id);
@@ -93,7 +93,7 @@ describe('SettingsMangaListTags.vue', () => {
     describe('and action is Delete', () => {
       it('shows modal with populated tag details', async () => {
         await mangaListTags.findAllComponents(BaseDropdown).at(1).vm.$emit(
-          'click', 'Delete'
+          'click', 'Delete',
         );
 
         expect(mangaListTags.vm.form.id).toEqual(tag2.id);
@@ -268,7 +268,7 @@ describe('SettingsMangaListTags.vue', () => {
         tagsSpy.mockResolvedValue({ status: 200 });
 
         await mangaListTags.findAllComponents(BaseDropdown).at(1).vm.$emit(
-          'click', 'Delete'
+          'click', 'Delete',
         );
 
         await flushPromises();
@@ -284,7 +284,7 @@ describe('SettingsMangaListTags.vue', () => {
         tagsSpy.mockResolvedValue({ status: 500, data: 'Not your tag' });
 
         await mangaListTags.findAllComponents(BaseDropdown).at(1).vm.$emit(
-          'click', 'Delete'
+          'click', 'Delete',
         );
 
         await flushPromises();

@@ -17,7 +17,7 @@ describe('MangaEntriesErrors', () => {
       expect(successful).toBeTruthy();
       expect(reportMangaEntriesMock).toHaveBeenCalledWith(
         '/api/v1/manga_entries_errors/',
-        { ids: ['1'], issue_id: 0 }
+        { ids: ['1'], issue_id: 0 },
       );
     });
 

@@ -50,7 +50,7 @@ describe('EditMangaEntries.vue', () => {
           await editMangaEntries.setProps({ selectedEntries: [entry1] });
 
           expect(editMangaEntries.vm.$data.selectedStatus).toEqual(
-            entry1.attributes.status
+            entry1.attributes.status,
           );
         });
       });
@@ -82,7 +82,7 @@ describe('EditMangaEntries.vue', () => {
         it('loads available sources', async () => {
           const availableSources = factories.source.buildList(1);
           const getMangaSourcesSpy = jest.spyOn(
-            mangaSources, 'getMangaSources'
+            mangaSources, 'getMangaSources',
           );
 
           getMangaSourcesSpy.mockResolvedValue({ data: availableSources });
@@ -93,14 +93,14 @@ describe('EditMangaEntries.vue', () => {
 
           expect(editMangaEntries.vm.$data.mangaSourceID).toEqual(entry1.id);
           expect(editMangaEntries.vm.$data.availableSources).toEqual(
-            availableSources
+            availableSources,
           );
         });
 
         it("shows error when available sources didn't load", async () => {
           const errorMessageMock = jest.spyOn(Message, 'error');
           const getMangaSourcesSpy = jest.spyOn(
-            mangaSources, 'getMangaSources'
+            mangaSources, 'getMangaSources',
           );
 
           getMangaSourcesSpy.mockResolvedValue(false);
@@ -118,7 +118,7 @@ describe('EditMangaEntries.vue', () => {
             loading: false,
           });
           expect(errorMessageMock).toHaveBeenCalledWith(
-            "Couldn't fetch available manga sites. Try refreshing the page"
+            "Couldn't fetch available manga sites. Try refreshing the page",
           );
         });
       });
@@ -140,7 +140,7 @@ describe('EditMangaEntries.vue', () => {
 
     afterEach(() => {
       expect(updateMangaEntryMock).toHaveBeenCalledWith(
-        1, { status: 2, manga_source_id: 1, user_tag_ids: [] }
+        1, { status: 2, manga_source_id: 1, user_tag_ids: [] },
       );
     });
 
@@ -182,7 +182,7 @@ describe('EditMangaEntries.vue', () => {
 
     afterEach(() => {
       expect(updateMangaEntriesMock).toHaveBeenCalledWith(
-        [1, 2], { status: 2, user_tag_ids: [] }
+        [1, 2], { status: 2, user_tag_ids: [] },
       );
     });
 
@@ -234,7 +234,7 @@ describe('EditMangaEntries.vue', () => {
         expect(store.state.lists.entries).toEqual([entry1, entry2]);
         expect(store.state.lists.entries).not.toEqual(updatedMangaEntries);
         expect(errorMessageMock).toHaveBeenCalledWith(
-          "Couldn't update. Try refreshing the page"
+          "Couldn't update. Try refreshing the page",
         );
       });
     });

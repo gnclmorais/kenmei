@@ -53,7 +53,7 @@ describe('registrations', () => {
       expect(successful.status).toBe(200);
       expect(updateSpy).toHaveBeenCalledWith(
         `/auth/registrations/${user.id}`,
-        { user: { email: 'new_email@example.com' } }
+        { user: { email: 'new_email@example.com' } },
       );
     });
 

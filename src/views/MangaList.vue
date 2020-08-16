@@ -171,8 +171,8 @@
       trackedEntriesIDs() {
         const trackedIDs = this.selectedEntries.map(
           (entry) => entry.attributes.tracked_entries.map(
-            (trackedEntry) => trackedEntry.id
-          )
+            (trackedEntry) => trackedEntry.id,
+          ),
         );
 
         return [].concat(...trackedIDs);
@@ -201,7 +201,7 @@
         if (this.searchTerm.length) {
           filtered = filtered.filter(
             (entry) => entry.attributes.title.toLowerCase()
-              .includes(this.searchTerm.toLowerCase())
+              .includes(this.searchTerm.toLowerCase()),
           );
         }
 
@@ -247,7 +247,7 @@
           this.removeEntries(this.trackedEntriesIDs);
         } else {
           Message.error(
-            'Deletion failed. Try reloading the page before trying again'
+            'Deletion failed. Try reloading the page before trying again',
           );
         }
       },
