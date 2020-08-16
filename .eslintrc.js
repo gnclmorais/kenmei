@@ -54,5 +54,11 @@ module.exports = {
         factories: false,
       },
     },
+    {
+      files: ['tests/fixtures/*'],
+      rules: {
+        'max-len': 'off',
+      },
+    },
   ],
 };
