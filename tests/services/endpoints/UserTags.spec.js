@@ -41,7 +41,7 @@ describe('UserTags', () => {
       expect(response.data).toEqual(data);
       expect(getMangaSourcesSpy).toHaveBeenCalledWith(
         '/api/v1/user_tags',
-        { user_tag: { name: data.name, description: data.description } }
+        { user_tag: { name: data.name, description: data.description } },
       );
     });
 
@@ -67,7 +67,7 @@ describe('UserTags', () => {
       expect(response.data).toEqual(data);
       expect(getMangaSourcesSpy).toHaveBeenCalledWith(
         `/api/v1/user_tags/${data.id}`,
-        { user_tag: { id: data.id, name: 'New Tag', description: '' } }
+        { user_tag: { id: data.id, name: 'New Tag', description: '' } },
       );
     });
 

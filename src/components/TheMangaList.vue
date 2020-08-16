@@ -201,7 +201,7 @@
         const { status } = entry.attributes;
 
         return {
-          1: 'success', 2: 'warning', 3: 'warning-light', 5: 'danger'
+          1: 'success', 2: 'warning', 3: 'warning-light', 5: 'danger',
         }[status];
       },
       async setLastRead(entry) {
@@ -215,7 +215,7 @@
         const response = await updateMangaEntry(entry.id, attributes);
         if (response) {
           Message.info(
-            `Updated last read chapter to ${attributes.last_chapter_read}`
+            `Updated last read chapter to ${attributes.last_chapter_read}`,
           );
           this.updateEntry(response);
         } else {

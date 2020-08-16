@@ -20,7 +20,7 @@ describe('confirmations', () => {
 
       expect(successful.status).toBe(200);
       expect(createSpy).toHaveBeenCalledWith(
-        '/auth/passwords', { email: 'user1@example.com' }
+        '/auth/passwords', { email: 'user1@example.com' },
       );
     });
 
@@ -61,7 +61,7 @@ describe('confirmations', () => {
             password_confirmation: 'new-password',
             current_password: 'password',
           },
-        }
+        },
       );
     });
 
@@ -90,7 +90,7 @@ describe('confirmations', () => {
 
       expect(successful.status).toBe(200);
       expect(resetSpy).toHaveBeenCalledWith(
-        '/auth/passwords/reset', { user, reset_password_token: 'token' }
+        '/auth/passwords/reset', { user, reset_password_token: 'token' },
       );
     });
 
@@ -117,7 +117,7 @@ describe('confirmations', () => {
 
       expect(successful.status).toBe(200);
       expect(editSpy).toHaveBeenCalledWith(
-        '/auth/passwords/edit', { params: { reset_password_token: 'token' } }
+        '/auth/passwords/edit', { params: { reset_password_token: 'token' } },
       );
     });
 

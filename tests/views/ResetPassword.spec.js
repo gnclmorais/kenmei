@@ -72,7 +72,7 @@ describe('ResetPassword.vue', () => {
         const error = 'Token not found, please reset your password again';
 
         tokenValidationSpy.mockResolvedValue(
-          { data: { error: 'Token not found' } }
+          { data: { error: 'Token not found' } },
         );
 
         resetPassword = shallowMount(ResetPassword, {
@@ -92,7 +92,7 @@ describe('ResetPassword.vue', () => {
         const error = 'Token has expired, please reset your password again';
 
         tokenValidationSpy.mockResolvedValue(
-          { data: { error: 'Token has expired' } }
+          { data: { error: 'Token has expired' } },
         );
 
         resetPassword = shallowMount(ResetPassword, {
@@ -112,7 +112,7 @@ describe('ResetPassword.vue', () => {
         const error = 'Something went wrong, try again later or contact hi@kenmei.co';
 
         tokenValidationSpy.mockResolvedValue(
-          { data: { error: 'Unexpected' } }
+          { data: { error: 'Unexpected' } },
         );
 
         resetPassword = shallowMount(ResetPassword, {
@@ -184,7 +184,7 @@ describe('ResetPassword.vue', () => {
 
         expect(router.currentRoute.name).toBe('manga-list');
         expect(mutations.setCurrentUser).toHaveBeenCalledWith(
-          { currentUser: null, dissmissedBannerID: null }, user
+          { currentUser: null, dissmissedBannerID: null }, user,
         );
       });
     });
@@ -202,7 +202,7 @@ describe('ResetPassword.vue', () => {
         const errorMessageSpy = jest.spyOn(Message, 'error');
 
         resetPasswordSpy.mockResolvedValue(
-          { status: 500, data: { error: 'Wrong user' } }
+          { status: 500, data: { error: 'Wrong user' } },
         );
 
         resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');

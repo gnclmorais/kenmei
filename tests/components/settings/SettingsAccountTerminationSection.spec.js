@@ -62,7 +62,7 @@ describe('AccountTerminationSection.vue', () => {
           await flushPromises();
 
           expect(successMessageSpy).toHaveBeenCalledWith(
-            'Your account has been deleted successfully'
+            'Your account has been deleted successfully',
           );
         });
 
@@ -72,7 +72,7 @@ describe('AccountTerminationSection.vue', () => {
           await flushPromises();
 
           expect(mutations.setCurrentUser).toHaveBeenCalledWith(
-            { currentUser }, null
+            { currentUser }, null,
           );
           expect(router.currentRoute.path).toBe('/');
         });

@@ -103,7 +103,7 @@ describe('TheMangaList.vue', () => {
       await flushPromises();
 
       expect(infoMessageMock).toHaveBeenCalledWith(
-        'Updated last read chapter to 2'
+        'Updated last read chapter to 2',
       );
     });
 
@@ -119,7 +119,7 @@ describe('TheMangaList.vue', () => {
       await flushPromises();
 
       expect(errorMessageMock).toHaveBeenCalledWith(
-        "Couldn't update. Try refreshing the page"
+        "Couldn't update. Try refreshing the page",
       );
     });
   });
@@ -161,7 +161,7 @@ describe('TheMangaList.vue', () => {
       await mangaList.setProps({
         tableData: [
           factories.entry.build(
-            { links: { last_chapter_available_url: null } }
+            { links: { last_chapter_available_url: null } },
           ),
         ],
       });

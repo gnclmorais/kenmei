@@ -8,7 +8,7 @@ const icons = require.context('./icons', false, /Icon[A-Z]\w+\.vue$/);
 const requireComponent = require.context(
   './base_components',
   true,
-  /Base[A-Z]\w+\.(vue|js)$/
+  /Base[A-Z]\w+\.(vue|js)$/,
 );
 
 // Register all base components

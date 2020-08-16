@@ -17,7 +17,7 @@ describe('importers', () => {
       expect(response.data).toEqual('Success');
       expect(postTrackrMoeSpy).toHaveBeenLastCalledWith(
         '/api/v1/importers/trackr_moe',
-        { lists: {} }
+        { lists: {} },
       );
     });
 
@@ -40,7 +40,7 @@ describe('importers', () => {
       expect(response.data).toEqual('Good work');
       expect(postMDListSpy).toHaveBeenLastCalledWith(
         '/api/v1/importers/mangadex',
-        { url: 'mdlist.example/list/1' }
+        { url: 'mdlist.example/list/1' },
       );
     });
 

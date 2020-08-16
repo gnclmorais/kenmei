@@ -71,7 +71,7 @@ describe('UserConfirmation.vue', () => {
 
         expect(router.currentRoute.name).toBe('manga-list');
         expect(mutations.setCurrentUser).toHaveBeenCalledWith(
-          { currentUser: null, dissmissedBannerID: null }, user
+          { currentUser: null, dissmissedBannerID: null }, user,
         );
       });
     });
@@ -79,7 +79,7 @@ describe('UserConfirmation.vue', () => {
     describe('when token is invalid', () => {
       it('shows token not valid validation error', async () => {
         confirmationsSpy.mockResolvedValue(
-          { data: { error: 'Token not found' } }
+          { data: { error: 'Token not found' } },
         );
 
         const userConfirmation = shallowMount(UserConfirmation, {

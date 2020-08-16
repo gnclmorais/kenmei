@@ -20,7 +20,7 @@ describe('confirmations', () => {
 
       expect(successful.status).toBe(200);
       expect(showSpy).toHaveBeenCalledWith(
-        '/auth/confirmations', { params: { confirmation_token: 'token' } }
+        '/auth/confirmations', { params: { confirmation_token: 'token' } },
       );
     });
 

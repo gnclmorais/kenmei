@@ -36,7 +36,7 @@ describe('AccountProfileSection.vue', () => {
         });
 
         expect(profileSection.text()).toContain(
-          'Currently waiting confirmation for:'
+          'Currently waiting confirmation for:',
         );
       });
     });
@@ -74,7 +74,7 @@ describe('AccountProfileSection.vue', () => {
         await flushPromises();
 
         expect(successMessageSpy).toHaveBeenCalledWith(
-          'Email Confirmation has been sent to your new email'
+          'Email Confirmation has been sent to your new email',
         );
       });
 
@@ -90,7 +90,7 @@ describe('AccountProfileSection.vue', () => {
           {
             email: currentUser.email,
             unconfirmedEmail: 'new_email@example.com',
-          }
+          },
         );
       });
     });

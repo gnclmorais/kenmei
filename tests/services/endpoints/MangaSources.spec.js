@@ -18,7 +18,7 @@ describe('MangaSources', () => {
       expect(successful).toEqual(data);
       expect(getMangaSourcesSpy).toHaveBeenCalledWith(
         '/api/v1/manga_sources',
-        { params: { manga_source: { filter: { manga_series: 1 } } } }
+        { params: { manga_source: { filter: { manga_series: 1 } } } },
       );
     });
 

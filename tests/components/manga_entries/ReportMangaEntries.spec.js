@@ -45,7 +45,7 @@ describe('ReportMangaEntries.vue', () => {
   describe('when reporting issues', () => {
     beforeEach(() => {
       postMangaEntriesErrorsMock = jest.spyOn(
-        mangaEntriesErrors, 'postMangaEntriesErrors'
+        mangaEntriesErrors, 'postMangaEntriesErrors',
       );
     });
 
@@ -65,7 +65,7 @@ describe('ReportMangaEntries.vue', () => {
 
         expect(reportMangaEntries.emitted('closeDialog')).toBeTruthy();
         expect(infoMessageMock).toHaveBeenCalledWith(
-          'Issue reported successfully'
+          'Issue reported successfully',
         );
       });
     });
@@ -81,7 +81,7 @@ describe('ReportMangaEntries.vue', () => {
         await flushPromises();
 
         expect(errorMessageMock).toHaveBeenCalledWith(
-          'Failed to report. Try reloading the page before trying again'
+          'Failed to report. Try reloading the page before trying again',
         );
       });
     });

@@ -84,7 +84,7 @@
         this.loading = true;
 
         const successful = await postMangaEntriesErrors(
-          this.selectedEntriesIDs, this.currentIssue
+          this.selectedEntriesIDs, this.currentIssue,
         );
 
         this.loading = false;
@@ -94,7 +94,7 @@
           Message.success('Issue reported successfully');
         } else {
           Message.error(
-            'Failed to report. Try reloading the page before trying again'
+            'Failed to report. Try reloading the page before trying again',
           );
         }
       },

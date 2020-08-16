@@ -43,7 +43,7 @@ describe('API', () => {
     afterEach(() => {
       expect(axios.put).toHaveBeenCalledWith(
         `/api/v1/manga_entries/${mangaEntry.id}`,
-        { manga_entry: attributes }
+        { manga_entry: attributes },
       );
     });
 
@@ -86,7 +86,7 @@ describe('API', () => {
     afterEach(() => {
       expect(axios.put).toHaveBeenCalledWith(
         '/api/v1/manga_entries/bulk_update',
-        { ids, manga_entry: attributes }
+        { ids, manga_entry: attributes },
       );
     });
 
@@ -122,7 +122,7 @@ describe('API', () => {
     afterEach(() => {
       expect(axios.delete).toHaveBeenCalledWith(
         '/api/v1/manga_entries/bulk_destroy',
-        { data: { ids } }
+        { data: { ids } },
       );
     });
 
