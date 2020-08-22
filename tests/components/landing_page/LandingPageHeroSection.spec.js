@@ -46,7 +46,7 @@ describe('LandingPageHeroSection.vue', () => {
 
     describe('@events', () => {
       it('@signOnOpened - emits signOnOpened with nav event', () => {
-        hero.find(Nav).vm.$emit('signOnOpened', 'TheSignIn');
+        hero.findComponent(Nav).vm.$emit('signOnOpened', 'TheSignIn');
 
         expect(hero.emitted('signOnOpened')[0]).toEqual(['TheSignIn']);
       });

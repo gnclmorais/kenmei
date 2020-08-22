@@ -117,7 +117,7 @@ describe('SettingsMangaListTags.vue', () => {
     });
 
     it('shows tag creation modal', async () => {
-      mangaListTags.find({ ref: 'openTagCreationModal' }).trigger('click');
+      mangaListTags.findComponent({ ref: 'openTagCreationModal' }).trigger('click');
 
       expect(mangaListTags.vm.modalVisible).toBeTruthy();
     });
@@ -130,11 +130,11 @@ describe('SettingsMangaListTags.vue', () => {
 
         tagsSpy.mockResolvedValue({ status: 200, data: newTag });
 
-        await mangaListTags.find({ ref: 'openTagCreationModal' })
+        await mangaListTags.findComponent({ ref: 'openTagCreationModal' })
           .trigger('click');
         await mangaListTags.setData({ form: newTag });
 
-        mangaListTags.find({ ref: 'addTagButton' }).trigger('click');
+        mangaListTags.findComponent({ ref: 'addTagButton' }).trigger('click');
 
         await flushPromises();
 
@@ -155,13 +155,13 @@ describe('SettingsMangaListTags.vue', () => {
         const errorMessageMock = jest.spyOn(Message, 'error');
         tagsSpy.mockResolvedValue({ status: 500, data: 'Name exists' });
 
-        await mangaListTags.find({ ref: 'openTagCreationModal' })
+        await mangaListTags.findComponent({ ref: 'openTagCreationModal' })
           .trigger('click');
         await mangaListTags.setData({
           form: factories.userTag.build({ id: null }),
         });
 
-        mangaListTags.find({ ref: 'addTagButton' }).trigger('click');
+        mangaListTags.findComponent({ ref: 'addTagButton' }).trigger('click');
 
         await flushPromises();
 
@@ -202,7 +202,7 @@ describe('SettingsMangaListTags.vue', () => {
 
         await mangaListTags.setData({ form: updatedTag });
 
-        mangaListTags.find({ ref: 'addTagButton' }).trigger('click');
+        mangaListTags.findComponent({ ref: 'addTagButton' }).trigger('click');
 
         await flushPromises();
 
@@ -227,7 +227,7 @@ describe('SettingsMangaListTags.vue', () => {
 
         await mangaListTags.setData({ form: factories.userTag.build() });
 
-        mangaListTags.find({ ref: 'addTagButton' }).trigger('click');
+        mangaListTags.findComponent({ ref: 'addTagButton' }).trigger('click');
 
         await flushPromises();
 

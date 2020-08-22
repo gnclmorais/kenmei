@@ -41,13 +41,14 @@ describe('BaseNavLight.vue', () => {
     });
 
     it('renders sign on buttons', () => {
-      expect(nav.contains('base-button-stub')).toBeTruthy();
+      expect(nav.text()).toContain('Sign In');
+      expect(nav.text()).toContain('Register');
     });
 
     it('does not render navigation', () => {
-      expect(nav.contains('.btn-menu')).toBeFalsy();
-      expect(nav.contains('.mobile-link')).toBeFalsy();
-      expect(nav.contains('.desktop-link')).toBeFalsy();
+      expect(nav.find('.btn-menu').exists()).toBeFalsy();
+      expect(nav.find('.mobile-link').exists()).toBeFalsy();
+      expect(nav.find('.desktop-link').exists()).toBeFalsy();
     });
 
     describe('when clicking Sign In ', () => {
@@ -63,7 +64,7 @@ describe('BaseNavLight.vue', () => {
         expect(nav.vm.$data.activeSignOnComponent).toContain('TheSignIn');
         expect(nav.vm.$data.signOnVisible).toBeFalsy();
 
-        await nav.find({ ref: 'signUpButton' }).trigger('click');
+        await nav.findComponent({ ref: 'signUpButton' }).trigger('click');
 
         expect(nav.vm.$data.activeSignOnComponent).toContain('TheSignUp');
         expect(nav.vm.$data.signOnVisible).toBeTruthy();
@@ -101,7 +102,7 @@ describe('BaseNavLight.vue', () => {
     });
 
     it('does not render signOn modal', () => {
-      expect(nav.contains('base-modal-stub')).toBeFalsy();
+      expect(nav.find('base-modal-stub').exists()).toBeFalsy();
     });
 
     describe('lifecycle', () => {

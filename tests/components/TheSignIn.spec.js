@@ -71,7 +71,7 @@ describe('TheSignIn.vue', () => {
           data() { return { user: userData }; },
         });
 
-        signIn.find({ ref: 'signInSubmit' }).trigger('click');
+        signIn.findComponent({ ref: 'signInSubmit' }).trigger('click');
 
         expect(actions.signIn).toHaveBeenCalledWith(expect.anything(), userData);
       });
@@ -79,7 +79,7 @@ describe('TheSignIn.vue', () => {
 
     describe('when form is invalid', () => {
       it('shows validation errors', async () => {
-        await signIn.find({ ref: 'signInSubmit' }).trigger('click');
+        await signIn.findComponent({ ref: 'signInSubmit' }).trigger('click');
 
         expect(signIn.text()).toContain("Password can't be blank");
       });

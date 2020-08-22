@@ -159,7 +159,7 @@ describe('ResetPassword.vue', () => {
         },
       });
 
-      await resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
+      await resetPassword.findComponent({ ref: 'resetPasswordSubmit' }).trigger('click');
 
       expect(resetPassword.text()).toContain('Passwords do not match');
     });
@@ -178,7 +178,7 @@ describe('ResetPassword.vue', () => {
 
         resetPasswordSpy.mockResolvedValue({ status: 200, data: user });
 
-        resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
+        resetPassword.findComponent({ ref: 'resetPasswordSubmit' }).trigger('click');
 
         await flushPromises();
 
@@ -205,7 +205,7 @@ describe('ResetPassword.vue', () => {
           { status: 500, data: { error: 'Wrong user' } },
         );
 
-        resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
+        resetPassword.findComponent({ ref: 'resetPasswordSubmit' }).trigger('click');
 
         await flushPromises();
 

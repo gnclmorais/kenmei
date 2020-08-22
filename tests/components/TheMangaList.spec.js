@@ -76,7 +76,7 @@ describe('TheMangaList.vue', () => {
 
       expect(mangaList.vm.$data.entryUpdated).toBeNull();
 
-      mangaList.find({ ref: 'updateEntryButton' }).trigger('click');
+      mangaList.findComponent({ ref: 'updateEntryButton' }).trigger('click');
 
       expect(mangaList.vm.$data.entryUpdated).toBe(defaultEntries[0]);
 
@@ -98,7 +98,7 @@ describe('TheMangaList.vue', () => {
 
       updateMangaEntryMock.mockResolvedValue(mangaEntry);
 
-      mangaList.find({ ref: 'updateEntryButton' }).trigger('click');
+      mangaList.findComponent({ ref: 'updateEntryButton' }).trigger('click');
 
       await flushPromises();
 
@@ -114,7 +114,7 @@ describe('TheMangaList.vue', () => {
       // issue with using it
       updateMangaEntryMock.mockResolvedValue(false);
 
-      mangaList.find({ ref: 'updateEntryButton' }).trigger('click');
+      mangaList.findComponent({ ref: 'updateEntryButton' }).trigger('click');
 
       await flushPromises();
 
@@ -139,7 +139,7 @@ describe('TheMangaList.vue', () => {
     });
 
     it('@editEntry - when editing an entry, emits editEntry', async () => {
-      mangaList.find({ ref: 'editEntryButton' }).trigger('click');
+      mangaList.findComponent({ ref: 'editEntryButton' }).trigger('click');
 
       expect(mangaList.emitted('editEntry')).toBeTruthy();
       expect(mangaList.emitted('editEntry')[0]).toEqual([entry2]);

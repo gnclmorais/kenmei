@@ -47,13 +47,13 @@ describe('LandingPageNavigation.vue', () => {
 
     describe('@events', () => {
       it('@signOnOpened - emits TheSignIn when clicking Sign In', () => {
-        nav.find({ ref: 'SignInButton' }).trigger('click');
+        nav.findComponent({ ref: 'SignInButton' }).trigger('click');
 
         expect(nav.emitted('signOnOpened')[0]).toEqual(['TheSignIn']);
       });
 
       it('@signOnOpened - emits TheSignUp when clicking Register', () => {
-        nav.find({ ref: 'SignUpButton' }).trigger('click');
+        nav.findComponent({ ref: 'SignUpButton' }).trigger('click');
 
         expect(nav.emitted('signOnOpened')[0]).toEqual(['TheSignUp']);
       });

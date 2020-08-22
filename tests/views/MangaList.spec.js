@@ -82,18 +82,18 @@ describe('MangaList.vue', () => {
         },
       });
 
-      modal = mangaList.find({ ref: 'addMangaEntryModal' });
+      modal = mangaList.findComponent({ ref: 'addMangaEntryModal' });
     });
 
     it('shows add manga entry modal', async () => {
-      await mangaList.find({ ref: 'addMangaEntryModalButton' }).trigger('click');
+      await mangaList.findComponent({ ref: 'addMangaEntryModalButton' }).trigger('click');
 
       expect(modal.element).toBeVisible();
     });
 
     describe('@events', () => {
       it('@dialogClosed - closes add manga dialog', () => {
-        mangaList.find(AddMangaEntry).vm.$emit('dialogClosed');
+        mangaList.findComponent(AddMangaEntry).vm.$emit('dialogClosed');
 
         expect(mangaList.vm.$data.dialogVisible).toBe(false);
       });
@@ -119,11 +119,11 @@ describe('MangaList.vue', () => {
         },
       });
 
-      modal = mangaList.find({ ref: 'editMangaEntryModal' });
+      modal = mangaList.findComponent({ ref: 'editMangaEntryModal' });
     });
 
     it('shows edit manga entries modal', async () => {
-      await mangaList.find(BulkActions).vm.$emit('edit');
+      await mangaList.findComponent(BulkActions).vm.$emit('edit');
 
       expect(modal.element).toBeVisible();
     });
@@ -132,14 +132,14 @@ describe('MangaList.vue', () => {
       it('@editComplete - resets selected manga entries and closes modal', async () => {
         await mangaList.setData({ editDialogVisible: true });
 
-        mangaList.find(EditMangaEntries).vm.$emit('editComplete');
+        mangaList.findComponent(EditMangaEntries).vm.$emit('editComplete');
 
         expect(mangaList.vm.$data.editDialogVisible).toBeFalsy();
         expect(mangaList.vm.$data.selectedEntries).toEqual([]);
       });
 
       it('@editEntry - shows edit manga entry dialog with specific entry', () => {
-        mangaList.find(TheMangaList).vm.$emit('editEntry', entry1);
+        mangaList.findComponent(TheMangaList).vm.$emit('editEntry', entry1);
 
         expect(mangaList.vm.$data.editDialogVisible).toBeTruthy();
         expect(mangaList.vm.$data.selectedEntries).toEqual([entry1]);
@@ -246,7 +246,10 @@ describe('MangaList.vue', () => {
     it('@seriesSelected - toggles bulk actions and sets selected series', async () => {
       expect(mangaList.find('bulk-actions-stub').element).not.toBeVisible();
 
-      await mangaList.find(TheMangaList).vm.$emit('seriesSelected', [entry1]);
+      await mangaList.findComponent(TheMangaList).vm.$emit(
+        'seriesSelected',
+        [entry1]
+      );
 
       expect(mangaList.find('bulk-actions-stub').element).toBeVisible();
       expect(mangaList.vm.$data.selectedEntries).toContain(entry1);
