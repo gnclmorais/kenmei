@@ -111,7 +111,7 @@ describe('BaseNavLight.vue', () => {
           nav = shallowMount(BaseNavLight, {
             store,
             localVue,
-            attachToDocument: true,
+            attachTo: 'body',
             stubs: {
               RouterLink: RouterLinkStub,
             },

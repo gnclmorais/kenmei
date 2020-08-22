@@ -111,7 +111,7 @@ describe('BaseNavDark.vue', () => {
           nav = shallowMount(BaseNavDark, {
             store,
             localVue,
-            attachToDocument: true,
+            attachTo: 'body',
             stubs: {
               RouterLink: RouterLinkStub,
             },

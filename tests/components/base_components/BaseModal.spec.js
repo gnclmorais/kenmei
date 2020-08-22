@@ -11,7 +11,7 @@ describe('BaseModal.vue', () => {
     it('gets modal closed', () => {
       const baseModal = shallowMount(BaseModal, {
         localVue,
-        attachToDocument: true,
+        attachTo: 'body',
         propsData: { visible: true },
       });
 
