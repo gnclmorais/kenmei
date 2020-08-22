@@ -29,7 +29,7 @@ describe('ReportMangaEntries.vue', () => {
   });
 
   it('disables submit button if only one entry selected for duplicated report', async () => {
-    const button = reportMangaEntries.find({ ref: 'reportEntriesButton' });
+    const button = reportMangaEntries.findComponent({ ref: 'reportEntriesButton' });
 
     await reportMangaEntries.setData({ currentIssue: 1 });
 

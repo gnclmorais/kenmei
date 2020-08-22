@@ -11,7 +11,7 @@ describe('BaseModal.vue', () => {
     it('gets modal closed', () => {
       const baseModal = shallowMount(BaseModal, {
         localVue,
-        attachToDocument: true,
+        attachTo: 'body',
         propsData: { visible: true },
       });
 
@@ -25,7 +25,7 @@ describe('BaseModal.vue', () => {
     it('gets modal closed', () => {
       const baseModal = shallowMount(BaseModal, { localVue });
 
-      baseModal.find({ ref: 'modalMask' }).trigger('click');
+      baseModal.findComponent({ ref: 'modalMask' }).trigger('click');
 
       expect(baseModal.emitted('dialogClosed')).toBeTruthy();
     });

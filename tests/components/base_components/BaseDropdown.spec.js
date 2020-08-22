@@ -20,7 +20,7 @@ describe('BaseDropdown.vue', () => {
 
   describe('when pressing off dropdown', () => {
     it('closes dropdown', async () => {
-      await baseDropdown.find({ ref: 'clickOffButton' }).trigger('click');
+      await baseDropdown.findComponent({ ref: 'clickOffButton' }).trigger('click');
 
       expect(baseDropdown.vm.$open).toBeFalsy();
     });

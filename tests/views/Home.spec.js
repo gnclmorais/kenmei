@@ -60,7 +60,7 @@ describe('Home.vue', () => {
 
       await home.setData({ updateBanner: { id: 1 }, landing: false });
 
-      expect(home.find({ ref: 'banner' }).element).toHaveStyle('height: 0px');
+      expect(home.findComponent({ ref: 'banner' }).element).toHaveStyle('height: 0px');
     });
   });
 });
