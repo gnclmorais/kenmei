@@ -43,6 +43,7 @@
               placeholder="Select Tags"
               multiple
               collapse-tags
+              filterable
             )
               el-option(
                 v-for="tag in tags"

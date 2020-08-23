@@ -21,6 +21,7 @@
           :disabled="tagsLoading"
           multiple
           collapse-tags
+          filterable
         )
           template(slot='empty')
             .relative.p-3.font-normal.text-sm.text-center
