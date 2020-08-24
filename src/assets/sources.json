@@ -95,22 +95,34 @@
     "logo": "meraki-scans.jpg"
   },
   {
-    "name": "Silent Sky",
-    "url": "https://www.silentsky-scans.net/",
+    "name": "Project Scans",
+    "url": "https://ptscans.com/",
     "status": "In Development",
-    "logo": "silent_sky_logo.jpg"
+    "logo": "project-scans.jpg"
   },
   {
-    "name": "Mangatellers",
-    "url": "http://www.mangatellers.gr/",
+    "name": "WhimSubs",
+    "url": "https://whimsubs.xyz/",
     "status": "In Development",
-    "logo": "mangatellers-wide.jpeg"
+    "logo": "whimsubs.jpg"
   },
   {
-    "name": "World Three",
-    "url": "http://www.world-three.org/",
+    "name": "Not Stop Scans",
+    "url": "https://www.nonstopscans.com/",
     "status": "In Development",
-    "logo": "world_three_logo.jpg"
+    "logo": "non_stop_scans.jpg"
+  },
+  {
+    "name": "Tappytoon",
+    "url": "https://www.tappytoon.com/en/",
+    "status": "Requested",
+    "logo": "tappytoon.jpg"
+  },
+  {
+    "name": "Webnovel",
+    "url": "https://www.webnovel.com/",
+    "status": "Requested",
+    "logo": "webnovel.jpg"
   },
   {
     "name": "WebToon",
@@ -147,12 +159,6 @@
     "url": "http://www.mangago.me/",
     "status": "Requested",
     "logo": "mangago.jpg"
-  },
-  {
-    "name": "KissManga",
-    "url": "https://kissmanga.com/",
-    "status": "Requested",
-    "logo": "kissmanga.jpg"
   },
   {
     "name": "LHTranslation",
