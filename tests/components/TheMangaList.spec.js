@@ -57,6 +57,26 @@ describe('TheMangaList.vue', () => {
       expect(rows.at(0).text()).toContain('Reading');
       expect(rows.at(1).text()).toContain('Completed');
     });
+
+    it('displays volume and/or chapter', async () => {
+      const entry1 = factories.entry.build({
+        id: '1', attributes: { last_volume_read: '1' },
+      });
+      const entry2 = factories.entry.build();
+
+      await mangaList.setProps({ tableData: [entry1, entry2] });
+
+      const rows = mangaList.findAll('.el-table__row');
+
+      expect(rows.at(0).text()).toContain(
+        `Vol. ${entry1.attributes.last_volume_read} Ch. ${
+          entry1.attributes.last_chapter_read
+        }`,
+      );
+      expect(rows.at(1).text()).toContain(
+        `Ch. ${entry2.attributes.last_chapter_read}`,
+      );
+    });
   });
 
   describe('when updating a manga entry', () => {
@@ -91,6 +111,7 @@ describe('TheMangaList.vue', () => {
         id: 1,
         attributes: {
           title: 'Manga Title',
+          last_volume_read: '2',
           last_chapter_read: '2',
           last_chapter_available: '2',
         },
@@ -103,7 +124,7 @@ describe('TheMangaList.vue', () => {
       await flushPromises();
 
       expect(infoMessageMock).toHaveBeenCalledWith(
-        'Updated last read chapter to 2',
+        'Updated last read to Ch. 2',
       );
     });
 

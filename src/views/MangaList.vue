@@ -258,6 +258,7 @@
       async updateEntries() {
         const attributes = this.selectedEntries.map((entry) => ({
           id: entry.id,
+          last_volume_read: entry.attributes.last_volume_available,
           last_chapter_read: entry.attributes.last_chapter_available,
           last_chapter_read_url: entry.links.last_chapter_available_url,
         }));

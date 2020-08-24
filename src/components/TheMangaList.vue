@@ -56,7 +56,7 @@
           )
       el-table-column(
         prop="attributes.last_chapter_read"
-        label="Last Chapter Read"
+        label="Last Read"
         align="center"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
@@ -66,12 +66,12 @@
             :underline="false"
             target="_blank"
           )
-            | {{ scope.row.attributes.last_chapter_read }}
+            | {{ chapterInfo(scope.row.attributes.last_volume_read, scope.row.attributes.last_chapter_read) }}
           template(v-else)
-            | {{ scope.row.attributes.last_chapter_read }}
+            | {{ chapterInfo(scope.row.attributes.last_volume_read, scope.row.attributes.last_chapter_read) }}
       el-table-column(
         prop="links.last_chapter_available_url"
-        label="Latest Chapter"
+        label="Last Available"
         align="center"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
@@ -81,7 +81,7 @@
             :underline="false"
             target="_blank"
           )
-            | {{ scope.row.attributes.last_chapter_available }}
+            | {{ chapterInfo(scope.row.attributes.last_volume_available, scope.row.attributes.last_chapter_available) }}
           template(v-else)
             | No chapters
       el-table-column(
@@ -204,19 +204,31 @@
           1: 'success', 2: 'warning', 3: 'warning-light', 5: 'danger',
         }[status];
       },
+      chapterInfo(volume, chapter) {
+        if (chapter) {
+          if (volume && volume !== '0') { return `Vol. ${volume} Ch. ${chapter}`; }
+
+          return `Ch. ${chapter}`;
+        }
+
+        return '';
+      },
       async setLastRead(entry) {
         this.entryUpdated = entry;
 
         const attributes = {
+          last_volume_read: entry.attributes.last_volume_available,
           last_chapter_read: entry.attributes.last_chapter_available,
           last_chapter_read_url: entry.links.last_chapter_available_url,
         };
 
         const response = await updateMangaEntry(entry.id, attributes);
         if (response) {
-          Message.info(
-            `Updated last read chapter to ${attributes.last_chapter_read}`,
+          const lastRead = this.chapterInfo(
+            attributes.last_volume_read, attributes.last_chapter_read,
           );
+
+          Message.info(`Updated last read to ${lastRead}`);
           this.updateEntry(response);
         } else {
           Message.error("Couldn't update. Try refreshing the page");
