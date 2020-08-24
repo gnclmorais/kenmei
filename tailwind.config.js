@@ -2,6 +2,11 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   separator: '_',
+  purge: [
+    './src/**/*.html',
+    './src/**/*.vue',
+    './src/**/*.jsx',
+  ],
   theme: {
     screens: {
       sm: '640px',
