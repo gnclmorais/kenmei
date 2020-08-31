@@ -8,6 +8,7 @@ import AddMangaEntry from '@/components/manga_entries/AddMangaEntry.vue';
 import EditMangaEntries from '@/components/manga_entries/EditMangaEntries.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
+import * as resource from '@/services/endpoints/manga_entries_collections';
 
 const localVue = createLocalVue();
 
@@ -99,7 +100,7 @@ describe('MangaList.vue', () => {
       });
     });
   });
-  describe('when updating manga entries', () => {
+  describe('when editing manga entries', () => {
     let mangaList;
     let modal;
 
@@ -143,6 +144,136 @@ describe('MangaList.vue', () => {
 
         expect(mangaList.vm.$data.editDialogVisible).toBeTruthy();
         expect(mangaList.vm.$data.selectedEntries).toEqual([entry1]);
+      });
+    });
+  });
+  describe('when updating manga entries', () => {
+    let entry1;
+    let entry2;
+    let store;
+    let mangaList;
+    let updateEntriesCollectionSpy;
+    let updatedMangaEntries;
+
+    beforeEach(() => {
+      updateEntriesCollectionSpy = jest.spyOn(resource, 'update');
+
+      entry1 = factories.entry.build({
+        id: 1,
+        attributes: { last_chapter_read: '1', last_chapter_available: '2' },
+        links: {
+          last_chapter_read_url: 'example.url/chapter/1',
+          last_chapter_available_url: 'example.url/chapter/2',
+        },
+      });
+      entry2 = factories.entry.build({
+        id: 2,
+        attributes: { last_chapter_read: '3', last_chapter_available: '4' },
+        links: {
+          last_chapter_read_url: 'example.url/chapter/3',
+          last_chapter_available_url: 'example.url/chapter/4',
+        },
+      });
+
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: {
+              tags: [],
+              entries: [entry1, entry2],
+              statuses: lists.state.statuses,
+            },
+            actions: lists.actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
+      });
+
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        data() { return { selectedEntries: [entry1, entry2] }; },
+        methods: {
+          clearTableSelection() {
+            return true;
+          },
+        },
+      });
+
+      updatedMangaEntries = [
+        factories.entry.build({
+          id: 1,
+          attributes: { last_chapter_read: '2' },
+          links: { last_chapter_read_url: 'example.url/chapter/2' },
+        }),
+        factories.entry.build({
+          id: 2,
+          attributes: { last_chapter_read: '4' },
+          links: { last_chapter_read_url: 'example.url/chapter/4' },
+        }),
+      ];
+    });
+
+    afterEach(() => {
+      expect(updateEntriesCollectionSpy).toHaveBeenCalledWith(
+        [
+          {
+            id: entry1.id,
+            last_chapter_read: entry1.attributes.last_chapter_available,
+            last_chapter_read_url: entry1.links.last_chapter_available_url,
+          },
+          {
+            id: entry2.id,
+            last_chapter_read: entry2.attributes.last_chapter_available,
+            last_chapter_read_url: entry2.links.last_chapter_available_url,
+          },
+        ],
+      );
+    });
+
+    describe('if update was successful', () => {
+      beforeEach(() => {
+        updateEntriesCollectionSpy.mockResolvedValue({
+          status: 200,
+          data: { data: updatedMangaEntries },
+        });
+      });
+
+      it('tells user how many entries have been updated', async () => {
+        const infoMessageMock = jest.spyOn(Message, 'info');
+
+        mangaList.vm.updateEntries();
+
+        await flushPromises();
+
+        expect(infoMessageMock).toHaveBeenCalledWith('Updated 2 entries');
+      });
+
+      it('replaces manga entries with newly updates attributes', async () => {
+        mangaList.vm.updateEntries();
+
+        await flushPromises();
+
+        expect(store.state.lists.entries).toEqual(updatedMangaEntries);
+      });
+    });
+
+    describe('if update was unsuccessful', () => {
+      it("shows couldn't update message and keeps same entries", async () => {
+        const errorMessageMock = jest.spyOn(Message, 'error');
+
+        updateEntriesCollectionSpy.mockResolvedValue({ status: 500 });
+
+        mangaList.vm.updateEntries();
+
+        await flushPromises();
+
+        expect(store.state.lists.entries).toEqual([entry1, entry2]);
+        expect(errorMessageMock).toHaveBeenCalledWith(
+          "Couldn't update. Try refreshing the page",
+        );
       });
     });
   });
