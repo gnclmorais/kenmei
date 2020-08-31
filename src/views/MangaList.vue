@@ -56,6 +56,7 @@
           v-show="entriesSelected"
           @delete="deleteEntries"
           @edit="editDialogVisible = true"
+          @read="updateEntries"
           @report="reportDialogVisible = true"
         )
         .actions.inline-block.float-right.sm_flex.sm_flex-row-reverse.relative
@@ -123,6 +124,7 @@
   import ReportMangaEntries from '@/components/manga_entries/ReportMangaEntries';
   import TheMangaList from '@/components/TheMangaList';
   import { bulkDeleteMangaEntries } from '@/services/api';
+  import { update } from '@/services/endpoints/manga_entries_collections';
 
   export default {
     name: 'MangaList',
@@ -228,6 +230,7 @@
       ...mapMutations('lists', [
         'removeEntries',
         'setTagsLoading',
+        'updateEntry',
       ]),
       handleSelection(selectedEntries) {
         this.entriesSelected = selectedEntries.length > 0;
@@ -250,6 +253,24 @@
           Message.error(
             'Deletion failed. Try reloading the page before trying again',
           );
+        }
+      },
+      async updateEntries() {
+        const attributes = this.selectedEntries.map((entry) => ({
+          id: entry.id,
+          last_chapter_read: entry.attributes.last_chapter_available,
+          last_chapter_read_url: entry.links.last_chapter_available_url,
+        }));
+
+        const response = await update(attributes);
+        const { status, data } = response;
+
+        if (status === 200) {
+          data.data.map((e) => this.updateEntry(e));
+          Message.info(`Updated ${attributes.length} entries`);
+          this.resetSelectedAttributes();
+        } else {
+          Message.error("Couldn't update. Try refreshing the page");
         }
       },
       resetEntries(dialogName) {
