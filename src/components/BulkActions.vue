@@ -6,7 +6,7 @@
     leave-to-class='opacity-0 transform translate-y-8'
   )
     span.relative.z-0.inline-flex.shadow-sm
-      button.w-full.flex.justify-center.group(
+      button.flex.justify-center.group(
         v-for='(button, index) in buttons'
         @click="$emit(button.action)"
         :key="index"
@@ -38,6 +38,11 @@
             icon: 'IconEdit',
           },
           {
+            text: 'Read',
+            action: 'read',
+            icon: 'IconCheckCircle',
+          },
+          {
             text: 'Report',
             action: 'report',
             icon: 'IconWarning',
@@ -58,6 +63,7 @@
         return {
           'group-hover_text-red-400': action === 'delete',
           'group-hover_text-gray-800': action === 'edit',
+          'group-hover_text-green-400': action === 'read',
           'group-hover_text-yellow-400': action === 'report',
         };
       },
@@ -67,7 +73,7 @@
 
 <style lang="scss" scoped>
   button {
-    @apply relative inline-flex items-center px-4 py-2 border border-gray-300;
+    @apply w-full py-2 relative inline-flex items-center border border-gray-300;
     @apply bg-white text-sm leading-5 font-medium text-gray-700;
     @apply transition ease-in-out duration-150;
 
@@ -81,6 +87,10 @@
 
     &:active {
       @apply bg-gray-100 text-gray-700;
+    }
+
+    @screen sm {
+      @apply px-4;
     }
   }
 

@@ -1,9 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`BulkActions.vue renders renders bulk actions button group 1`] = `
-<transition-stub enterclass="opacity-0 transform translate-y-8" leavetoclass="opacity-0 transform translate-y-8" enteractiveclass="slide-transition" leaveactiveclass="slide-transition"><span class="relative z-0 inline-flex shadow-sm"><button class="w-full flex justify-center group rounded-l-md"><icontrash-stub class="-ml-1 mr-2 h-5 w-5 text-gray-400 group-hover_text-red-400"></icontrash-stub><span class="group-hover_text-red-400">Delete</span></button><button class="w-full flex justify-center group -ml-px">
+<transition-stub enterclass="opacity-0 transform translate-y-8" leavetoclass="opacity-0 transform translate-y-8" enteractiveclass="slide-transition" leaveactiveclass="slide-transition"><span class="relative z-0 inline-flex shadow-sm"><button class="flex justify-center group rounded-l-md"><icontrash-stub class="-ml-1 mr-2 h-5 w-5 text-gray-400 group-hover_text-red-400"></icontrash-stub><span class="group-hover_text-red-400">Delete</span></button><button class="flex justify-center group -ml-px">
     <iconedit-stub class="-ml-1 mr-2 h-5 w-5 text-gray-400 group-hover_text-gray-800"></iconedit-stub><span class="group-hover_text-gray-800">Edit</span>
-  </button><button class="w-full flex justify-center group -ml-px rounded-r-md">
+  </button><button class="flex justify-center group -ml-px">
+    <iconcheckcircle-stub class="-ml-1 mr-2 h-5 w-5 text-gray-400 group-hover_text-green-400"></iconcheckcircle-stub><span class="group-hover_text-green-400">Read</span>
+  </button><button class="flex justify-center group -ml-px rounded-r-md">
     <iconwarning-stub class="-ml-1 mr-2 h-5 w-5 text-gray-400 group-hover_text-yellow-400"></iconwarning-stub><span class="group-hover_text-yellow-400">Report</span>
   </button></span></transition-stub>
 `;

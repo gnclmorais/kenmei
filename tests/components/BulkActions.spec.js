@@ -18,6 +18,9 @@ describe('BulkActions.vue', () => {
       expect(bulkActions.emitted('edit')).toBeTruthy();
 
       await bulkActions.findAll('button').at(2).trigger('click');
+      expect(bulkActions.emitted('read')).toBeTruthy();
+
+      await bulkActions.findAll('button').at(3).trigger('click');
       expect(bulkActions.emitted('report')).toBeTruthy();
     });
   });
