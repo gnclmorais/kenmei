@@ -36,11 +36,11 @@
       return {
         landing: false,
         updateBanner: {
-          id: 7,
-          link: 'https://news.kenmei.co/monthly-updates/2020/july',
+          id: 8,
+          link: 'https://news.kenmei.co/monthly-updates/2020/august',
           message: `
-            Survey results + various under the hood improvements in the 
-            latest monthly update
+            Official extension, ability to set multiple last chapters read and
+            more in the latest monthly update
           `,
           mobileText: 'Check out the latest monthly update',
         },
