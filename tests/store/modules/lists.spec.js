@@ -7,56 +7,6 @@ import * as mangaEntries from '@/services/endpoints/v2/manga_entries';
 
 describe('lists', () => {
   describe('getters', () => {
-    describe('getEntriesByTagIDs', () => {
-      it('returns entries that has all tag ids specified', () => {
-        const singleTag = factories.entry.build({ user_tag_ids: [1] });
-        const bothTags = factories.entry.build({ user_tag_ids: [1, 2] });
-        const state = {
-          entries: [
-            singleTag,
-            bothTags,
-            factories.entry.build({ user_tag_ids: [3] }),
-          ],
-        };
-
-        let getEntriesByTagIDs = lists.getters.getEntriesByTagIDs(state);
-
-        expect(getEntriesByTagIDs([1])).toEqual([singleTag, bothTags]);
-
-        getEntriesByTagIDs = lists.getters.getEntriesByTagIDs(state);
-
-        expect(getEntriesByTagIDs([1, 2])).toEqual([bothTags]);
-      });
-    });
-
-    describe('getEntriesByStatus', () => {
-      it('returns entries based on status enum', () => {
-        const expectedReturn = factories.entry.build({
-          attributes: { status: 4 },
-        });
-        const state = {
-          entries: [
-            expectedReturn,
-            factories.entry.build({ attributes: { status: 1 } }),
-          ],
-        };
-
-        const getEntriesByStatus = lists.getters.getEntriesByStatus(state);
-
-        expect(getEntriesByStatus(4)).toEqual([expectedReturn]);
-      });
-
-      it('returns all entries if enum is -1', () => {
-        const entry1 = factories.entry.build({ attributes: { status: 1 } });
-        const entry2 = factories.entry.build({ attributes: { status: 2 } });
-        const state  = { entries: [entry1, entry2] };
-
-        const getEntriesByStatus = lists.getters.getEntriesByStatus(state);
-
-        expect(getEntriesByStatus(-1)).toEqual([entry1, entry2]);
-      });
-    });
-
     describe('findEntryFromIDs', () => {
       it('returns first found entry based on entry IDs being passed', () => {
         const entry = factories.entry.build();

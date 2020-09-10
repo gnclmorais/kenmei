@@ -22,12 +22,6 @@ const state = {
 };
 
 const getters = {
-  getEntriesByTagIDs: (state) => (tagIDs) => state.entries.filter(
-    (entry) => tagIDs.every((id) => entry.user_tag_ids.includes(id)),
-  ),
-  getEntriesByStatus: (state) => (status) => state.entries.filter(
-    (entry) => status === -1 || entry.attributes.status === status,
-  ),
   findEntryFromIDs: (state) => (ids) => state.entries.find(
     (entry) => ids.includes(entry.id),
   ),
