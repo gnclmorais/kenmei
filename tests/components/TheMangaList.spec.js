@@ -13,7 +13,6 @@ localVue.directive('tippy', true);
 localVue.use(Vuex);
 
 describe('TheMangaList.vue', () => {
-  let mangaList;
   let store;
 
   const defaultEntries = factories.entry.buildList(1);
@@ -30,17 +29,11 @@ describe('TheMangaList.vue', () => {
             ],
             entries: defaultEntries,
             statuses: lists.state.statuses,
+            entriesPagy: { count: 1, page: 1 },
           },
           mutations: lists.mutations,
           getters: lists.getters,
         },
-      },
-    });
-    mangaList = mount(MangaList, {
-      store,
-      localVue,
-      propsData: {
-        tableData: defaultEntries,
       },
     });
   });
@@ -48,9 +41,15 @@ describe('TheMangaList.vue', () => {
   describe('when showing entries', () => {
     it('displays status name for each entry', async () => {
       const entry1 = factories.entry.build({ id: '1' });
-      const entry2 = factories.entry.build({ id: '2', attributes: { status: 4 } });
+      const entry2 = factories.entry.build({
+        id: '2', attributes: { status: 4 },
+      });
 
-      await mangaList.setProps({ tableData: [entry1, entry2] });
+      const mangaList = await mount(MangaList, {
+        store,
+        localVue,
+        computed: { entries: () => [entry1, entry2] },
+      });
 
       const rows = mangaList.findAll('.el-table__row');
 
@@ -64,7 +63,11 @@ describe('TheMangaList.vue', () => {
       });
       const entry2 = factories.entry.build();
 
-      await mangaList.setProps({ tableData: [entry1, entry2] });
+      const mangaList = await mount(MangaList, {
+        store,
+        localVue,
+        computed: { entries: () => [entry1, entry2] },
+      });
 
       const rows = mangaList.findAll('.el-table__row');
 
@@ -85,7 +88,11 @@ describe('TheMangaList.vue', () => {
         },
       });
 
-      await mangaList.setProps({ tableData: [entry1] });
+      const mangaList = await mount(MangaList, {
+        store,
+        localVue,
+        computed: { entries: () => [entry1] },
+      });
 
       const rows = mangaList.findAll('.el-table__row');
 
@@ -98,10 +105,11 @@ describe('TheMangaList.vue', () => {
 
   describe('when updating a manga entry', () => {
     let updateMangaEntryMock;
+    let mangaList;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       updateMangaEntryMock = jest.spyOn(api, 'updateMangaEntry');
-      mangaList.setData({ sortedData: defaultEntries });
+      mangaList = await mount(MangaList, { store, localVue });
     });
 
     afterEach(() => {
@@ -163,17 +171,24 @@ describe('TheMangaList.vue', () => {
   });
 
   describe('@events', () => {
+    let mangaList;
     const entry1 = factories.entry.build({ id: '1' });
     const entry2 = factories.entry.build({ id: '2' });
 
-    beforeEach(() => {
-      mangaList.setData({ sortedData: [entry1, entry2] });
+    beforeEach(async () => {
+      mangaList = await mount(MangaList, {
+        store,
+        localVue,
+        computed: { entries: () => [entry1, entry2] },
+      });
     });
 
     it('@handleSelectionChange - when selecting rows, emits seriesSelected', async () => {
       mangaList.findAll('.el-checkbox').trigger('click');
 
-      expect(mangaList.emitted('seriesSelected')[1][0]).toEqual([entry1, entry2]);
+      expect(mangaList.emitted('seriesSelected')[1][0]).toEqual(
+        [entry1, entry2],
+      );
     });
 
     it('@editEntry - when editing an entry, emits editEntry', async () => {
@@ -190,18 +205,23 @@ describe('TheMangaList.vue', () => {
         attributes: { title: 'Manga Title', last_released_at: null },
       });
 
-      await mangaList.setProps({ tableData: [entry] });
+      const mangaList = await mount(MangaList, {
+        store,
+        localVue,
+        computed: { entries: () => [entry] },
+      });
 
       expect(mangaList.text()).toContain('Unknown');
     });
 
     it('Latest Chapter column shows no chapters', async () => {
-      await mangaList.setProps({
-        tableData: [
-          factories.entry.build(
-            { links: { last_chapter_available_url: null } },
-          ),
-        ],
+      const entry = factories.entry.build({
+        links: { last_chapter_available_url: null },
+      });
+      const mangaList = await mount(MangaList, {
+        store,
+        localVue,
+        computed: { entries: () => [entry] },
       });
 
       expect(mangaList.text()).toContain('No chapters');
@@ -214,7 +234,11 @@ describe('TheMangaList.vue', () => {
         attributes: { title: '&Uuml;bel Blatt' },
       });
 
-      await mangaList.setProps({ tableData: [entry] });
+      const mangaList = await mount(MangaList, {
+        store,
+        localVue,
+        computed: { entries: () => [entry] },
+      });
 
       expect(mangaList.find('.el-link--inner').text()).toContain('Übel Blatt');
     });
@@ -228,7 +252,11 @@ describe('TheMangaList.vue', () => {
         manga_series_id: 1,
       });
 
-      await mangaList.setProps({ tableData: [newMangaEntry] });
+      const mangaList = await mount(MangaList, {
+        store,
+        localVue,
+        computed: { entries: () => [newMangaEntry] },
+      });
 
       expect(mangaList.text()).toContain('2 sites tracked');
     });

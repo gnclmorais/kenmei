@@ -2,10 +2,9 @@
   #mangaTable
     el-table(
       ref="mangaListTable"
-      :data="currentPageEntries"
+      :data="entries"
       v-loading='tagsLoading'
       @selection-change="handleSelectionChange"
-      @sort-change="applySorting"
     )
       template(slot='empty')
         span.mt-2.leading-normal
@@ -21,7 +20,6 @@
         prop="newReleases"
         width="30"
         align="center"
-        sortable="custom"
         label-class-name="p-0"
       )
         template(slot-scope="scope")
@@ -29,7 +27,6 @@
       el-table-column(
         prop="attributes.title"
         label="Title"
-        sortable="custom"
         width="400"
       )
         template(slot-scope="scope")
@@ -88,7 +85,6 @@
         prop="attributes.last_released_at"
         label="Released"
         align="center"
-        sortable="custom"
       )
         template(v-if='scope.row.attributes' slot-scope="scope")
           template(v-if='scope.row.attributes.last_released_at')
@@ -117,13 +113,14 @@
             circle
             v-tippy
           )
-    .flex.flex-row.justify-center(v-if="tableData.length > 0")
+    .flex.flex-row.justify-center(v-if="entries.length > 0")
       el-pagination(
         layout="prev, pager, next"
         :page-size="50"
-        :current-page.sync="currentPage"
-        :total="tableData.length"
+        :current-page.sync="entriesPagy.page"
+        :total="entriesPagy.count"
         :hide-on-single-page="true"
+        @current-change="$emit('changePage', $event)"
       )
 </template>
 
@@ -137,7 +134,6 @@
   import relativeTime from 'dayjs/plugin/relativeTime';
 
   import { updateMangaEntry } from '@/services/api';
-  import { sortBy } from '@/services/sorters';
 
   dayjs.extend(relativeTime);
 
@@ -157,37 +153,18 @@
         return dayjs().to(dayjs(datetime));
       },
     },
-    props: {
-      tableData: {
-        type: Array,
-        required: true,
-      },
-    },
     data() {
       return {
-        currentPage: 1,
-        sortedData: [],
         entryUpdated: null,
       };
     },
     computed: {
       ...mapState('lists', [
         'entries',
+        'entriesPagy',
         'statuses',
         'tagsLoading',
       ]),
-      currentPageEntries() {
-        const page = this.currentPage - 1;
-        return this.sortedData.slice(page * 50, (page + 1) * 50);
-      },
-    },
-    watch: {
-      tableData(newVal, oldVal) {
-        if (newVal === oldVal) { return; }
-
-        this.sortedData = newVal;
-        this.$refs.mangaListTable.sort('newReleases', 'ascending');
-      },
     },
     methods: {
       ...mapMutations('lists', [
@@ -239,10 +216,6 @@
         }
 
         this.entryUpdated = null;
-      },
-      applySorting({ _column, prop, order }) {
-        this.sortedData = sortBy(this.tableData, prop, order);
-        this.currentPage = 1;
       },
       handleSelectionChange(entries) {
         this.$emit('seriesSelected', entries);
