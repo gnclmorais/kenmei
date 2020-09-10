@@ -4,11 +4,13 @@ import flushPromises from 'flush-promises';
 import MangaList from '@/views/MangaList.vue';
 import TheMangaList from '@/components/TheMangaList.vue';
 import BulkActions from '@/components/BulkActions.vue';
+import SortDropdown from '@/components/SortDropdown.vue';
 import AddMangaEntry from '@/components/manga_entries/AddMangaEntry.vue';
 import EditMangaEntries from '@/components/manga_entries/EditMangaEntries.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
 import * as resource from '@/services/endpoints/manga_entries_collections';
+import * as mangaEntriesResource from '@/services/endpoints/v2/manga_entries';
 
 const localVue = createLocalVue();
 
@@ -373,6 +375,112 @@ describe('MangaList.vue', () => {
       });
     });
   });
+  describe('when filtering entries', () => {
+    let indexMangaEntriesSpy;
+    const page = 1;
+
+    beforeEach(() => {
+      indexMangaEntriesSpy = jest.spyOn(mangaEntriesResource, 'index');
+    });
+
+    describe('and searchTerm is provided', () => {
+      it('fetches entries with the provided query', async () => {
+        const mangaList = shallowMount(MangaList, { store, localVue });
+
+        jest.useFakeTimers();
+        await mangaList.setData({ searchTerm: 'Boku no' });
+        jest.runAllTimers();
+
+        expect(indexMangaEntriesSpy).toHaveBeenCalledWith(
+          page,
+          mangaList.vm.$data.selectedStatus,
+          mangaList.vm.$data.selectedTagIDs,
+          'boku no',
+          mangaList.vm.$data.selectedSort,
+        );
+      });
+    });
+
+    describe('and selectedTagIDs are provided', () => {
+      it('fetches new entries with the provided tag IDs', async () => {
+        const mangaList = shallowMount(MangaList, { store, localVue });
+
+        await mangaList.setData({ selectedTagIDs: [tag2.id] });
+
+        expect(indexMangaEntriesSpy).toHaveBeenCalledWith(
+          page,
+          mangaList.vm.$data.selectedStatus,
+          [tag2.id],
+          mangaList.vm.$data.searchTerm,
+          mangaList.vm.$data.selectedSort,
+        );
+      });
+    });
+
+    describe('and selectedStatus has changed', () => {
+      it('fetches new entries with the provided status', async () => {
+        const mangaList      = shallowMount(MangaList, { store, localVue });
+        const selectedStatus = 2;
+
+        await mangaList.setData({ selectedStatus });
+
+        expect(indexMangaEntriesSpy).toHaveBeenCalledWith(
+          page,
+          selectedStatus,
+          mangaList.vm.$data.selectedTagIDs,
+          mangaList.vm.$data.searchTerm,
+          mangaList.vm.$data.selectedSort,
+        );
+      });
+    });
+  });
+  describe('when sorting entries', () => {
+    let indexMangaEntriesSpy;
+    const page = 1;
+
+    beforeEach(() => {
+      indexMangaEntriesSpy = jest.spyOn(mangaEntriesResource, 'index');
+    });
+
+    it('fetches entries with the provided sorting', async () => {
+      const mangaList    = shallowMount(MangaList, { store, localVue });
+      const selectedSort = { Released: 'asc' };
+
+      await mangaList.findComponent(SortDropdown).vm.$emit(
+        'click',
+        selectedSort,
+      );
+
+      expect(indexMangaEntriesSpy).toHaveBeenCalledWith(
+        page,
+        mangaList.vm.$data.selectedStatus,
+        mangaList.vm.$data.selectedTagIDs,
+        mangaList.vm.$data.searchTerm,
+        selectedSort,
+      );
+    });
+  });
+  describe('when changing pages', () => {
+    let indexMangaEntriesSpy;
+
+    beforeEach(() => {
+      indexMangaEntriesSpy = jest.spyOn(mangaEntriesResource, 'index');
+    });
+
+    it('fetches entries for the provided page', async () => {
+      const mangaList = shallowMount(MangaList, { store, localVue });
+
+      await mangaList.findComponent(TheMangaList).vm.$emit('changePage', 2);
+
+      expect(indexMangaEntriesSpy).toHaveBeenCalledWith(
+        2,
+        mangaList.vm.$data.selectedStatus,
+        mangaList.vm.$data.selectedTagIDs,
+        mangaList.vm.$data.searchTerm,
+        mangaList.vm.$data.selectedSort,
+      );
+    });
+  });
   describe('@events', () => {
     let mangaList;
 
@@ -390,45 +498,6 @@ describe('MangaList.vue', () => {
 
       expect(mangaList.find('bulk-actions-stub').element).toBeVisible();
       expect(mangaList.vm.$data.selectedEntries).toContain(entry1);
-    });
-  });
-  describe(':data', () => {
-    it(':searchTerm - if present, filters manga entries', () => {
-      const mangaList = shallowMount(MangaList, { store, localVue });
-
-      jest.useFakeTimers();
-
-      expect(mangaList.vm.filteredEntries).toEqual([entry1, entry2]);
-
-      mangaList.setData({ searchTerm: 'Boku no' });
-      jest.runAllTimers();
-
-      expect(mangaList.vm.filteredEntries).toEqual([entry1]);
-
-      mangaList.setData({ searchTerm: 'Attack' });
-      jest.runAllTimers();
-
-      expect(mangaList.vm.filteredEntries).toEqual([entry2]);
-    });
-
-    describe(':selectedTagIDs', () => {
-      it('filters entries based on tags', async () => {
-        const mangaList = shallowMount(MangaList, { store, localVue });
-
-        await mangaList.setData({ selectedTagIDs: [tag2.id] });
-
-        expect(mangaList.vm.filteredEntries).toEqual([entry2]);
-      });
-    });
-
-    describe(':selectedStatus', () => {
-      it('filters entries based on status enum', async () => {
-        const mangaList = shallowMount(MangaList, { store, localVue });
-
-        await mangaList.setData({ selectedStatus: 2 });
-
-        expect(mangaList.vm.filteredEntries).toEqual([entry3]);
-      });
     });
   });
   describe(':lifecycle', () => {
