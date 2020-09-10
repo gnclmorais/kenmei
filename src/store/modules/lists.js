@@ -1,5 +1,6 @@
 import { Message } from 'element-ui';
-import { secure } from '@/modules/axios';
+import * as userTags from '@/services/endpoints/UserTags';
+import * as mangaEntries from '@/services/endpoints/v2/manga_entries';
 
 // Can't access getter inside mutations, hence this has to be a plain function
 export const getEntryIndex = (state, id) => state.entries.findIndex(
@@ -9,6 +10,7 @@ export const getEntryIndex = (state, id) => state.entries.findIndex(
 const state = {
   tags: [],
   entries: [],
+  entriesPagy: {},
   statuses: [
     { enum: 1, name: 'Reading' },
     { enum: 2, name: 'On Hold' },
@@ -32,19 +34,23 @@ const getters = {
 };
 
 const actions = {
-  getTags({ commit }) {
-    return secure.get('/api/v1/user_tags/')
-      .then((response) => {
-        commit('setTags', response.data);
-      })
-      .catch((request) => { Message.error(request.response.data.error); });
+  async getTags({ commit }) {
+    const response = await userTags.index();
+    const { status, data } = response;
+
+    return status === 200 ? commit('setTags', data) : Message.error(data.error);
   },
-  getEntries({ commit }) {
-    return secure.get('/api/v1/manga_entries/')
-      .then((response) => {
-        commit('setEntries', response.data.data);
-      })
-      .catch((request) => { Message.error(request.response.data.error); });
+  async getEntries({ commit }, { page, status, tagIDs, searchTerm, sort }) {
+    const response = await mangaEntries.index(
+      page, status, tagIDs, searchTerm, sort,
+    );
+
+    if (response.status === 200) {
+      commit('setEntries', response.data.entries);
+      commit('setEntriesPagy', response.data.pagy);
+    } else {
+      Message.error(response.data.error);
+    }
   },
 };
 
@@ -54,6 +60,9 @@ const mutations = {
   },
   setEntries(state, data) {
     state.entries = data;
+  },
+  setEntriesPagy(state, data) {
+    state.entriesPagy = data;
   },
   addEntry(state, data) {
     state.entries.push(data);
