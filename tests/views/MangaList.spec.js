@@ -168,7 +168,11 @@ describe('MangaList.vue', () => {
       });
       entry2 = factories.entry.build({
         id: 2,
-        attributes: { last_chapter_read: '3', last_chapter_available: '4' },
+        attributes: {
+          last_chapter_read: '3',
+          last_volume_available: '2',
+          last_chapter_available: '4',
+        },
         links: {
           last_chapter_read_url: 'example.url/chapter/3',
           last_chapter_available_url: 'example.url/chapter/4',
@@ -210,7 +214,7 @@ describe('MangaList.vue', () => {
         }),
         factories.entry.build({
           id: 2,
-          attributes: { last_chapter_read: '4' },
+          attributes: { last_volume_read: '2', last_chapter_read: '4' },
           links: { last_chapter_read_url: 'example.url/chapter/4' },
         }),
       ];
@@ -222,11 +226,13 @@ describe('MangaList.vue', () => {
           {
             id: entry1.id,
             last_chapter_read: entry1.attributes.last_chapter_available,
+            last_volume_read: entry1.attributes.last_volume_available,
             last_chapter_read_url: entry1.links.last_chapter_available_url,
           },
           {
             id: entry2.id,
             last_chapter_read: entry2.attributes.last_chapter_available,
+            last_volume_read: entry2.attributes.last_volume_available,
             last_chapter_read_url: entry2.links.last_chapter_available_url,
           },
         ],
