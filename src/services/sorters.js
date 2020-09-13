@@ -15,8 +15,8 @@ const titleSort = (entryA, entryB) => {
 };
 /* eslint-enable camelcase */
 
-const newReleasesSort = (entryA, entryB) => Number(unread(entryB))
-  - Number(unread(entryA));
+const newReleasesSort = (entryA, entryB) => Number(entryB.attributes.unread)
+  - Number(entryA.attributes.unread);
 
 const releasedAtSort = (a, b) => {
   const aReleasedAt = a.attributes.last_released_at;
