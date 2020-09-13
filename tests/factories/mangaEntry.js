@@ -8,6 +8,7 @@ export default Factory.define(({ sequence }) => ({
   attributes: {
     title: 'Manga Title',
     status: 1,
+    unread: true,
     last_volume_read: null,
     last_chapter_read: '1',
     last_volume_available: null,

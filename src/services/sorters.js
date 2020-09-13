@@ -1,12 +1,4 @@
 /* eslint-disable camelcase */
-export const unread = (entry) => {
-  const { last_chapter_read_url, last_chapter_available_url } = entry.links;
-
-
-  return last_chapter_available_url
-    && last_chapter_read_url !== last_chapter_available_url;
-};
-
 const titleSort = (entryA, entryB) => {
   const entryATitle = entryA.attributes.title.toLowerCase();
   const entryBTitle = entryB.attributes.title.toLowerCase();
@@ -15,8 +7,8 @@ const titleSort = (entryA, entryB) => {
 };
 /* eslint-enable camelcase */
 
-const newReleasesSort = (entryA, entryB) => Number(unread(entryB))
-  - Number(unread(entryA));
+const newReleasesSort = (entryA, entryB) => Number(entryB.attributes.unread)
+  - Number(entryA.attributes.unread);
 
 const releasedAtSort = (a, b) => {
   const aReleasedAt = a.attributes.last_released_at;

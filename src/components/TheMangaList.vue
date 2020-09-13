@@ -25,7 +25,7 @@
         label-class-name="p-0"
       )
         template(slot-scope="scope")
-          .new-chapter-dot(v-if="unread(scope.row)")
+          .new-chapter-dot(v-if="scope.row.attributes.unread")
       el-table-column(
         prop="attributes.title"
         label="Title"
@@ -108,7 +108,7 @@
           )
           el-button(
             content="Set last read to the latest chapter"
-            v-if="unread(scope.row)"
+            v-if="scope.row.attributes.unread"
             ref="updateEntryButton"
             icon="el-icon-check"
             size="mini"
@@ -137,7 +137,7 @@
   import relativeTime from 'dayjs/plugin/relativeTime';
 
   import { updateMangaEntry } from '@/services/api';
-  import { unread, sortBy } from '@/services/sorters';
+  import { sortBy } from '@/services/sorters';
 
   dayjs.extend(relativeTime);
 
@@ -190,7 +190,6 @@
       },
     },
     methods: {
-      unread,
       ...mapMutations('lists', [
         'updateEntry',
       ]),

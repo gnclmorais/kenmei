@@ -1,4 +1,4 @@
-import { unread, sortBy } from '@/services/sorters';
+import { sortBy } from '@/services/sorters';
 
 describe('Sorters', () => {
   let entry1;
@@ -36,50 +36,6 @@ describe('Sorters', () => {
         },
       },
     );
-  });
-  describe('unread', () => {
-    describe('when last chapter availiable is different than last read', () => {
-      it('returns true', () => {
-        const entry = factories.entry.build(
-          {
-            links: {
-              last_chapter_read_url: 'example.url/manga/1/chapter/4',
-              last_chapter_available_url: 'example.url/manga/1/chapter/5',
-            },
-          },
-        );
-
-        expect(unread(entry)).toBeTruthy();
-      });
-    });
-    describe('when last read null and last released chapter availiable', () => {
-      it('returns true', () => {
-        const entry = factories.entry.build(
-          {
-            links: {
-              last_chapter_read_url: null,
-              last_chapter_available_url: 'example.url/manga/1/chapter/5',
-            },
-          },
-        );
-
-        expect(unread(entry)).toBeTruthy();
-      });
-    });
-    describe('when last available is null', () => {
-      it('returns false', () => {
-        const entry = factories.entry.build(
-          {
-            links: {
-              last_chapter_read_url: 'example.url/manga/1/chapter/5',
-              last_chapter_available_url: null,
-            },
-          },
-        );
-
-        expect(unread(entry)).toBeFalsy();
-      });
-    });
   });
 
   describe('sortBy', () => {
