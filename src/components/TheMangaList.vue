@@ -206,7 +206,12 @@
       },
       chapterInfo(volume, chapter) {
         if (chapter) {
+          const chapterNumber = parseFloat(chapter);
+
           if (volume && volume !== '0') { return `Vol. ${volume} Ch. ${chapter}`; }
+
+          // TODO: Replace when we return titles separately from the chapter
+          if (Number.isNaN(chapterNumber)) return chapter;
 
           return `Ch. ${chapter}`;
         }
