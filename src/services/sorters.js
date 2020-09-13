@@ -1,12 +1,4 @@
 /* eslint-disable camelcase */
-export const unread = (entry) => {
-  const { last_chapter_read_url, last_chapter_available_url } = entry.links;
-
-
-  return last_chapter_available_url
-    && last_chapter_read_url !== last_chapter_available_url;
-};
-
 const titleSort = (entryA, entryB) => {
   const entryATitle = entryA.attributes.title.toLowerCase();
   const entryBTitle = entryB.attributes.title.toLowerCase();
