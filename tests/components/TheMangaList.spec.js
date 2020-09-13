@@ -77,6 +77,23 @@ describe('TheMangaList.vue', () => {
         `Ch. ${entry2.attributes.last_chapter_read}`,
       );
     });
+
+    it('displays title if chapter is not present', async () => {
+      const entry1 = factories.entry.build({
+        attributes: {
+          last_chapter_read: 'Oneshot', last_chapter_available: '',
+        },
+      });
+
+      await mangaList.setProps({ tableData: [entry1] });
+
+      const rows = mangaList.findAll('.el-table__row');
+
+      expect(rows.at(0).text()).toContain(
+        `${entry1.attributes.last_chapter_read}`,
+      );
+      expect(rows.at(0).text()).not.toContain('Ch.');
+    });
   });
 
   describe('when updating a manga entry', () => {
