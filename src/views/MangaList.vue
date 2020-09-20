@@ -147,7 +147,7 @@
       return {
         selectedEntries: [],
         selectedTagIDs: [],
-        selectedSort: { Unread: 'asc' },
+        selectedSort: { Unread: 'desc' },
         selectedStatus: 1,
         entriesSelected: false,
         searchTerm: '',
