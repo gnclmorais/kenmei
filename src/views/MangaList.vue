@@ -2,41 +2,43 @@
   .flex.flex-col.items-center
     .hidden.bg-white.h-64.w-full.absolute.border-b.border-gray-200.sm_block
     .flex.flex-col.w-full.max-w-7xl.py-8
-      .mx-2.mb-5.sm_mx-5
-        el-select.w-full.sm_w-40(
-          v-model="selectedStatus"
-          placeholder="Filter by status"
-          :disabled="tagsLoading"
-        )
-          el-option(
-            v-for="status in allStatuses"
-            :key="status.enum"
-            :label="status.name"
-            :value="status.enum"
+      .mx-2.mb-5.sm_mx-5.flex.justify-between.flex-col.sm_flex-row
+        .flex.flex-col.w-full.sm_flex-row
+          el-select.w-full.sm_w-40(
+            v-model="selectedStatus"
+            placeholder="Filter by status"
           )
-        el-select.w-full.mt-3.sm_mt-0.sm_ml-3.sm_w-48(
-          ref="tagFilter"
-          v-model="selectedTagIDs"
-          placeholder="Filter by tags"
-          :disabled="tagsLoading"
-          multiple
-          collapse-tags
-          filterable
-        )
-          template(slot='empty')
-            .relative.p-3.font-normal.text-sm.text-center
-              span.text-gray-400
-                | No tags found. Create new tags in
-              router-link.inline.text-blue-500.hover_text-blue-600(
-                to="settings"
-                exact
-              )
-                |  Settings
-          el-option(
-            v-for="tag in tags"
-            :key="tag.id"
-            :label="tag.name"
-            :value="tag.id"
+            el-option(
+              v-for="status in allStatuses"
+              :key="status.enum"
+              :label="status.name"
+              :value="status.enum"
+            )
+          el-select.w-full.mt-3.sm_mt-0.sm_ml-3.sm_w-48(
+            ref="tagFilter"
+            v-model="selectedTagIDs"
+            placeholder="Filter by tags"
+            multiple
+            collapse-tags
+            filterable
+          )
+            template(slot='empty')
+              .relative.p-3.font-normal.text-sm.text-center
+                span.text-gray-400
+                  | No tags found. Create new tags in
+                router-link.inline.text-blue-500.hover_text-blue-600(
+                  to="settings"
+                  exact
+                )
+                  |  Settings
+            el-option(
+              v-for="tag in tags"
+              :key="tag.id"
+              :label="tag.name"
+              :value="tag.id"
+            )
+          sort-dropdown.w-full.mt-3.sm_mt-0.sm_ml-3.sm_w-40(
+            @click="applySort($event)"
           )
         .mt-3.text-center.w-full.float-right.sm_mt-0.sm_text-left.sm_w-64
           .relative.rounded-md.shadow-sm
@@ -74,9 +76,10 @@
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
           ref='mangaList'
-          :tableData='filteredEntries || entries'
           @seriesSelected="handleSelection"
           @editEntry='showEditEntryDialog'
+          @changePage='changePage'
+          @sortingApplied='applySort'
         )
       importers(
         :visible='importDialogVisible'
@@ -109,15 +112,14 @@
 <script>
   import VueScrollTo from 'vue-scrollto';
   import debounce from 'lodash/debounce';
-  import {
-    mapActions, mapState, mapMutations, mapGetters,
-  } from 'vuex';
+  import { mapActions, mapState, mapMutations } from 'vuex';
   import {
     Message, Input, Select, Option,
   } from 'element-ui';
 
   import Importers from '@/components/TheImporters';
   import BulkActions from '@/components/BulkActions';
+  import SortDropdown from '@/components/SortDropdown';
   import AddMangaEntry from '@/components/manga_entries/AddMangaEntry';
   import DeleteMangaEntries from '@/components/manga_entries/DeleteMangaEntries';
   import EditMangaEntries from '@/components/manga_entries/EditMangaEntries';
@@ -131,6 +133,7 @@
     components: {
       Importers,
       BulkActions,
+      SortDropdown,
       AddMangaEntry,
       EditMangaEntries,
       DeleteMangaEntries,
@@ -144,6 +147,7 @@
       return {
         selectedEntries: [],
         selectedTagIDs: [],
+        selectedSort: { Unread: 'asc' },
         selectedStatus: 1,
         entriesSelected: false,
         searchTerm: '',
@@ -157,13 +161,9 @@
     computed: {
       ...mapState('lists', [
         'entries',
+        'entriesPagy',
         'tags',
         'statuses',
-        'tagsLoading',
-      ]),
-      ...mapGetters('lists', [
-        'getEntriesByTagIDs',
-        'getEntriesByStatus',
       ]),
       allStatuses() {
         return [{ enum: -1, name: 'All' }].concat(this.statuses);
@@ -186,36 +186,34 @@
         },
         set: debounce(function(newVal) { //eslint-disable-line
           if (newVal !== this.searchTerm) { this.searchTerm = newVal; }
-        }, 250),
+        }, 350),
       },
-      filteredEntries() {
-        let filtered = this.entries;
+      filters() {
+        return {
+          status: this.selectedStatus,
+          tagIDs: this.selectedTagIDs,
+          searchTerm: this.searchTerm.toLowerCase(),
+        };
+      },
+    },
+    watch: {
+      async filters(newFilters) {
+        this.setTagsLoading(true);
 
-        if (this.selectedTagIDs.length) {
-          const taggedEntries = this.getEntriesByTagIDs(this.selectedTagIDs);
+        await this.getEntries({
+          page: 1,
+          ...newFilters,
+          sort: this.selectedSort,
+        });
 
-          filtered = filtered.filter((e) => taggedEntries.includes(e));
-        }
-        if (this.selectedStatus) {
-          const statusEntries = this.getEntriesByStatus(this.selectedStatus);
-
-          filtered = filtered.filter((e) => statusEntries.includes(e));
-        }
-        if (this.searchTerm.length) {
-          filtered = filtered.filter(
-            (entry) => entry.attributes.title.toLowerCase()
-              .includes(this.searchTerm.toLowerCase()),
-          );
-        }
-
-        return filtered;
+        this.setTagsLoading(false);
       },
     },
     async created() {
       this.setTagsLoading(true);
 
       await this.getTags();
-      await this.getEntries();
+      await this.getEntries({ page: 1, status: 1 });
 
       this.setTagsLoading(false);
     },
@@ -273,6 +271,25 @@
         } else {
           Message.error("Couldn't update. Try refreshing the page");
         }
+      },
+      async changePage(page) {
+        this.setTagsLoading(true);
+
+        await this.getEntries({
+          page,
+          ...this.filters,
+          sort: this.selectedSort,
+        });
+
+        this.setTagsLoading(false);
+      },
+      async applySort(sort) {
+        this.setTagsLoading(true);
+
+        this.selectedSort = sort;
+        await this.getEntries({ page: 1, ...this.filters, sort });
+
+        this.setTagsLoading(false);
       },
       resetEntries(dialogName) {
         this[dialogName] = false;
