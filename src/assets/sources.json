@@ -89,6 +89,18 @@
     "logo": "meraki-scans.jpg"
   },
   {
+    "name": "Method Scans",
+    "url": "https://methodscans.com/",
+    "status": "Supported",
+    "logo": "method_scans_logo.jpg"
+  },
+  {
+    "name": "Sleeping Knight",
+    "url": "https://skscans.com/",
+    "status": "Supported",
+    "logo": "sleeping_knight_logo.jpg"
+  },
+  {
     "name": "Project Scans",
     "url": "https://ptscans.com/",
     "status": "In Development",
