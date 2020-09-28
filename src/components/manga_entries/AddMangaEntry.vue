@@ -36,7 +36,7 @@
       span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
         base-button(
           ref="addMangaButton"
-          @click="addSeriesEntry"
+          @click="addMangaEntry"
           :disabled="mangaURL.length === 0"
         )
           | Add
@@ -47,7 +47,7 @@
 <script>
   import { mapState, mapMutations, mapGetters } from 'vuex';
   import { Message, Select, Option } from 'element-ui';
-  import { addMangaEntry } from '@/services/api';
+  import { create } from '@/services/api';
 
   export default {
     name: 'AddMangaEntry',
@@ -90,10 +90,10 @@
         'addEntry',
         'replaceEntry',
       ]),
-      async addSeriesEntry() {
+      async addMangaEntry() {
         this.loading = true;
 
-        const response = await addMangaEntry(this.mangaURL, this.selectedStatus);
+        const response = await create(this.mangaURL, this.selectedStatus);
         const { status, data } = response;
 
         if (status === 200) {

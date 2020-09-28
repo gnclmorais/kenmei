@@ -6,7 +6,7 @@ describe('API', () => {
     jest.restoreAllMocks();
   });
 
-  describe('addMangaEntry()', () => {
+  describe('create()', () => {
     it('makes a request to the resource and returns data', async () => {
       const postMangaEntriesCollectionsSpy = jest.spyOn(axios, 'post');
       const mangaURL = 'example.url/123';
@@ -15,7 +15,7 @@ describe('API', () => {
 
       postMangaEntriesCollectionsSpy.mockResolvedValue({ status: 200, data });
 
-      const response = await apiService.addMangaEntry(mangaURL, status);
+      const response = await apiService.create(mangaURL, status);
 
       expect(response.data).toEqual(data);
       expect(postMangaEntriesCollectionsSpy).toHaveBeenCalledWith(
@@ -27,7 +27,7 @@ describe('API', () => {
     it('makes a request to the resource and returns false if failed', async () => {
       axios.post.mockRejectedValue({ status: 500 });
 
-      const response = await apiService.addMangaEntry('', 0);
+      const response = await apiService.create('', 0);
       expect(response).toBeFalsy();
     });
   });
