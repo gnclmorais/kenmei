@@ -4,11 +4,8 @@ export const addMangaEntry = (seriesURL, status) => secure
   .post('/api/v1/manga_entries/', {
     manga_entry: { series_url: seriesURL, status },
   })
-  .then((response) => {
-    if (response.data.error) { return {}; }
-
-    return response.data;
-  });
+  .then((response) => response)
+  .catch((request) => request.response);
 
 export const updateMangaEntry = (id, attributes) => secure
   .put(`/api/v1/manga_entries/${id}`, { manga_entry: attributes })
