@@ -48,7 +48,7 @@ describe('AddMangaEntry.vue', () => {
     });
   });
 
-  describe('when adding new MangaDex entry', () => {
+  describe('when adding new manga entry', () => {
     let addMangaEntrySpy;
 
     beforeEach(() => {
@@ -65,9 +65,11 @@ describe('AddMangaEntry.vue', () => {
       it('adds new Manga entry', async () => {
         const mangaEntry = factories.entry.build();
 
-        addMangaEntrySpy.mockResolvedValue({ data: mangaEntry });
+        addMangaEntrySpy.mockResolvedValue({
+          status: 200, data: { data: mangaEntry },
+        });
 
-        addMangaEntry.vm.mangaDexSearch();
+        addMangaEntry.vm.addSeriesEntry();
 
         await flushPromises();
 
@@ -101,9 +103,11 @@ describe('AddMangaEntry.vue', () => {
           },
         });
 
-        addMangaEntrySpy.mockResolvedValue({ data: newMangaEntry });
+        addMangaEntrySpy.mockResolvedValue({
+          status: 200, data: { data: newMangaEntry },
+        });
 
-        addMangaEntry.vm.mangaDexSearch();
+        addMangaEntry.vm.addSeriesEntry();
 
         await flushPromises();
 
@@ -117,11 +121,11 @@ describe('AddMangaEntry.vue', () => {
       it('shows info message with payload data', async () => {
         const infoMessageMock = jest.spyOn(Message, 'info');
 
-        addMangaEntrySpy.mockRejectedValue(
-          { response: { status: 404, data: 'Manga was not found' } },
+        addMangaEntrySpy.mockResolvedValue(
+          { status: 404, data: 'Manga was not found' },
         );
 
-        addMangaEntry.vm.mangaDexSearch();
+        addMangaEntry.vm.addSeriesEntry();
 
         await flushPromises();
         expect(infoMessageMock).toHaveBeenCalledWith('Manga was not found');
@@ -132,11 +136,11 @@ describe('AddMangaEntry.vue', () => {
       it('shows info message with payload data', async () => {
         const infoMessageMock = jest.spyOn(Message, 'info');
 
-        addMangaEntrySpy.mockRejectedValue(
-          { response: { status: 406, data: 'Manga already added' } },
+        addMangaEntrySpy.mockResolvedValue(
+          { status: 406, data: 'Manga already added' },
         );
 
-        addMangaEntry.vm.mangaDexSearch();
+        addMangaEntry.vm.addSeriesEntry();
 
         await flushPromises();
         expect(infoMessageMock).toHaveBeenCalledWith('Manga already added');
@@ -146,9 +150,9 @@ describe('AddMangaEntry.vue', () => {
     it('shows error message on unsuccessful API lookup', async () => {
       const errorMessageMock = jest.spyOn(Message, 'error');
 
-      addMangaEntrySpy.mockRejectedValue({ response: { status: 500 } });
+      addMangaEntrySpy.mockResolvedValue({ status: 500 });
 
-      addMangaEntry.vm.mangaDexSearch();
+      addMangaEntry.vm.addSeriesEntry();
 
       await flushPromises();
 
