@@ -56,13 +56,13 @@ describe('lists', () => {
     });
 
     describe('addEntry', () => {
-      it('adds a new manga entry to state', () => {
+      it('adds a new manga entry to start of entries array', () => {
         const newEntry = factories.entry.build({ id: 2 });
         const state = { entries: factories.entry.buildList(1) };
 
         lists.mutations.addEntry(state, newEntry);
 
-        expect(state.entries).toContain(newEntry);
+        expect(state.entries[0]).toEqual(newEntry);
       });
     });
 

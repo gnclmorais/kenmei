@@ -59,7 +59,7 @@ const mutations = {
     state.entriesPagy = data;
   },
   addEntry(state, data) {
-    state.entries.push(data);
+    state.entries.unshift(data);
   },
   updateEntry(state, data) {
     state.entries.splice(getEntryIndex(state, data.id), 1, data);
