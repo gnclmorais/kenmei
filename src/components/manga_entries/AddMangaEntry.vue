@@ -36,7 +36,7 @@
       span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
         base-button(
           ref="addMangaButton"
-          @click="mangaDexSearch"
+          @click="addMangaEntry"
           :disabled="mangaURL.length === 0"
         )
           | Add
@@ -47,7 +47,7 @@
 <script>
   import { mapState, mapMutations, mapGetters } from 'vuex';
   import { Message, Select, Option } from 'element-ui';
-  import { addMangaEntry } from '@/services/api';
+  import { create } from '@/services/api';
 
   export default {
     name: 'AddMangaEntry',
@@ -90,35 +90,35 @@
         'addEntry',
         'replaceEntry',
       ]),
-      mangaDexSearch() {
+      async addMangaEntry() {
         this.loading = true;
 
-        addMangaEntry(this.mangaURL, this.selectedStatus)
-          .then((newMangaEntry) => {
-            const { data } = newMangaEntry;
-            const currentEntry = this.findEntryFromIDs(
-              data.attributes.tracked_entries.map((e) => e.id),
-            );
+        const response = await create(this.mangaURL, this.selectedStatus);
+        const { status, data } = response;
 
-            if (currentEntry) {
-              this.replaceEntry({ currentEntry, newEntry: data });
-            } else {
-              this.addEntry(newMangaEntry.data);
-            }
+        if (status === 200) {
+          const entryData = data.data;
 
-            this.closeModal();
-          })
-          .catch((error) => {
-            const { status, data } = error.response;
+          const currentEntry = this.findEntryFromIDs(
+            entryData.attributes.tracked_entries.map((e) => e.id),
+          );
 
-            if (status === 404 || status === 406) {
-              Message.info(data);
-              this.loading = false;
-            } else {
-              Message.error('Something went wrong');
-              this.closeModal();
-            }
-          });
+          if (currentEntry) {
+            this.replaceEntry({ currentEntry, newEntry: entryData });
+          } else {
+            this.addEntry(entryData);
+          }
+
+          this.closeModal();
+
+          Message.info('New Entry added');
+        } else if (status === 404 || status === 406) {
+          Message.info(data);
+          this.loading = false;
+        } else {
+          Message.error('Something went wrong');
+          this.closeModal();
+        }
       },
       closeModal() {
         this.$emit('dialogClosed');

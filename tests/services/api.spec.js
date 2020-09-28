@@ -6,25 +6,29 @@ describe('API', () => {
     jest.restoreAllMocks();
   });
 
-  describe('addMangaEntry()', () => {
-    it('makes a request to the API and returns manga if found', async () => {
+  describe('create()', () => {
+    it('makes a request to the resource and returns data', async () => {
+      const postMangaEntriesCollectionsSpy = jest.spyOn(axios, 'post');
       const mangaURL = 'example.url/123';
       const status = 1;
-      const mockData = factories.entry.build();
+      const data = factories.entry.build();
 
-      axios.post.mockResolvedValue({ status: 200, data: mockData });
+      postMangaEntriesCollectionsSpy.mockResolvedValue({ status: 200, data });
 
-      const data = await apiService.addMangaEntry(mangaURL, status);
-      expect(data).toEqual(mockData);
+      const response = await apiService.create(mangaURL, status);
+
+      expect(response.data).toEqual(data);
+      expect(postMangaEntriesCollectionsSpy).toHaveBeenCalledWith(
+        '/api/v1/manga_entries/',
+        { manga_entry: { series_url: mangaURL, status } },
+      );
     });
 
-    it('makes a request to the API and returns not_found status if series not found', async () => {
-      const mangaURL = 'example.url/invalidURL';
-      const mangaListID = 1;
-      axios.post.mockResolvedValue({ status: 404, data: {} });
+    it('makes a request to the resource and returns false if failed', async () => {
+      axios.post.mockRejectedValue({ status: 500 });
 
-      const data = await apiService.addMangaEntry(mangaURL, mangaListID);
-      expect(data).toEqual({});
+      const response = await apiService.create('', 0);
+      expect(response).toBeFalsy();
     });
   });
 
