@@ -1,3 +1,4 @@
+import i18n from 'i18n';
 import Vuex from 'vuex';
 import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
@@ -30,9 +31,10 @@ describe('AccountProfileSection.vue', () => {
           },
         });
 
-        const profileSection = shallowMount(AccountProfileSection, {
+        const profileSection = mount(AccountProfileSection, {
           store,
           localVue,
+          i18n,
         });
 
         expect(profileSection.text()).toContain(
@@ -57,7 +59,7 @@ describe('AccountProfileSection.vue', () => {
         },
       });
 
-      profileSection = mount(AccountProfileSection, { store, localVue });
+      profileSection = mount(AccountProfileSection, { store, localVue, i18n });
     });
 
     describe('and attributes are valid', () => {
