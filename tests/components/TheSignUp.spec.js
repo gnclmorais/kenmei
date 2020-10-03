@@ -1,5 +1,5 @@
+import i18n from 'i18n';
 import Vuex from 'vuex';
-import axios from 'axios';
 import flushPromises from 'flush-promises';
 import { Message } from 'element-ui';
 
@@ -33,6 +33,7 @@ describe('TheSignUp.vue', () => {
     signUp = mount(TheSignUp, {
       store,
       localVue,
+      i18n,
     });
   });
 
@@ -73,10 +74,18 @@ describe('TheSignUp.vue', () => {
       it('shows validation errors if form is invalid', async () => {
         await signUp.findComponent({ ref: 'signUpSubmit' }).trigger('click');
 
-        expect(signUp.text()).toContain("Email can't be blank");
+        expect(signUp.text()).toContain('Emailrequired');
       });
 
       it('shows server-side errors if request failed', async () => {
+        signUp.setData({
+          user: {
+            email: 'text@example.com',
+            password: 'password',
+            password_confirmation: 'password',
+          },
+        });
+
         const createUserSpy   = jest.spyOn(resource, 'create');
         const errorMessageSpy = jest.spyOn(Message, 'error');
 
@@ -94,20 +103,6 @@ describe('TheSignUp.vue', () => {
 
         // TODO: Check that we actually called it with server-side errors
         expect(errorMessageSpy).toBeCalled();
-      });
-
-      it('tests that passwords match each other', async () => {
-        await signUp.setData({
-          user: {
-            email: 'text@example.com',
-            password: 'pass',
-            password_confirmation: 'passwo',
-          },
-        });
-
-        await signUp.findComponent({ ref: 'signUpSubmit' }).trigger('click');
-
-        expect(signUp.text()).toContain('Passwords do not match');
       });
     });
   });

@@ -1,10 +1,5 @@
 <template lang="pug">
-  el-form.w-full(
-    ref='signUpForm'
-    :rules='rules'
-    :model='user'
-    label-position='top'
-  )
+  .w-full
     template(v-if="confirmationInitiated")
       base-action-completed(
         header="Signed up successfully"
@@ -13,33 +8,27 @@
         @completeAction="$emit('signOnFinished')"
       )
     template(v-else)
-      el-form-item(prop='email')
-        el-input(
-          placeholder='Email'
-          type='email'
-          v-model.trim='user.email'
-          prefix-icon="el-icon-message"
-        )
-      el-form-item(prop='password')
-        el-input(
-          placeholder='Password'
-          type='password'
-          v-model.trim='user.password'
-          auto-complete='new-password'
-          prefix-icon="el-icon-lock"
-          @keyup.enter.native='submitForm'
-        )
-      el-form-item(prop='password_confirmation')
-        el-input(
-          placeholder='Password confirmation'
-          type='password'
-          v-model.trim='user.password_confirmation'
-          auto-complete='new-password'
-          prefix-icon="el-icon-lock"
-          @keyup.enter.native='signUp(user)'
-        )
-      el-form-item
-        base-button(ref='signUpSubmit' @click='submitForm') Register
+      base-form-input(
+        v-model.trim="$v.user.email.$model"
+        :validator="$v.user.email"
+        label="Email"
+        placeholder="you@example.com"
+      )
+      base-form-input.mt-5(
+        v-model.trim="$v.user.password.$model"
+        :validator="$v.user.password"
+        label="Password"
+        placeholder="Password"
+        type="password"
+      )
+      base-form-input.mt-5(
+        v-model.trim="$v.user.password_confirmation.$model"
+        :validator="$v.user.password_confirmation"
+        label="Password confirmation"
+        placeholder="Password confirmation"
+        type="password"
+      )
+      base-button.mt-5(ref='signUpSubmit' @click='signUp') Register
       .text-center
         el-divider.my-4
         span.text-sm
@@ -53,30 +42,19 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
   import {
-    Form, FormItem, Input, Message, Divider, Link,
-  } from 'element-ui';
+    required, email, minLength, maxLength, sameAs,
+  } from 'vuelidate/lib/validators';
+  import { Message, Divider, Link } from 'element-ui';
 
   import { create } from '@/services/endpoints/auth/registrations';
 
   export default {
     components: {
-      'el-form': Form,
-      'el-form-item': FormItem,
-      'el-input': Input,
       'el-divider': Divider,
       'el-link': Link,
     },
     data() {
-      const passwordConfirmationMatches = (rule, value, callback) => {
-        if (!value || value !== this.user.password) {
-          callback(new Error('Passwords do not match.'));
-        } else {
-          callback();
-        }
-      };
-
       return {
         confirmationInitiated: false,
         user: {
@@ -84,57 +62,29 @@
           password: '',
           password_confirmation: '',
         },
-        rules: {
-          email: [
-            {
-              required: true,
-              message: "Email can't be blank",
-              trigger: 'blur',
-            },
-            {
-              type: 'email',
-              message: 'Please input correct email address',
-              trigger: 'blur,change',
-            },
-          ],
-          password: [
-            {
-              required: true,
-              message: "Password can't be blank",
-              trigger: 'blur',
-            },
-            {
-              min: 8,
-              max: 24,
-              message: 'Password must be between 8 and 24 characters.',
-              trigger: 'change',
-            },
-          ],
-          password_confirmation: [
-            {
-              required: true,
-              message: "Password confirmation can't be blank",
-              trigger: 'change',
-            },
-            { validator: passwordConfirmationMatches, trigger: 'blur' },
-          ],
-        },
       };
     },
-    computed: {
-      ...mapGetters('user', [
-        'signedIn',
-      ]),
+    validations: {
+      user: {
+        email: {
+          required,
+          email,
+        },
+        password: {
+          required,
+          minLength8: minLength(8),
+          maxLength24: maxLength(24),
+        },
+        password_confirmation: {
+          sameAs: sameAs('password'),
+        },
+      },
     },
     methods: {
-      submitForm() {
-        this.$refs.signUpForm.validate((valid) => {
-          if (valid) { this.signUp(); }
-
-          return false;
-        });
-      },
       async signUp() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
+
         this.$emit('loading', true);
 
         const response = await create(this.user);
