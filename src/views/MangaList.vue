@@ -41,18 +41,13 @@
             @click="applySort($event)"
           )
         .mt-3.text-center.w-full.float-right.sm_mt-0.sm_text-left.sm_w-64
-          .relative.rounded-md.shadow-sm
-            .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
-              svg.h-5.w-5.text-gray-400(fill='currentColor' viewbox='0 0 20 20')
-                path(
-                  fill-rule='evenodd'
-                  d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'
-                  clip-rule='evenodd'
-                )
-            input.form-input.block.w-full.pl-10.sm_text-sm.sm_leading-5(
-              v-model="debouncedSearchTerm"
-              placeholder='Input manga title'
-            )
+          base-form-input(
+            v-model="debouncedSearchTerm"
+            placeholder='Input manga title'
+            type="text"
+          )
+            template(slot='icon')
+              icon-search.h-5.w-5.text-gray-400
       .mx-5.mb-5.max-sm_mx-2.max-sm_flex.max-sm_flex-col
         bulk-actions.mb-3.sm_mb-0(
           v-show="entriesSelected"
@@ -113,9 +108,7 @@
   import VueScrollTo from 'vue-scrollto';
   import debounce from 'lodash/debounce';
   import { mapActions, mapState, mapMutations } from 'vuex';
-  import {
-    Message, Input, Select, Option,
-  } from 'element-ui';
+  import { Message, Select, Option } from 'element-ui';
 
   import Importers from '@/components/TheImporters';
   import BulkActions from '@/components/BulkActions';
@@ -139,7 +132,6 @@
       DeleteMangaEntries,
       ReportMangaEntries,
       TheMangaList,
-      'el-input': Input,
       'el-select': Select,
       'el-option': Option,
     },

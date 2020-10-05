@@ -1,29 +1,20 @@
 <template lang="pug">
-  el-form.w-full(
-    ref='signInForm'
-    :rules='rules'
-    :model='user'
-    label-position='top'
-  )
-    el-form-item(prop='email')
-      el-input(
-        placeholder='Email'
-        type='email'
-        v-model.trim='user.email'
-        prefix-icon="el-icon-user"
-      )
-    el-form-item.mb-3(prop='password')
-      el-input(
-        placeholder='Password'
-        type='password'
-        v-model.trim='user.password'
-        auto-complete='current-password'
-        prefix-icon="el-icon-lock"
-        @keyup.enter.native='submitForm'
-      )
-    el-form-item.mb-0
-      el-checkbox(v-model="user.remember_me") Remember Me (2 months)
-      base-button(ref='signInSubmit' @click='submitForm') Sign In
+  .w-full
+    base-form-input(
+      v-model.trim="$v.user.email.$model"
+      :validator="$v.user.email"
+      label="Email"
+      placeholder="you@example.com"
+    )
+    base-form-input.mt-5(
+      v-model.trim="$v.user.password.$model"
+      :validator="$v.user.password"
+      label="Password"
+      placeholder="Password"
+      type="password"
+    )
+    base-form-checkbox.mt-5(v-model="user.remember_me") Remember Me (2 months)
+    base-button.mt-5(ref='signInSubmit' @click='submitForm') Sign In
     .text-center
       el-link.mt-4(
         @click.native="$emit('componentChanged', 'TheResetPassword')"
@@ -42,16 +33,12 @@
 </template>
 
 <script>
+  import { required, email } from 'vuelidate/lib/validators';
   import { mapActions, mapGetters } from 'vuex';
-  import {
-    Form, FormItem, Input, Checkbox, Link, Divider,
-  } from 'element-ui';
+  import { Checkbox, Link, Divider } from 'element-ui';
 
   export default {
     components: {
-      'el-form': Form,
-      'el-form-item': FormItem,
-      'el-input': Input,
       'el-checkbox': Checkbox,
       'el-link': Link,
       'el-divider': Divider,
@@ -63,28 +50,18 @@
           password: '',
           remember_me: false,
         },
-        rules: {
-          email: [
-            {
-              required: true,
-              message: "Email can't be blank",
-              trigger: 'blur',
-            },
-            {
-              type: 'email',
-              message: 'Please input correct email address',
-              trigger: 'blur',
-            },
-          ],
-          password: [
-            {
-              required: true,
-              message: "Password can't be blank",
-              trigger: 'blur',
-            },
-          ],
-        },
       };
+    },
+    validations: {
+      user: {
+        email: {
+          required,
+          email,
+        },
+        password: {
+          required,
+        },
+      },
     },
     computed: {
       ...mapGetters('user', [
@@ -95,14 +72,10 @@
       ...mapActions('user', [
         'signIn',
       ]),
-      submitForm() {
-        this.$refs.signInForm.validate((valid) => {
-          if (valid) { this.trySignIn(); }
+      async submitForm() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
 
-          return false;
-        });
-      },
-      async trySignIn() {
         this.$emit('loading', true);
 
         await this.signIn(this.user);

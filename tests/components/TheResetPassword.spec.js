@@ -1,3 +1,4 @@
+import i18n from 'i18n';
 import { Message } from 'element-ui';
 import axios from 'axios';
 import flushPromises from 'flush-promises';
@@ -8,17 +9,16 @@ describe('TheResetPassword.vue', () => {
   let resetPassword;
 
   beforeEach(() => {
-    resetPassword = shallowMount(TheResetPassword);
+    resetPassword = mount(TheResetPassword, { i18n });
   });
 
   describe('@events', () => {
     it('@click - when pressing Sign In link, emits componentChanged', () => {
-      resetPassword = mount(TheResetPassword);
-
       resetPassword.find('.el-link').trigger('click');
 
-      expect(resetPassword.emitted('componentChanged')[0]).toEqual(['TheSignIn']);
       expect(resetPassword.vm.$data.resetInitiated).not.toBeTruthy();
+      expect(resetPassword.emitted('componentChanged')[0])
+        .toEqual(['TheSignIn']);
     });
   });
 
@@ -39,20 +39,32 @@ describe('TheResetPassword.vue', () => {
       );
     });
 
-    it('shows server-side errors if request failed', async () => {
-      const axiosSpy        = jest.spyOn(axios, 'post');
-      const errorMessageSpy = jest.spyOn(Message, 'error');
-      const mockResponse    = { response: { data: 'Things happened' } };
+    describe('and has client-side errors', () => {
+      it('shows client-side errors', async () => {
+        await resetPassword
+          .findComponent({ ref: 'resetPasswordSubmit' })
+          .trigger('click');
 
-      resetPassword.setData({ user: { email: 'test@example.com' } });
+        expect(resetPassword.text()).toContain('Emailrequired');
+      });
+    });
 
-      axiosSpy.mockRejectedValue(mockResponse);
+    describe('and has server-side errors', () => {
+      it('shows server-side errors', async () => {
+        const axiosSpy        = jest.spyOn(axios, 'post');
+        const errorMessageSpy = jest.spyOn(Message, 'error');
+        const mockResponse    = { response: { data: 'Things happened' } };
 
-      resetPassword.vm.resetPassword();
+        resetPassword.setData({ user: { email: 'test@example.com' } });
 
-      await flushPromises();
+        axiosSpy.mockRejectedValue(mockResponse);
 
-      expect(errorMessageSpy).toBeCalled();
+        resetPassword.vm.resetPassword();
+
+        await flushPromises();
+
+        expect(errorMessageSpy).toBeCalled();
+      });
     });
   });
 });

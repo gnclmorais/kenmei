@@ -1,3 +1,4 @@
+import i18n from 'i18n';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
 import TheImporters from '@/components/TheImporters.vue';
@@ -208,12 +209,33 @@ describe('TheImporters.vue', () => {
           },
         },
       });
-      importers = mount(TheImporters, { store, localVue });
-      importers.setData({ importURL: 'https://mangadex.org/list/007' });
+      importers = mount(TheImporters, {
+        store,
+        localVue,
+        i18n,
+        data() {
+          return {
+            importURL: 'https://mangadex.org/list/007',
+            activeTab: 'mangaDex',
+          };
+        },
+      });
     });
 
     afterEach(() => {
       jest.restoreAllMocks();
+    });
+
+    describe('and has client-side errors', () => {
+      it('shows validation errors', async () => {
+        await importers.setData({ importURL: 'https://mangadex.org/list/12/' });
+        await importers
+          .findComponent({ ref: 'importMangaDexButton' })
+          .trigger('click');
+
+        expect(importers.text())
+          .toContain('MDList URLmust be a MDList url');
+      });
     });
 
     describe('and request status is success', () => {

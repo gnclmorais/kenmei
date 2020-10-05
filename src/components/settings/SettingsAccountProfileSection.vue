@@ -9,33 +9,15 @@
       .mt-5.md_mt-0.md_col-span-2
         .grid.lg_grid-cols-3.lg_gap-6
             .col-span-3.sm_col-span-2
-              div
-                label.block.text-sm.font-medium.leading-5.text-gray-700(
-                  for='email'
-                )
-                  | Email
-                .mt-1.relative.rounded-md.shadow-sm
-                  .input-icon
-                    svg.h-5.w-5.text-gray-400(
-                      fill='currentColor'
-                      viewbox='0 0 20 20'
-                    )
-                      path(
-                        fill-rule='evenodd'
-                        :d='emailIcon'
-                        clip-rule='evenodd'
-                      )
-                  input#email.form-input(
-                    v-model='email'
-                    type='email'
-                    autocomplete='new-password'
-                    placeholder='Email'
-                  )
-                p.mt-2.text-sm.text-gray-500(
-                  v-if="currentUser.unconfirmedEmail"
-                )
-                  | Currently waiting confirmation for:
-                  | {{ currentUser.unconfirmedEmail }}
+              base-form-input(
+                v-model.trim="$v.email.$model"
+                :validator="$v.email"
+                label="Email"
+                placeholder="you@example.com"
+                :helperText="unconfirmedEmail"
+              )
+                template(slot='icon')
+                  icon-mail.h-5.w-5
       .mt-8.border-t.border-gray-200.pt-5.col-span-3
         .flex.justify-end
           span.inline-flex.rounded-md.shadow-sm
@@ -43,6 +25,7 @@
 </template>
 
 <script>
+  import { required, email } from 'vuelidate/lib/validators';
   import { mapState, mapMutations } from 'vuex';
   import { Message } from 'element-ui';
 
@@ -52,17 +35,25 @@
     data() {
       return {
         email: '',
-        emailIcon: `
-          M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997
-          1.884zM18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z
-        `,
         loading: false,
       };
+    },
+    validations: {
+      email: {
+        required,
+        email,
+      },
     },
     computed: {
       ...mapState('user', [
         'currentUser',
       ]),
+      unconfirmedEmail() {
+        if (!this.currentUser.unconfirmedEmail) return;
+
+        // eslint-disable-next-line consistent-return
+        return `Currently waiting confirmation for: ${this.currentUser.unconfirmedEmail}`;
+      },
     },
     mounted() {
       this.email = this.currentUser.email;
@@ -70,6 +61,9 @@
     methods: {
       ...mapMutations('user', ['setCurrentUser']),
       async saveForm() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
+
         this.loading = true;
 
         const response = await update({

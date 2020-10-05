@@ -11,51 +11,36 @@
         template(v-else-if="tokenValid")
           h3.leading-normal.text-gray-600.text-center
             | Reset Password
-          el-form(
-            ref='updatePasswordForm'
-            :rules='rules'
-            :model='user'
-            label-position='top'
+          base-form-input.mt-5(
+            v-model.trim="$v.user.password.$model"
+            :validator="$v.user.password"
+            label="Password"
+            autocomplete='new-password'
+            type="password"
           )
-            el-form-item(prop='password')
-              el-input(
-                placeholder='Password'
-                type='password'
-                prefix-icon="el-icon-lock"
-                v-model.trim='user.password'
-                auto-complete='new-password'
-                @keyup.enter.native='submitForm'
-              )
-            el-form-item(prop='password_confirmation')
-              el-input(
-                placeholder='Password confirmation'
-                type='password'
-                prefix-icon="el-icon-lock"
-                v-model.trim='user.password_confirmation'
-                auto-complete='new-password'
-                @keyup.enter.native='submitForm'
-              )
-            el-form-item.mb-0
-              base-button(ref='resetPasswordSubmit' @click='submitForm')
-                | Save Password
+          base-form-input.mt-5(
+            v-model.trim="$v.user.passwordConfirmation.$model"
+            :validator="$v.user.passwordConfirmation"
+            label="Password confirmation"
+            autocomplete='new-password'
+            type="password"
+          )
+          base-button.mt-5(ref='resetPasswordSubmit' @click='submitNewPassword')
+            | Save Password
         p.leading-normal.text-gray-600.text-center(v-else)
           | {{ this.validationError }}
 </template>
 
 <script>
   import {
-    Form, FormItem, Input, Message,
-  } from 'element-ui';
+    required, minLength, maxLength, sameAs,
+  } from 'vuelidate/lib/validators';
+  import { Message } from 'element-ui';
   import { mapGetters, mapMutations } from 'vuex';
 
   import { edit, reset } from '@/services/endpoints/auth/passwords';
 
   export default {
-    components: {
-      'el-form': Form,
-      'el-form-item': FormItem,
-      'el-input': Input,
-    },
     props: {
       resetPasswordToken: {
         type: String,
@@ -63,45 +48,26 @@
       },
     },
     data() {
-      const passwordConfirmationMatches = (rule, value, callback) => {
-        if (!value || value !== this.user.password) {
-          callback(new Error('Passwords do not match.'));
-        } else {
-          callback();
-        }
-      };
-
       return {
         tokenValid: null,
         validationError: '',
         user: {
           password: '',
-          password_confirmation: '',
-        },
-        rules: {
-          password: [
-            {
-              required: true,
-              message: "Password can't be blank",
-              trigger: 'blur',
-            },
-            {
-              min: 8,
-              max: 24,
-              message: 'Password must be between 8 and 24 characters.',
-              trigger: 'change',
-            },
-          ],
-          password_confirmation: [
-            {
-              required: true,
-              message: "Password confirmation can't be blank",
-              trigger: 'change',
-            },
-            { validator: passwordConfirmationMatches, trigger: 'blur' },
-          ],
+          passwordConfirmation: '',
         },
       };
+    },
+    validations: {
+      user: {
+        password: {
+          required,
+          minLength8: minLength(8),
+          maxLength24: maxLength(24),
+        },
+        passwordConfirmation: {
+          sameAs: sameAs('password'),
+        },
+      },
     },
     computed: {
       ...mapGetters('user', [
@@ -115,14 +81,10 @@
       ...mapMutations('user', [
         'setCurrentUser',
       ]),
-      submitForm() {
-        this.$refs.updatePasswordForm.validate((valid) => {
-          if (valid) { this.submitNewPassword(); }
-
-          return false;
-        });
-      },
       async submitNewPassword() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
+
         const response = await reset(this.user, this.resetPasswordToken);
 
         if (response.status === 200) {

@@ -4,6 +4,7 @@ import Rollbar from 'vue-rollbar';
 import { Loading } from 'element-ui';
 import VueTippy from 'vue-tippy';
 import VueScrollTo from 'vue-scrollto';
+import Vuelidate from 'vuelidate';
 import Meta from 'vue-meta';
 import Home from '@/views/Home.vue';
 import '@/plugins/element.js';
@@ -15,11 +16,13 @@ import 'tippy.js/themes/light.css';
 
 import router from '@/router/';
 import store from '@/store/index';
+import i18n from '@/plugins/i18n.js';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueScrollTo);
 Vue.use(Meta);
+Vue.use(Vuelidate);
 Vue.use(VueTippy, {
   directive: 'tippy',
   animateFill: false,
@@ -67,5 +70,6 @@ Vue.config.errorHandler = (err, _vm, _info) => { Vue.rollbar.error(err); };
 new Vue({
   router,
   store,
+  i18n,
   render: (h) => h(Home),
 }).$mount('#app');

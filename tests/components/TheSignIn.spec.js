@@ -1,5 +1,5 @@
+import i18n from 'i18n';
 import Vuex from 'vuex';
-
 import TheSignIn from '@/components/TheSignIn.vue';
 
 import user from '@/store/modules/user';
@@ -27,6 +27,7 @@ describe('TheSignIn.vue', () => {
     signIn = mount(TheSignIn, {
       store,
       localVue,
+      i18n,
     });
   });
 
@@ -81,7 +82,7 @@ describe('TheSignIn.vue', () => {
       it('shows validation errors', async () => {
         await signIn.findComponent({ ref: 'signInSubmit' }).trigger('click');
 
-        expect(signIn.text()).toContain("Password can't be blank");
+        expect(signIn.text()).toContain('required');
       });
     });
   });

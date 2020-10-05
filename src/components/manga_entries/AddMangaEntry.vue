@@ -6,23 +6,18 @@
     @dialogClosed="closeModal()"
   )
     template(slot='body')
-      .flex.flex-col.w-full
-        .mt-3.text-center.sm_mt-0.sm_text-left.w-full
-          label.block.text-sm.font-medium.leading-5.text-gray-700(for='url')
-            | Manga URL
-          .mt-1.relative.rounded-md.shadow-sm
-            .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
-               i.el-icon-link.text-gray-400.sm_text-sm.sm_leading-5
-            input.form-input.block.w-full.pl-10.sm_text-sm.sm_leading-5(
-              aria-label='Manga URL'
-              name='manga_url'
-              v-model.trim="mangaURL"
-              placeholder='https://mangadex.org/title/7139/'
-            )
-          p.mt-2.text-xs.text-gray-500
-            | When using a chapter URL, last read chapter will be pre-populated
-        .mt-6.text-center.sm_text-left.w-full
-          label.block.text-sm.leading-5.font-medium.text-gray-700
+      .flex-col.w-full
+        base-form-input(
+          v-model="$v.mangaURL.$model"
+          :validator="$v.mangaURL"
+          label="Manga URL"
+          placeholder="https://www.example.com/manga"
+          helperText="When using a chapter URL, last read chapter will be pre-populated"
+        )
+          template(slot='icon')
+            icon-link.h-5.w-5
+        .mt-5.text-center.sm_text-left.w-full
+          label.block.text-sm.text-left.leading-5.font-medium.text-gray-700
             | Status
           .mt-1.relative.rounded-md.shadow-sm.w-auto
             el-select.rounded.w-full(v-model="selectedStatus")
@@ -34,17 +29,14 @@
               )
     template(slot='actions')
       span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
-        base-button(
-          ref="addMangaButton"
-          @click="addMangaEntry"
-          :disabled="mangaURL.length === 0"
-        )
+        base-button(ref="addMangaButton" @click="addMangaEntry")
           | Add
       span.mt-3.flex.w-full.rounded-md.shadow-sm.sm_mt-0.sm_w-auto
         base-button(type="secondary" @click="closeModal()") Cancel
 </template>
 
 <script>
+  import { required, url } from 'vuelidate/lib/validators';
   import { mapState, mapMutations, mapGetters } from 'vuex';
   import { Message, Select, Option } from 'element-ui';
   import { create } from '@/services/api';
@@ -72,6 +64,12 @@
         loading: false,
       };
     },
+    validations: {
+      mangaURL: {
+        required,
+        url,
+      },
+    },
     computed: {
       ...mapState('lists', [
         'statuses',
@@ -91,6 +89,9 @@
         'replaceEntry',
       ]),
       async addMangaEntry() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
+
         this.loading = true;
 
         const response = await create(this.mangaURL, this.selectedStatus);
@@ -128,18 +129,3 @@
     },
   };
 </script>
-
-<style lang="scss" media="screen" scoped>
-  input {
-    @apply appearance-none rounded-md block w-full py-2 pl-8;
-    @apply border border-gray-300 text-gray-900;
-
-    &:focus {
-      @apply outline-none shadow-outline-blue border-blue-300 z-10;
-    }
-
-    @screen sm {
-      @apply text-sm leading-5;
-    }
-  }
-</style>

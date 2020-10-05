@@ -1,3 +1,4 @@
+import i18n from 'i18n';
 import Vuex from 'vuex';
 import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
@@ -25,7 +26,7 @@ describe('AddMangaEntry.vue', () => {
       },
     });
 
-    addMangaEntry = shallowMount(AddMangaEntry, { store, localVue });
+    addMangaEntry = shallowMount(AddMangaEntry, { store, localVue, i18n });
   });
 
   describe(':props', () => {
@@ -48,17 +49,22 @@ describe('AddMangaEntry.vue', () => {
     });
   });
 
+  describe('and there are client-side errors', () => {
+    it.todo('shows validation errors');
+  });
+
   describe('when adding new manga entry', () => {
     let createEntrySpy;
 
     beforeEach(() => {
-      addMangaEntry.setData({ mangaURL: 'example.url/manga/1' });
+      addMangaEntry.setData({ mangaURL: 'http://www.example.url/manga/1' });
 
       createEntrySpy = jest.spyOn(api, 'create');
     });
 
     afterEach(() => {
-      expect(createEntrySpy).toHaveBeenCalledWith('example.url/manga/1', 1);
+      expect(createEntrySpy)
+        .toHaveBeenCalledWith('http://www.example.url/manga/1', 1);
     });
 
     describe('when no manga sources are tracked', () => {

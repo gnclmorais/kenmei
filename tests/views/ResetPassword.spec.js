@@ -1,3 +1,4 @@
+import i18n from 'i18n';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import { Message } from 'element-ui';
@@ -34,6 +35,7 @@ describe('ResetPassword.vue', () => {
     resetPassword = shallowMount(ResetPassword, {
       store,
       localVue,
+      i18n,
       propsData: {
         resetPasswordToken: 'token',
       },
@@ -57,6 +59,7 @@ describe('ResetPassword.vue', () => {
       resetPassword = shallowMount(ResetPassword, {
         store,
         localVue,
+        i18n,
         propsData: {
           resetPasswordToken: 'token',
         },
@@ -78,6 +81,7 @@ describe('ResetPassword.vue', () => {
         resetPassword = shallowMount(ResetPassword, {
           store,
           localVue,
+          i18n,
           propsData: {
             resetPasswordToken: 'token',
           },
@@ -98,6 +102,7 @@ describe('ResetPassword.vue', () => {
         resetPassword = shallowMount(ResetPassword, {
           store,
           localVue,
+          i18n,
           propsData: {
             resetPasswordToken: 'token',
           },
@@ -118,6 +123,7 @@ describe('ResetPassword.vue', () => {
         resetPassword = shallowMount(ResetPassword, {
           store,
           localVue,
+          i18n,
           propsData: {
             resetPasswordToken: 'token',
           },
@@ -144,24 +150,29 @@ describe('ResetPassword.vue', () => {
         store,
         router,
         localVue,
+        i18n,
         propsData: {
           resetPasswordToken: 'token',
         },
       });
     });
 
-    it('tests that passwords match each other', async () => {
-      await resetPassword.setData({
-        tokenValid: true,
-        user: {
-          password: 'password',
-          password_confirmation: 'passwords',
-        },
+    describe('and has client-side errors', () => {
+      it('shows client-side errors', async () => {
+        await resetPassword.setData({
+          tokenValid: true,
+          user: {
+            password: 'password',
+            passwordConfirmation: 'passwords',
+          },
+        });
+
+        await resetPassword
+          .findComponent({ ref: 'resetPasswordSubmit' })
+          .trigger('click');
+
+        expect(resetPassword.text()).toContain('must be identical');
       });
-
-      await resetPassword.findComponent({ ref: 'resetPasswordSubmit' }).trigger('click');
-
-      expect(resetPassword.text()).toContain('Passwords do not match');
     });
 
     describe('with valid params', () => {
@@ -170,7 +181,7 @@ describe('ResetPassword.vue', () => {
           tokenValid: true,
           user: {
             password: 'password',
-            password_confirmation: 'password',
+            passwordConfirmation: 'password',
           },
         });
 
@@ -178,7 +189,9 @@ describe('ResetPassword.vue', () => {
 
         resetPasswordSpy.mockResolvedValue({ status: 200, data: user });
 
-        resetPassword.findComponent({ ref: 'resetPasswordSubmit' }).trigger('click');
+        resetPassword
+          .findComponent({ ref: 'resetPasswordSubmit' })
+          .trigger('click');
 
         await flushPromises();
 
@@ -195,7 +208,7 @@ describe('ResetPassword.vue', () => {
           tokenValid: true,
           user: {
             password: 'password',
-            password_confirmation: 'password',
+            passwordConfirmation: 'password',
           },
         });
 

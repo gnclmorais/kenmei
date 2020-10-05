@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import Vuelidate from 'vuelidate';
+import VueI18n from 'vue-i18n';
 import fs from 'fs';
 import path from 'path';
 import '@testing-library/jest-dom';
@@ -62,3 +64,7 @@ globalIconFiles.forEach((fileName) => {
 // for tests. Same for the Vue devtools
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
+
+// Setup global libraries
+Vue.use(Vuelidate);
+Vue.use(VueI18n);

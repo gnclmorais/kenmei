@@ -7,7 +7,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "vue-cli-service test:unit",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
     "@tailwindcss/ui": "^0.5.0",
@@ -23,17 +24,20 @@
     "qs": "^6.9.3",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
+    "vue-i18n": "^8.0.0",
     "vue-meta": "^2.4.0",
     "vue-rollbar": "^1.0.0",
     "vue-router": "^3.4.4",
     "vue-scrollto": "^2.18.2",
     "vue-slide-toggle": "^1.1.1",
     "vue-tippy": "^4.4.0",
+    "vuelidate": "^0.7.5",
     "vuex": "^3.5.1",
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.3",
+    "@kazupon/vue-i18n-loader": "^0.3.0",
     "@vue/cli-plugin-babel": "~4.5.3",
     "@vue/cli-plugin-eslint": "~4.5.3",
     "@vue/cli-plugin-unit-jest": "~4.5.3",
@@ -55,6 +59,7 @@
     "sass-loader": "^8.0.2",
     "tailwindcss": "^1.6.2",
     "vue-cli-plugin-element": "^1.0.1",
+    "vue-cli-plugin-i18n": "~0.6.1",
     "vue-template-compiler": "^2.6.11"
   },
   "postcss": {

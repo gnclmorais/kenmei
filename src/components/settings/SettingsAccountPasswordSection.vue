@@ -8,25 +8,28 @@
       .mt-5.md_mt-0.md_col-span-2
         .grid.grid-cols-6.gap-6
           .col-span-6.sm_col-span-3
-            label(for="new-password") New password
-            input#new-password.form-input(
-              type='password'
+            base-form-input(
+              v-model.trim="$v.user.password.$model"
+              :validator="$v.user.password"
+              label="New password"
               autocomplete='new-password'
-              v-model="user.password"
+              type="password"
             )
           .col-span-6.sm_col-span-3
-            label(for="new-password-confirmation") Confirm new password
-            input#new-password-confirmation.form-input(
-              type='password'
+            base-form-input(
+              v-model.trim="$v.user.passwordConfirmation.$model"
+              :validator="$v.user.passwordConfirmation"
+              label="Confirm new password"
               autocomplete='new-password'
-              v-model="user.passwordConfirmation"
+              type="password"
             )
           .col-span-6.sm_col-span-3
-            label(for="current-password") Current password
-            input#current-password.form-input(
-              type='password'
-              autocomplete='current-password'
-              v-model="user.currentPassword"
+            base-form-input(
+              v-model.trim="$v.user.currentPassword.$model"
+              :validator="$v.user.currentPassword"
+              label="Current password"
+              type="password"
+              autocomplete="current-password"
             )
       .mt-8.border-t.border-gray-200.pt-5.col-span-3
         .flex.justify-end
@@ -35,6 +38,9 @@
 </template>
 
 <script>
+  import {
+    required, minLength, maxLength, sameAs,
+  } from 'vuelidate/lib/validators';
   import { Message } from 'element-ui';
 
   import { update } from '@/services/endpoints/auth/passwords';
@@ -50,8 +56,26 @@
         loading: false,
       };
     },
+    validations: {
+      user: {
+        password: {
+          required,
+          minLength8: minLength(8),
+          maxLength24: maxLength(24),
+        },
+        passwordConfirmation: {
+          sameAs: sameAs('password'),
+        },
+        currentPassword: {
+          required,
+        },
+      },
+    },
     methods: {
       async updatePassword() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
+
         this.loading = true;
 
         const response = await update(this.user);
@@ -70,22 +94,3 @@
     },
   };
 </script>
-
-<style media="screen" lang="scss" scoped>
-  label {
-    @apply block text-sm font-medium leading-5 text-gray-700;
-  }
-
-  input {
-    @apply mt-1 block w-full py-2 px-3 border border-gray-300;
-    @apply rounded-md shadow-sm transition duration-150 ease-in-out;
-
-    &:focus {
-      @apply outline-none shadow-outline-blue border-blue-300;
-    }
-
-    @screen sm {
-      @apply text-sm leading-5;
-    }
-  }
-</style>
