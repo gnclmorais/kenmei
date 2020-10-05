@@ -8,7 +8,7 @@
           | Checking token validity
           br
           i.el-icon-loading
-        template(v-else-if="tokenValid")
+        form(v-else-if="tokenValid" @submit.prevent="submitNewPassword")
           h3.leading-normal.text-gray-600.text-center
             | Reset Password
           base-form-input.mt-5(
@@ -25,7 +25,7 @@
             autocomplete='new-password'
             type="password"
           )
-          base-button.mt-5(ref='resetPasswordSubmit' @click='submitNewPassword')
+          base-button.mt-5(ref='resetPasswordSubmit' type='submit')
             | Save Password
         p.leading-normal.text-gray-600.text-center(v-else)
           | {{ this.validationError }}

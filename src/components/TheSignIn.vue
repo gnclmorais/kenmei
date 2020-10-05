@@ -1,5 +1,5 @@
 <template lang="pug">
-  .w-full
+  form.w-full(@submit.prevent="submitForm")
     base-form-input(
       v-model.trim="$v.user.email.$model"
       :validator="$v.user.email"
@@ -14,7 +14,7 @@
       type="password"
     )
     base-form-checkbox.mt-5(v-model="user.remember_me") Remember Me (2 months)
-    base-button.mt-5(ref='signInSubmit' @click='submitForm') Sign In
+    base-button.mt-5(ref='signInSubmit' type="submit") Sign In
     .text-center
       el-link.mt-4(
         @click.native="$emit('componentChanged', 'TheResetPassword')"
