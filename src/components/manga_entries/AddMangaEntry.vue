@@ -32,7 +32,7 @@
         base-button(ref="addMangaButton" @click="addMangaEntry")
           | Add
       span.mt-3.flex.w-full.rounded-md.shadow-sm.sm_mt-0.sm_w-auto
-        base-button(type="secondary" @click="closeModal()") Cancel
+        base-button(colour="secondary" @click="closeModal()") Cancel
 </template>
 
 <script>

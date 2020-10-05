@@ -65,7 +65,7 @@
               i.el-icon-plus.mr-1
               | Add Manga
           span.flex.mt-3.sm_mt-0.w-full.rounded-md.shadow-sm.sm_w-auto
-            base-button(type="success" @click="importDialogVisible = true")
+            base-button(colour="success" @click="importDialogVisible = true")
               i.el-icon-upload2.mr-1
               | Import
       .flex-grow.sm_mx-5.mx-0
