@@ -72,15 +72,16 @@ describe('TheSignIn.vue', () => {
           data() { return { user: userData }; },
         });
 
-        signIn.findComponent({ ref: 'signInSubmit' }).trigger('click');
+        await signIn.find('form').trigger('submit.prevent');
 
-        expect(actions.signIn).toHaveBeenCalledWith(expect.anything(), userData);
+        expect(actions.signIn)
+          .toHaveBeenCalledWith(expect.anything(), userData);
       });
     });
 
     describe('when form is invalid', () => {
       it('shows validation errors', async () => {
-        await signIn.findComponent({ ref: 'signInSubmit' }).trigger('click');
+        await signIn.find('form').trigger('submit.prevent');
 
         expect(signIn.text()).toContain('required');
       });

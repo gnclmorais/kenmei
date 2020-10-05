@@ -7,7 +7,7 @@
         buttonText="Close"
         @completeAction="$emit('signOnFinished')"
       )
-    template(v-else)
+    form(v-else @submit.prevent="signUp")
       base-form-input(
         v-model.trim="$v.user.email.$model"
         :validator="$v.user.email"
@@ -28,7 +28,7 @@
         placeholder="Password confirmation"
         type="password"
       )
-      base-button.mt-5(ref='signUpSubmit' @click='signUp') Register
+      base-button.mt-5(ref='signUpSubmit' type='submit') Register
       .text-center
         el-divider.my-4
         span.text-sm

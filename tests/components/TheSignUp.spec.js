@@ -72,7 +72,7 @@ describe('TheSignUp.vue', () => {
 
     describe(':user - is invalid', () => {
       it('shows validation errors if form is invalid', async () => {
-        await signUp.findComponent({ ref: 'signUpSubmit' }).trigger('click');
+        await signUp.find('form').trigger('submit.prevent');
 
         expect(signUp.text()).toContain('Emailrequired');
       });

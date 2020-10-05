@@ -13,10 +13,10 @@
             | use the edit button to switch to a different source.
     template(slot='actions')
       span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
-        base-button(type="danger" @click="$emit('confirmDeletion')")
+        base-button(colour="danger" @click="$emit('confirmDeletion')")
           | Delete
       span.mt-3.flex.w-full.rounded-md.shadow-sm.sm_mt-0.sm_w-auto
-        base-button(type="secondary" @click="$emit('dialogClosed')")
+        base-button(colour="secondary" @click="$emit('dialogClosed')")
           | Cancel
 </template>
 

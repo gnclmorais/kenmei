@@ -1,6 +1,6 @@
 <template lang="pug">
   button(
-    type='button'
+    :type='type'
     :class='classes'
     :disabled='disabled'
     @click="$emit('click')"
@@ -12,6 +12,10 @@
   export default {
     props: {
       type: {
+        type: String,
+        default: 'button',
+      },
+      colour: {
         type: String,
         default: 'primary',
       },
@@ -27,12 +31,12 @@
     computed: {
       classes() {
         return {
-          'btn-primary': this.type === 'primary',
-          'btn-success': this.type === 'success',
-          'btn-secondary': this.type === 'secondary',
-          'btn-info': this.type === 'info',
-          'btn-warn': this.type === 'warning',
-          'btn-danger': this.type === 'danger',
+          'btn-primary': this.colour === 'primary',
+          'btn-success': this.colour === 'success',
+          'btn-secondary': this.colour === 'secondary',
+          'btn-info': this.colour === 'info',
+          'btn-warn': this.colour === 'warning',
+          'btn-danger': this.colour === 'danger',
           'btn-xl': this.size === 'xl',
           'btn-lg': this.size === 'lg',
           'btn-md': this.size === 'md',

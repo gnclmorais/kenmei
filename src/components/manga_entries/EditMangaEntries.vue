@@ -60,7 +60,7 @@
         )
           | Update
       span.mt-3.sm_mt-0.flex.w-full.rounded-md.shadow-sm.sm_w-auto
-        base-button(type="secondary" @click="$emit('editComplete')") Cancel
+        base-button(colour="secondary" @click="$emit('editComplete')") Cancel
 </template>
 
 <script>

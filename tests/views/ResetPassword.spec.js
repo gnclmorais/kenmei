@@ -167,9 +167,7 @@ describe('ResetPassword.vue', () => {
           },
         });
 
-        await resetPassword
-          .findComponent({ ref: 'resetPasswordSubmit' })
-          .trigger('click');
+        await resetPassword.find('form').trigger('submit.prevent');
 
         expect(resetPassword.text()).toContain('must be identical');
       });
@@ -189,10 +187,7 @@ describe('ResetPassword.vue', () => {
 
         resetPasswordSpy.mockResolvedValue({ status: 200, data: user });
 
-        resetPassword
-          .findComponent({ ref: 'resetPasswordSubmit' })
-          .trigger('click');
-
+        await resetPassword.find('form').trigger('submit.prevent');
         await flushPromises();
 
         expect(router.currentRoute.name).toBe('manga-list');
@@ -218,8 +213,7 @@ describe('ResetPassword.vue', () => {
           { status: 500, data: { error: 'Wrong user' } },
         );
 
-        resetPassword.findComponent({ ref: 'resetPasswordSubmit' }).trigger('click');
-
+        await resetPassword.find('form').trigger('submit.prevent');
         await flushPromises();
 
         expect(errorMessageSpy).toBeCalledWith(

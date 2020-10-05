@@ -42,12 +42,12 @@
           | Total {{ tags.length }} tags
       .flex.flex-initial.justify-between.sm_justify-end
         base-button(
-          type="secondary"
+          colour="secondary"
           :disabled="currentPage - 1 === 0"
           @click="currentPage -= 1"
         ) Previous
         base-button.ml-3(
-          type="secondary"
+          colour="secondary"
           :disabled="currentPage + 1 > pages"
           @click="currentPage += 1"
         ) Next
@@ -87,7 +87,7 @@
           base-button(ref="addTagButton" @click="upsertTag")
             | Add
         span.mt-3.flex.w-full.rounded-md.shadow-sm.sm_mt-0.sm_w-auto
-          base-button(type="secondary" @click="closeModal()") Cancel
+          base-button(colour="secondary" @click="closeModal()") Cancel
 </template>
 
 <script>

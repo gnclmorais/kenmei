@@ -33,7 +33,7 @@
           template(v-if="!signedIn")
             base-button(
               ref="signInButton"
-              type="secondary"
+              colour="secondary"
               @click="openSignOnWith('TheSignIn')"
             ) Sign In
             base-button.ml-3(

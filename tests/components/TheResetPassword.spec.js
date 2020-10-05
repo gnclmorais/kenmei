@@ -41,9 +41,10 @@ describe('TheResetPassword.vue', () => {
 
     describe('and has client-side errors', () => {
       it('shows client-side errors', async () => {
-        await resetPassword
-          .findComponent({ ref: 'resetPasswordSubmit' })
-          .trigger('click');
+        await resetPassword.find('form').trigger('submit.prevent');
+        // await resetPassword
+        //   .findComponent({ ref: 'resetPasswordSubmit' })
+        //   .trigger('click');
 
         expect(resetPassword.text()).toContain('Emailrequired');
       });

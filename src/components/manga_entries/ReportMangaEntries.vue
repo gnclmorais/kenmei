@@ -29,13 +29,13 @@
       span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
         base-button(
           ref="reportEntriesButton"
-          type="danger"
+          colour="danger"
           @click="report"
           :disabled="issueInvalid"
         )
           | Report
       span.mt-3.sm_mt-0.flex.w-full.rounded-md.shadow-sm.sm_w-auto
-        base-button(type="secondary" @click="$emit('closeDialog')") Cancel
+        base-button(colour="secondary" @click="$emit('closeDialog')") Cancel
 </template>
 
 <script>

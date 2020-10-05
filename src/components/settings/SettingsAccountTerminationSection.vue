@@ -8,7 +8,7 @@
             | Deleting your account is irreversable, so make sure you have
             | exported all data, before proceeding
       .mt-5.md_mt-0.md_col-span-1.self-center
-        base-button(type='danger' @click="confirmationVisible = true")
+        base-button(colour='danger' @click="confirmationVisible = true")
           | Delete Account
       base-modal(
         :visible="confirmationVisible"
@@ -28,10 +28,10 @@
                 | manga entries and tags. Do you want to proceed?
         template(slot='actions')
           span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
-            base-button(type="danger" @click="deleteAccount")
+            base-button(colour="danger" @click="deleteAccount")
               | Confirm
           span.mt-3.flex.w-full.rounded-md.shadow-sm.sm_mt-0.sm_w-auto
-            base-button(type="secondary" @click="confirmationVisible = false")
+            base-button(colour="secondary" @click="confirmationVisible = false")
               | Cancel
 </template>
 

@@ -7,7 +7,7 @@
         buttonText="Close"
         @completeAction="$emit('signOnFinished')"
       )
-    template(v-else)
+    form(v-else @submit.prevent="resetPassword")
       base-form-input(
         v-model.trim="$v.user.email.$model"
         :validator="$v.user.email"
@@ -18,7 +18,7 @@
       )
         template(slot='icon')
           icon-mail.h-5.w-5
-      base-button.mt-5(ref='resetPasswordSubmit' @click='resetPassword')
+      base-button.mt-5(ref='resetPasswordSubmit' type='submit')
         | Reset Password
       .text-center
         el-divider.my-4
@@ -63,7 +63,7 @@
       async resetPassword() {
         this.$v.$touch();
         if (this.$v.$invalid) return;
-        
+
         this.$emit('loading', true);
 
         const response = await plain
