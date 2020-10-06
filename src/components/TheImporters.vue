@@ -101,6 +101,7 @@
         if (!newVal) {
           // Reset data to initial state
           Object.assign(this.$data, this.$options.data.call(this));
+          this.$v.$reset();
         }
       }, 250),
     },
