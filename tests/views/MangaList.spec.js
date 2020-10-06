@@ -1,3 +1,4 @@
+import VueScrollTo from 'vue-scrollto';
 import Vuex from 'vuex';
 import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
@@ -15,6 +16,7 @@ import * as mangaEntriesResource from '@/services/endpoints/v2/manga_entries';
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
+localVue.use(VueScrollTo);
 
 // To avoid missing directive Vue warnings
 localVue.directive('loading', true);
