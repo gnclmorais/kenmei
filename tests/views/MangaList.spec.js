@@ -73,23 +73,18 @@ describe('MangaList.vue', () => {
       mangaList = shallowMount(MangaList, {
         store,
         localVue,
-        data() {
-          return {
-            selectedEntries: [entry1],
-          };
-        },
-        methods: {
-          clearTableSelection() {
-            return true;
-          },
-        },
+        data() { return { selectedEntries: [entry1] }; },
+        methods: { clearTableSelection() { return true; } },
+        stubs: ['router-link', 'router-view'],
       });
 
       modal = mangaList.findComponent({ ref: 'addMangaEntryModal' });
     });
 
     it('shows add manga entry modal', async () => {
-      await mangaList.findComponent({ ref: 'addMangaEntryModalButton' }).trigger('click');
+      await mangaList
+        .findComponent({ ref: 'addMangaEntryModalButton' })
+        .trigger('click');
 
       expect(modal.element).toBeVisible();
     });
@@ -110,16 +105,9 @@ describe('MangaList.vue', () => {
       mangaList = shallowMount(MangaList, {
         store,
         localVue,
-        data() {
-          return {
-            selectedEntries: [entry1],
-          };
-        },
-        methods: {
-          clearTableSelection() {
-            return true;
-          },
-        },
+        data() { return { selectedEntries: [entry1] }; },
+        methods: { clearTableSelection() { return true; } },
+        stubs: ['router-link', 'router-view'],
       });
 
       modal = mangaList.findComponent({ ref: 'editMangaEntryModal' });
@@ -201,11 +189,8 @@ describe('MangaList.vue', () => {
         store,
         localVue,
         data() { return { selectedEntries: [entry1, entry2] }; },
-        methods: {
-          clearTableSelection() {
-            return true;
-          },
-        },
+        methods: { clearTableSelection() { return true; } },
+        stubs: ['router-link', 'router-view'],
       });
 
       updatedMangaEntries = [
@@ -292,16 +277,9 @@ describe('MangaList.vue', () => {
       mangaList = shallowMount(MangaList, {
         store,
         localVue,
-        data() {
-          return {
-            selectedEntries: [entry1],
-          };
-        },
-        methods: {
-          clearTableSelection() {
-            return true;
-          },
-        },
+        data() { return { selectedEntries: [entry1] }; },
+        methods: { clearTableSelection() { return true; } },
+        stubs: ['router-link', 'router-view'],
       });
     });
 
@@ -385,7 +363,11 @@ describe('MangaList.vue', () => {
 
     describe('and searchTerm is provided', () => {
       it('fetches entries with the provided query', async () => {
-        const mangaList = shallowMount(MangaList, { store, localVue });
+        const mangaList = shallowMount(MangaList, {
+          store,
+          localVue,
+          stubs: ['router-link', 'router-view'],
+        });
 
         jest.useFakeTimers();
         await mangaList.setData({ searchTerm: 'Boku no' });
@@ -403,7 +385,11 @@ describe('MangaList.vue', () => {
 
     describe('and selectedTagIDs are provided', () => {
       it('fetches new entries with the provided tag IDs', async () => {
-        const mangaList = shallowMount(MangaList, { store, localVue });
+        const mangaList = shallowMount(MangaList, {
+          store,
+          localVue,
+          stubs: ['router-link', 'router-view'],
+        });
 
         await mangaList.setData({ selectedTagIDs: [tag2.id] });
 
@@ -419,8 +405,12 @@ describe('MangaList.vue', () => {
 
     describe('and selectedStatus has changed', () => {
       it('fetches new entries with the provided status', async () => {
-        const mangaList      = shallowMount(MangaList, { store, localVue });
         const selectedStatus = 2;
+        const mangaList      = shallowMount(MangaList, {
+          store,
+          localVue,
+          stubs: ['router-link', 'router-view'],
+        });
 
         await mangaList.setData({ selectedStatus });
 
@@ -443,7 +433,11 @@ describe('MangaList.vue', () => {
     });
 
     it('fetches entries with the provided sorting', async () => {
-      const mangaList    = shallowMount(MangaList, { store, localVue });
+      const mangaList    = shallowMount(MangaList, {
+        store,
+        localVue,
+        stubs: ['router-link', 'router-view'],
+      });
       const selectedSort = { Released: 'asc' };
 
       await mangaList.findComponent(SortDropdown).vm.$emit(
@@ -468,7 +462,11 @@ describe('MangaList.vue', () => {
     });
 
     it('fetches entries for the provided page', async () => {
-      const mangaList = shallowMount(MangaList, { store, localVue });
+      const mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        stubs: ['router-link', 'router-view'],
+      });
 
       await mangaList.findComponent(TheMangaList).vm.$emit('changePage', 2);
 
@@ -485,7 +483,11 @@ describe('MangaList.vue', () => {
     let mangaList;
 
     beforeEach(() => {
-      mangaList = shallowMount(MangaList, { store, localVue });
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        stubs: ['router-link', 'router-view'],
+      });
     });
 
     it('@seriesSelected - toggles bulk actions and sets selected series', async () => {
@@ -493,7 +495,7 @@ describe('MangaList.vue', () => {
 
       await mangaList.findComponent(TheMangaList).vm.$emit(
         'seriesSelected',
-        [entry1]
+        [entry1],
       );
 
       expect(mangaList.find('bulk-actions-stub').element).toBeVisible();
@@ -523,7 +525,11 @@ describe('MangaList.vue', () => {
     });
 
     it(':created() - loads tags and entries, while toggling loading', async () => {
-      shallowMount(MangaList, { store, localVue });
+      shallowMount(MangaList, {
+        store,
+        localVue,
+        stubs: ['router-link', 'router-view'],
+      });
 
       await flushPromises();
 
