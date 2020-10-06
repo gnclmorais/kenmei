@@ -125,6 +125,7 @@
         this.$emit('dialogClosed');
         this.loading = false;
         this.mangaURL = '';
+        this.$v.$reset();
       },
     },
   };
