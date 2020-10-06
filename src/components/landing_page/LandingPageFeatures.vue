@@ -6,7 +6,7 @@
           | Your Manga Control Centre
         h3 The best way to read and track manga
       .mt-10
-        ul.md_grid.md_grid-cols-2.md_col-gap-8.md_row-gap-10
+        ul.md_grid.md_grid-cols-2.md_gap-x-8.md_gap-y-10
           li(
             v-for='(feature, index) in features'
             :class="{'mt-10 md_mt-0': index !== 0}"
