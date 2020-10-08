@@ -5,6 +5,8 @@
         type='checkbox'
         :checked="value"
         :indeterminate.prop="indeterminate"
+        :disabled="disabled"
+        :class="{ 'opacity-50 cursor-not-allowed': disabled }"
         @change="$emit('input', $event.target.checked)"
       )
     .pl-7.text-sm.leading-5(v-if='$slots.default')
@@ -20,6 +22,10 @@
         required: true,
       },
       indeterminate: {
+        type: Boolean,
+        default: false,
+      },
+      disabled: {
         type: Boolean,
         default: false,
       },
