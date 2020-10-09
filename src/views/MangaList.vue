@@ -1,80 +1,27 @@
 <template lang="pug">
   .flex.flex-col.items-center
-    .hidden.bg-white.h-64.w-full.absolute.border-b.border-gray-200.sm_block
-    .flex.flex-col.w-full.max-w-7xl.py-8
-      .mx-2.mb-5.sm_mx-5.flex.justify-between.flex-col.sm_flex-row
-        .flex.flex-col.w-full.sm_flex-row
-          el-select.w-full.sm_w-40(
-            v-model="selectedStatus"
-            placeholder="Filter by status"
-          )
-            el-option(
-              v-for="status in allStatuses"
-              :key="status.enum"
-              :label="status.name"
-              :value="status.enum"
-            )
-          el-select.w-full.mt-3.sm_mt-0.sm_ml-3.sm_w-48(
-            ref="tagFilter"
-            v-model="selectedTagIDs"
-            placeholder="Filter by tags"
-            multiple
-            collapse-tags
-            filterable
-          )
-            template(slot='empty')
-              .relative.p-3.font-normal.text-sm.text-center
-                span.text-gray-400
-                  | No tags found. Create new tags in
-                router-link.inline.text-blue-500.hover_text-blue-600(
-                  to="settings"
-                  exact
-                )
-                  |  Settings
-            el-option(
-              v-for="tag in tags"
-              :key="tag.id"
-              :label="tag.name"
-              :value="tag.id"
-            )
-          sort-dropdown.w-full.mt-3.sm_mt-0.sm_ml-3.sm_w-40(
-            @click="applySort($event)"
-          )
-        .mt-3.text-center.w-full.float-right.sm_mt-0.sm_text-left.sm_w-64
-          base-form-input(
-            v-model="debouncedSearchTerm"
-            placeholder='Input manga title'
-            type="text"
-          )
-            template(slot='icon')
-              icon-search.h-5.w-5.text-gray-400
-      .mx-5.mb-5.max-sm_mx-2.max-sm_flex.max-sm_flex-col
-        bulk-actions.mb-3.sm_mb-0(
-          v-show="entriesSelected"
-          @delete="deleteEntries"
-          @edit="editDialogVisible = true"
-          @read="updateEntries"
-          @report="reportDialogVisible = true"
-        )
-        .actions.inline-block.float-right.sm_flex.sm_flex-row-reverse.relative
-          span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
-            base-button(
-              ref="addMangaEntryModalButton"
-              @click="dialogVisible = true"
-            )
-              i.el-icon-plus.mr-1
-              | Add Manga
-          span.flex.mt-3.sm_mt-0.w-full.rounded-md.shadow-sm.sm_w-auto
-            base-button(colour="success" @click="importDialogVisible = true")
-              i.el-icon-upload2.mr-1
-              | Import
-      .flex-grow.sm_mx-5.mx-0
+    .hidden.bg-white.h-48.w-full.absolute.border-b.border-gray-200.sm_block
+    .flex.flex-col.w-full.max-w-7xl.pt-8.sm_py-8
+      manga-list-actions(
+        :selectedStatus.sync="selectedStatus"
+        :selectedTagIDs.sync="selectedTagIDs"
+        :debouncedSearchTerm.sync="debouncedSearchTerm"
+        @sortApplied="applySort($event)"
+      )
+      .flex-grow.sm_mx-5.mx-0.z-10
         the-manga-list(
           ref='mangaList'
+          :editMode='entriesSelected'
           @seriesSelected="handleSelection"
           @editEntry='showEditEntryDialog'
-          @changePage='changePage'
-          @sortingApplied='applySort'
+          @deleteEntry='deleteEntries'
+          @importManga='importDialogVisible = true'
+          @addManga='dialogVisible = true'
+          @bulkDelete='deleteEntries'
+          @bulkEdit='editDialogVisible = true'
+          @bulkUpdate='updateEntries'
+          @bulkReport='reportDialogVisible = true'
+          @pageChanged="changePage($event)"
         )
       importers(
         :visible='importDialogVisible'
@@ -112,12 +59,12 @@
 
   import Importers from '@/components/TheImporters';
   import BulkActions from '@/components/BulkActions';
-  import SortDropdown from '@/components/SortDropdown';
   import AddMangaEntry from '@/components/manga_entries/AddMangaEntry';
   import DeleteMangaEntries from '@/components/manga_entries/DeleteMangaEntries';
   import EditMangaEntries from '@/components/manga_entries/EditMangaEntries';
   import ReportMangaEntries from '@/components/manga_entries/ReportMangaEntries';
   import TheMangaList from '@/components/TheMangaList';
+  import MangaListActions from '@/components/MangaListActions';
   import { bulkDeleteMangaEntries } from '@/services/api';
   import { update } from '@/services/endpoints/manga_entries_collections';
 
@@ -126,12 +73,12 @@
     components: {
       Importers,
       BulkActions,
-      SortDropdown,
       AddMangaEntry,
       EditMangaEntries,
       DeleteMangaEntries,
       ReportMangaEntries,
       TheMangaList,
+      MangaListActions,
       'el-select': Select,
       'el-option': Option,
     },
@@ -141,7 +88,6 @@
         selectedTagIDs: [],
         selectedSort: { Unread: 'desc' },
         selectedStatus: 1,
-        entriesSelected: false,
         searchTerm: '',
         dialogVisible: false,
         importDialogVisible: false,
@@ -157,8 +103,8 @@
         'tags',
         'statuses',
       ]),
-      allStatuses() {
-        return [{ enum: -1, name: 'All' }].concat(this.statuses);
+      entriesSelected() {
+        return this.selectedEntries.length > 1;
       },
       selectedEntriesIDs() {
         return this.selectedEntries.map((entry) => entry.id);
@@ -223,7 +169,6 @@
         'updateEntry',
       ]),
       handleSelection(selectedEntries) {
-        this.entriesSelected = selectedEntries.length > 0;
         this.selectedEntries = selectedEntries;
       },
       deleteEntries() {
@@ -287,12 +232,8 @@
         this[dialogName] = false;
         this.resetSelectedAttributes();
       },
-      clearTableSelection() {
-        this.$refs.mangaList.$refs.mangaListTable.clearSelection();
-      },
       resetSelectedAttributes() {
         this.selectedEntries = [];
-        this.clearTableSelection();
       },
       showEditEntryDialog(entry) {
         this.selectedEntries = [entry];

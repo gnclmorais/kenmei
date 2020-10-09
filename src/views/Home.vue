@@ -14,7 +14,7 @@
       .flex-1.overflow-x-hidden.min-h-45
         transition(name="slide-left" mode="out-in")
           router-view
-      base-footer.flex-shrink-0
+      base-footer.flex-shrink-0.hidden.sm_block
 </template>
 
 <script>

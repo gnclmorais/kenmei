@@ -1,25 +1,19 @@
 <template lang="pug">
-  transition(
-    enter-active-class='slide-transition'
-    enter-class='opacity-0 transform translate-y-8'
-    leave-active-class='slide-transition'
-    leave-to-class='opacity-0 transform translate-y-8'
-  )
-    span.relative.z-0.inline-flex.shadow-sm
-      button.flex.justify-center.group(
-        v-for='(button, index) in buttons'
-        @click="$emit(button.action)"
-        :key="index"
-        :class="buttonClasses(index)"
+  span.relative.z-0.inline-flex.shadow-sm
+    button.flex.justify-center.group(
+      v-for='(button, index) in buttons'
+      @click="$emit(button.action)"
+      :key="index"
+      :class="buttonClasses(index)"
+    )
+      component.-ml-1.mr-2.h-5.w-5.text-gray-400(
+        :is='button.icon'
+        :class="hoverClasses(button.action)"
       )
-        component.-ml-1.mr-2.h-5.w-5.text-gray-400(
-          :is='button.icon'
-          :class="hoverClasses(button.action)"
-        )
-        span(
-          v-text="button.text"
-          :class="hoverClasses(button.action)"
-        )
+      span(
+        v-text="button.text"
+        :class="hoverClasses(button.action)"
+      )
 </template>
 
 <script>
