@@ -1,14 +1,11 @@
 <template lang="pug">
-  span(v-text="text" :class="classes")
+  span(:class="classes")
+    slot
 </template>
 
 <script>
   export default {
     props: {
-      text: {
-        type: String,
-        required: true,
-      },
       type: {
         type: String,
         default: 'primary',

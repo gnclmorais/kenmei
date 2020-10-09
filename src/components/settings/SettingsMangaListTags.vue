@@ -19,7 +19,8 @@
           .min-w-0.flex-1.flex.items-center
             .min-w-0.flex-1.items-center.grid.grid-col-1.space-y-4.sm_space-y-0.sm_grid-cols-4.sm_gap-4
               div.col-span-1
-                base-badge.float-left(:text="tag.name")
+                base-badge.float-left
+                  | {{ tag.name }}
               .col-span-2.text-sm.leading-5.text-gray-500
                 span(v-if="tag.description" v-text="tag.description")
                 span(v-else) No description
