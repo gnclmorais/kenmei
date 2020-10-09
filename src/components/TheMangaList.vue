@@ -1,161 +1,99 @@
 <template lang="pug">
-  #mangaTable
-    el-table(
-      ref="mangaListTable"
-      :data="entries"
-      v-loading='tagsLoading'
-      @selection-change="handleSelectionChange"
-    )
-      template(slot='empty')
-        span.mt-2.leading-normal
-          template(v-if='entries.length || tagsLoading')
-            | No entries found.
-            | Try changing your filters
-          template(v-else)
-            | You haven't imported manga yet. Add a new manga series by pressing
-            | Add Manga and providing a URL. Or press Import, to import your
-            | manga from TrackrMoe or MangaDex
-      el-table-column(type="selection" width="35")
-      el-table-column(
-        prop="newReleases"
-        width="30"
-        align="center"
-        label-class-name="p-0"
-      )
-        template(slot-scope="scope")
-          .new-chapter-dot(v-if="scope.row.attributes.unread")
-      el-table-column(
-        prop="attributes.title"
-        label="Title"
-        width="400"
-      )
-        template(slot-scope="scope")
-          el-link.break-normal(
-            :href="scope.row.links.series_url"
-            :underline="false"
-            target="_blank"
+  .bg-white.shadow.overflow-hidden.sm_rounded-md
+    .border-b.border-gray-200.px-4.py-5.sm_px-6
+      .-ml-4.-mt-2.flex.items-center.justify-between.flex-wrap.sm_flex-no-wrap
+        manga-list-header.ml-4.mt-2.sm_ml-2(
+          :selectedEntries="selectedEntries"
+          @selectAll="selectAllEntries"
+        )
+        actions(
+          :editMode="editMode"
+          @importManga='$emit($event)'
+          @addManga="$emit($event)"
+          @bulkDelete="$emit($event)"
+          @bulkEdit="$emit($event)"
+          @bulkUpdate='$emit($event)'
+          @bulkReport="$emit($event)"
+        )
+    ul.divide-y.divide-gray-200
+      template(v-if="entries.length")
+        li.transition.duration-150.ease-in-out(
+          v-for="(item, index) in entries"
+          :key="item.id"
+        )
+          manga-list-row(
+            :item="item"
+            :itemSelected="selectedEntries.includes(item)"
+            @entrySelected="handleSelectionChange"
+            @setLastRead="setLastRead"
+            @editEntry="$emit('editEntry', $event)"
+            @deleteEntry="$emit('deleteEntry', $event)"
           )
-            | {{ scope.row.attributes.title | sanitize }}
-            .font-normal.text-sm.leading-5.text-gray-500(
-              v-if="scope.row.attributes.tracked_entries.length > 1"
-            )
-              | {{ scope.row.attributes.tracked_entries.length }} sites tracked
-      el-table-column(
-        prop="attributes.status"
-        label="Status"
-        width="150"
-        align="center"
-      )
-        template(slot-scope="scope")
-          base-badge(
-            :text="entryStatusName(scope.row)"
-            :type="entryType(scope.row)"
+      template(v-else)
+        template(v-if="entriesLoading")
+          li(v-for="index in 2" :key="index")
+            a.block.relative
+              .flex.items-center.px-4.py-4
+                base-form-checkbox.h-5.w-4.hidden.sm_flex(
+                  :value='false'
+                  :disabled='true'
+                )
+                manga-list-row-skeleton.ml-10
+        li(v-else)
+          a.block.px-48.text-center
+            .flex.items-center.justify-center.px-4.py-12.sm_px-6
+              .text-base.leading-5.font-medium.text-gray-500
+                template(v-if='entries.length')
+                  | No entries found.
+                  | Try changing your filters
+                template(v-else)
+                  | You haven't imported manga yet. Add a new manga series by
+                  | pressing Add Manga and providing a URL. Or press Import, to
+                  | import your manga from TrackrMoe or MangaDex
+    .pagination(v-if="entries.length")
+      .flex-1.flex.justify-center.sm_items-center.sm_justify-between
+        div.hidden.sm_block.pl-12(v-if="entriesPagy.count")
+          base-pagination-info(:pagy="entriesPagy" :loading="entriesLoading")
+        div(v-if="entriesPagy.pages > 1")
+          base-pagination-pager(
+            :pagy="entriesPagy"
+            @pageChanged="$emit('pageChanged', $event)"
           )
-      el-table-column(
-        prop="attributes.last_chapter_read"
-        label="Last Read"
-        align="center"
-      )
-        template(v-if='scope.row.attributes' slot-scope="scope")
-          el-link.break-normal(
-            v-if="scope.row.links.last_chapter_read_url"
-            :href="scope.row.links.last_chapter_read_url"
-            :underline="false"
-            target="_blank"
-          )
-            | {{ chapterInfo(scope.row.attributes.last_volume_read, scope.row.attributes.last_chapter_read) }}
-          template(v-else)
-            | {{ chapterInfo(scope.row.attributes.last_volume_read, scope.row.attributes.last_chapter_read) }}
-      el-table-column(
-        prop="links.last_chapter_available_url"
-        label="Last Available"
-        align="center"
-      )
-        template(v-if='scope.row.attributes' slot-scope="scope")
-          el-link(
-            v-if="scope.row.links.last_chapter_available_url"
-            :href="scope.row.links.last_chapter_available_url"
-            :underline="false"
-            target="_blank"
-          )
-            | {{ chapterInfo(scope.row.attributes.last_volume_available, scope.row.attributes.last_chapter_available) }}
-          template(v-else)
-            | No chapters
-      el-table-column(
-        prop="attributes.last_released_at"
-        label="Released"
-        align="center"
-      )
-        template(v-if='scope.row.attributes' slot-scope="scope")
-          template(v-if='scope.row.attributes.last_released_at')
-            | {{ scope.row.attributes.last_released_at | timeAgo }}
-          template(v-else)
-            | Unknown
-      el-table-column(width="100" class-name="actions")
-        template(slot-scope="scope")
-          el-button(
-            ref="editEntryButton"
-            content="Edit"
-            icon="el-icon-edit-outline"
-            size="mini"
-            @click="editMangaEntry(scope.row)"
-            circle
-            v-tippy
-          )
-          el-button(
-            content="Set last read to the latest chapter"
-            v-if="scope.row.attributes.unread"
-            ref="updateEntryButton"
-            icon="el-icon-check"
-            size="mini"
-            @click="setLastRead(scope.row)"
-            :loading="entryUpdated === scope.row"
-            circle
-            v-tippy
-          )
-    .flex.flex-row.justify-center(v-if="entries.length > 0")
-      el-pagination(
-        layout="prev, pager, next"
-        :page-size="50"
-        :current-page.sync="entriesPagy.page"
-        :total="entriesPagy.count"
-        :hide-on-single-page="true"
-        @current-change="$emit('changePage', $event)"
-      )
 </template>
 
 <script>
   import { mapState, mapMutations } from 'vuex';
-  import {
-    Table, TableColumn, Link, Button, Message, Pagination,
-  } from 'element-ui';
-  import dayjs from 'dayjs';
-  import he from 'he';
-  import relativeTime from 'dayjs/plugin/relativeTime';
+  import { Message } from 'element-ui';
 
   import { updateMangaEntry } from '@/services/api';
 
-  dayjs.extend(relativeTime);
+  import Actions from './TheMangaListActions.vue';
+  import MangaListRow from './manga_list/TheMangaListRow.vue';
+  import MangaListRowSkeleton from './manga_list/TheMangaListRowSkeleton.vue';
+  import MangaListHeader from './TheMangaListHeader.vue';
 
   export default {
     components: {
-      'el-table': Table,
-      'el-table-column': TableColumn,
-      'el-link': Link,
-      'el-button': Button,
-      'el-pagination': Pagination,
+      Actions,
+      MangaListRow,
+      MangaListRowSkeleton,
+      MangaListHeader,
     },
-    filters: {
-      sanitize(title) {
-        return he.decode(title);
-      },
-      timeAgo(datetime) {
-        return dayjs().to(dayjs(datetime));
+    props: {
+      editMode: {
+        type: Boolean,
+        default: false,
       },
     },
     data() {
       return {
+        selectedEntries: [],
         entryUpdated: null,
+        dropdownItems: [
+          { text: 'Set chapter to last read', icon: 'IconCheckCircle2' },
+          { text: 'Edit', icon: 'IconEdit' },
+          { text: 'Delete', icon: 'IconTrash' },
+        ],
       };
     },
     computed: {
@@ -164,22 +102,13 @@
         'entriesPagy',
         'statuses',
         'tagsLoading',
+        'entriesLoading',
       ]),
     },
     methods: {
       ...mapMutations('lists', [
         'updateEntry',
       ]),
-      entryStatusName(e) {
-        return this.statuses.find((s) => s.enum === e.attributes.status).name;
-      },
-      entryType(entry) {
-        const { status } = entry.attributes;
-
-        return {
-          1: 'success', 2: 'warning', 3: 'warning-light', 5: 'danger',
-        }[status];
-      },
       chapterInfo(volume, chapter) {
         if (chapter) {
           const chapterNumber = parseFloat(chapter);
@@ -217,73 +146,39 @@
 
         this.entryUpdated = null;
       },
-      handleSelectionChange(entries) {
-        this.$emit('seriesSelected', entries);
+      handleSelectionChange(entry, selected) {
+        if (selected) {
+          this.selectedEntries.push(entry);
+        } else {
+          this.selectedEntries = this.selectedEntries.filter((e) => e !== entry);
+        }
+
+        this.$emit('seriesSelected', this.selectedEntries);
       },
-      editMangaEntry(entry) {
-        this.$emit('editEntry', entry);
+      selectAllEntries(state) {
+        if (state) {
+          this.selectedEntries = this.entries;
+        } else {
+          this.selectedEntries = [];
+        }
+
+        this.$emit('seriesSelected', this.selectedEntries);
       },
     },
   };
 </script>
 
-<style media="screen" lang="scss">
-  .el-pagination {
-    width: fit-content;
-    @apply my-5 p-0 shadow overflow-hidden;
+<style media="screen" lang="scss" scoped>
+  .border-l-blue-500 {
+    border-left-color: #4299e1;
+  }
+
+  .pagination {
+    @apply bg-white px-4 py-3 flex items-center justify-between;
+    @apply border-t border-gray-200;
 
     @screen sm {
-      @apply rounded-md;
+      @apply px-6;
     }
-  }
-  .btn-prev {
-    @apply rounded-l;
-  }
-  .btn-next {
-    @apply rounded-r;
-  }
-  .actions > .cell {
-    opacity: 0;
-    transition: 0.2s ease-in-out;
-    @apply float-right;
-    height: 28px; // matches the button height
-  }
-  tr:hover .actions > .cell {
-    opacity: 1;
-  }
-  .new-chapter-dot {
-    background-color: #409EFF;
-    @apply h-2 w-2 p-0 rounded-full;
-  }
-
-  .el-checkbox__inner {
-    @apply delay-0;
-  }
-
-  .el-table {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, .12);
-
-    @screen sm {
-      @apply rounded-md;
-    }
-  }
-
-  .el-table th {
-    @apply border-b border-gray-200 text-xs leading-4 font-medium text-gray-500;
-    @apply uppercase tracking-wider;
-  }
-  .el-table th > .cell {
-    @apply break-normal;
-  }
-
-  .el-table td > .cell {
-    @apply break-normal;
-  }
-  .el-table--enable-row-hover .el-table__body tr:hover>td {
-    @apply bg-gray-50;
-  }
-
-  .el-table__empty-text {
-    @apply leading-loose my-5;
   }
 </style>
