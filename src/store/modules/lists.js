@@ -19,6 +19,7 @@ const state = {
     { enum: 5, name: 'Dropped' },
   ],
   tagsLoading: false,
+  entriesLoading: false,
 };
 
 const getters = {
@@ -35,6 +36,8 @@ const actions = {
     return status === 200 ? commit('setTags', data) : Message.error(data.error);
   },
   async getEntries({ commit }, { page, status, tagIDs, searchTerm, sort }) {
+    commit('setEntriesLoading', true);
+
     const response = await mangaEntries.index(
       page, status, tagIDs, searchTerm, sort,
     );
@@ -45,6 +48,8 @@ const actions = {
     } else {
       Message.error(response.data.error);
     }
+
+    commit('setEntriesLoading', false);
   },
 };
 
@@ -74,6 +79,9 @@ const mutations = {
   },
   setTagsLoading(state, data) {
     state.tagsLoading = data;
+  },
+  setEntriesLoading(state, data) {
+    state.entriesLoading = data;
   },
 };
 
