@@ -36,11 +36,10 @@
       return {
         landing: false,
         updateBanner: {
-          id: 8,
-          link: 'https://news.kenmei.co/monthly-updates/2020/august',
+          id: 9,
+          link: 'https://news.kenmei.co/monthly-updates/2020/september',
           message: `
-            Official extension, ability to set multiple last chapters read and
-            more in the latest monthly update
+            Upcoming desktop and mobile UI overhaul + more in the latest update
           `,
           mobileText: 'Check out the latest monthly update',
         },
