@@ -28,7 +28,7 @@
     "vue-meta": "^2.4.0",
     "vue-rollbar": "^1.0.0",
     "vue-router": "^3.4.4",
-    "vue-scrollto": "^2.18.2",
+    "vue-scrollto": "^2.19.1",
     "vue-slide-toggle": "^1.1.1",
     "vue-tippy": "^4.4.0",
     "vuelidate": "^0.7.5",
