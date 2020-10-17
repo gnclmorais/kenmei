@@ -1,8 +1,8 @@
 import { secure } from '@/modules/axios';
 
-export const create = (seriesURL, status) => secure
+export const create = (seriesURL, status, sourceID) => secure
   .post('/api/v1/manga_entries/', {
-    manga_entry: { series_url: seriesURL, status },
+    manga_entry: { series_url: seriesURL, status, manga_source_id: sourceID },
   })
   .then((response) => response)
   .catch((request) => request.response);
