@@ -21,7 +21,7 @@ module.exports = {
   ],
   rules: {
     'no-nested-ternary': 'off',
-    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true }],
     'comma-dangle': ['error', 'always-multiline'],
     'no-shadow': 'off',
     'no-param-reassign': 'off',
