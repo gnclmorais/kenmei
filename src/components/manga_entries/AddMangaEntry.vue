@@ -7,7 +7,23 @@
   )
     template(slot='body')
       .flex-col.w-full
+        base-tabs.mb-5(
+          :selectedTab="selectedTab"
+          :tabs="tabs"
+          @tabSelected="selectedTab = $event"
+        )
+        .relative(v-if="selectedTab === 'Search'")
+          search-manga-entries(
+            :searchQuery="$v.searchQuery.$model"
+            :mangaSourceID="$v.mangaSourceID.$model"
+            :selectedSeriesTitle="selectedSeriesTitle"
+            :validator="$v"
+            @seriesSelected="selectSeries"
+            @mangaSourceSelected="mangaSourceID = $event"
+            @input="searchQuery = $event"
+          )
         base-form-input(
+          v-else
           v-model="$v.mangaURL.$model"
           :validator="$v.mangaURL"
           label="Manga URL"
@@ -43,9 +59,12 @@
 
   import { create } from '@/services/api';
 
+  import SearchMangaEntries from './AddMangaEntryBySearch.vue';
+
   export default {
     name: 'AddMangaEntry',
     components: {
+      SearchMangaEntries,
       'el-select': Select,
       'el-option': Option,
     },
@@ -61,16 +80,37 @@
     },
     data() {
       return {
+        searchQuery: '',
         mangaURL: '',
         selectedStatus: 1,
+        selectedSeriesTitle: '',
+        selectedTab: 'Search',
+        tabs: ['Search', 'Add with URL'],
+        mangaSourceID: null,
         loading: false,
       };
     },
-    validations: {
-      mangaURL: {
-        required,
-        url,
-      },
+    validations() {
+      if (this.selectedTab === 'Search') {
+        return {
+          searchQuery: {
+            required,
+          },
+          selectedSeriesTitle: {
+            required,
+          },
+          mangaSourceID: {
+            required,
+          },
+        };
+      }
+
+      return {
+        mangaURL: {
+          required,
+          url,
+        },
+      };
     },
     computed: {
       ...mapState('lists', [
@@ -93,19 +133,32 @@
       currentStatus(status) {
         this.selectedStatus = status === -1 ? 1 : status;
       },
+      selectedTab() {
+        const { selectedTab, selectedStatus, ...original } = this.$options.data.call(this);
+
+        Object.assign(this.$data, original);
+        this.$v.$reset();
+      },
     },
     methods: {
       ...mapMutations('lists', [
         'addEntry',
         'replaceEntry',
       ]),
+      selectSeries(title) {
+        this.selectedSeriesTitle = title;
+        this.mangaSourceID = null;
+      },
       async addMangaEntry() {
         this.$v.$touch();
         if (this.$v.$invalid) return;
 
         this.loading = true;
 
-        const response = await create(this.mangaURL, this.selectedStatus);
+        const response = this.mangaSourceID
+          ? await create(this.mangaURL, this.selectedStatus, this.mangaSourceID)
+          : await create(this.mangaURL, this.selectedStatus);
+
         const { status, data } = response;
 
         if (status === 200) {
