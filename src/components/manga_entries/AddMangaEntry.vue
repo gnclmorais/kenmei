@@ -3,7 +3,7 @@
     :visible="visible"
     :loading="loading"
     size="sm"
-    @dialogClosed="closeModal()"
+    @dialogClosed="$emit('dialogClosed')"
   )
     template(slot='body')
       .flex-col.w-full
@@ -32,13 +32,15 @@
         base-button(ref="addMangaButton" @click="addMangaEntry")
           | Add
       span.mt-3.flex.w-full.rounded-md.shadow-sm.sm_mt-0.sm_w-auto
-        base-button(colour="secondary" @click="closeModal()") Cancel
+        base-button(colour="secondary" @click="$emit('dialogClosed')") Cancel
 </template>
 
 <script>
   import { required, url } from 'vuelidate/lib/validators';
   import { mapState, mapMutations, mapGetters } from 'vuex';
   import { Message, Select, Option } from 'element-ui';
+  import debounce from 'lodash/debounce';
+
   import { create } from '@/services/api';
 
   export default {
@@ -79,6 +81,15 @@
       ]),
     },
     watch: {
+      visible: debounce(function(newVal) { //eslint-disable-line
+        if (!newVal) {
+          const { selectedStatus, ...original } = this.$options.data.call(this);
+
+          // Reset data to initial state
+          Object.assign(this.$data, original);
+          this.$v.$reset();
+        }
+      }, 250),
       currentStatus(status) {
         this.selectedStatus = status === -1 ? 1 : status;
       },
@@ -110,7 +121,7 @@
             this.addEntry(entryData);
           }
 
-          this.closeModal();
+          this.$emit('dialogClosed');
 
           Message.info('New Entry added');
         } else if (status === 404 || status === 406) {
@@ -118,14 +129,8 @@
           this.loading = false;
         } else {
           Message.error('Something went wrong');
-          this.closeModal();
+          this.$emit('dialogClosed');
         }
-      },
-      closeModal() {
-        this.$emit('dialogClosed');
-        this.loading = false;
-        this.mangaURL = '';
-        this.$v.$reset();
       },
     },
   };
