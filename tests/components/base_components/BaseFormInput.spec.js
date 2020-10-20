@@ -8,6 +8,14 @@ describe('BaseDropdown.vue', () => {
     baseFormInput = mount(BaseFormInput, { i18n, propsData: { value: '' } });
   });
 
+  describe('when calling focus method', () => {
+    it('focuses input', () => {
+      baseFormInput.vm.focus();
+
+      expect(baseFormInput.find('input').element).toHaveFocus();
+    });
+  });
+
   describe('when input is detected', () => {
     it('emits input value', async () => {
       await baseFormInput.find('input').setValue('new value');

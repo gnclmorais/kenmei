@@ -2,12 +2,7 @@
   .w-full
     label.block.text-sm.font-medium.leading-5.text-gray-700(v-if="label")
       | {{ label }}
-      transition(
-        enter-active-class='slide-transition'
-        enter-class='opacity-0 transform -translate-y-1'
-        leave-active-class='slide-transition'
-        leave-to-class='opacity-0 transform -translate-y-1'
-      )
+      transition(name="slide")
         span.leading-none.ml-1.text-xs.text-red-600(
           v-if="hasErrors"
           v-t.preserve="activeError"
@@ -19,8 +14,11 @@
       )
         slot(name="icon")
       input.form-input.block.w-full.sm_text-sm.sm_leading-5(
-        v-bind:value="value"
-        v-on:input="$emit('input', $event.target.value)"
+        ref="input"
+        :value="value"
+        @input="$emit('input', $event.target.value)"
+        @focus="$emit('focus')"
+        @blur="$emit('blur')"
         :class="classes"
         :placeholder="placeholder"
         :type="type"
@@ -79,12 +77,23 @@
         };
       },
     },
+    methods: {
+      focus() {
+        this.$refs.input.focus();
+      },
+    },
   };
 </script>
 
 <style media="screen" lang="scss" scoped>
-  .slide-transition {
+  .slide-enter-active,
+  .slide-leave-active {
     @apply transition ease-in duration-200 transition-all overflow-hidden;
+  }
+
+  .slide-enter,
+  .slide-leave-to {
+    @apply opacity-0 transform -translate-y-1;
   }
 
   .icon {

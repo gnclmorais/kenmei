@@ -30,6 +30,28 @@ describe('API', () => {
       const response = await apiService.create('', 0);
       expect(response).toBeFalsy();
     });
+
+    describe('when sourceID is present', () => {
+      it('uses it to make a request', async () => {
+        const postMangaEntriesCollectionsSpy = jest.spyOn(axios, 'post');
+        const mangaURL = '';
+        const sourceID = 123;
+        const status = 1;
+
+        await apiService.create(mangaURL, status, sourceID);
+
+        expect(postMangaEntriesCollectionsSpy).toHaveBeenCalledWith(
+          '/api/v1/manga_entries/',
+          {
+            manga_entry: {
+              series_url: mangaURL,
+              status,
+              manga_source_id: sourceID,
+            },
+          },
+        );
+      });
+    });
   });
 
   describe('updateMangaEntry()', () => {

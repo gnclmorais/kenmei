@@ -13,6 +13,7 @@ import '@/stylesheets/tailwind.css';
 import '@/stylesheets/global.scss';
 import '@/stylesheets/transitions.scss';
 import 'tippy.js/themes/light.css';
+import 'overlayscrollbars/css/OverlayScrollbars.css';
 
 import router from '@/router/';
 import store from '@/store/index';
