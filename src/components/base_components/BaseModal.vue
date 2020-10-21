@@ -1,6 +1,6 @@
 <template lang="pug">
   transition(leave-active-class='duration-300')
-    .modal(v-show="visible")
+    .modal(ref='modal' v-show="visible")
       transition(name="overlay-fade")
         .fixed.inset-0.transition-opacity(ref="modalMask" v-show="visible")
           .absolute.inset-0.bg-gray-500.opacity-75
@@ -14,7 +14,9 @@
 </template>
 
 <script>
-  import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+  import {
+    disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks,
+  } from 'body-scroll-lock';
 
   export default {
     props: {
@@ -49,15 +51,14 @@
         } else {
           // Need to wait for animation to finish, to avoid content jump due to
           // padding change
-          const el = this.targetElement;
-          setTimeout(() => { enableBodyScroll(el); }, 200);
+          setTimeout(() => { enableBodyScroll(this.$refs.modal); }, 200);
         }
       },
     },
     destroyed() {
       // I need to enable body scroll, in case modal gets destroyed before the
       // prop change
-      enableBodyScroll(this.targetElement);
+      clearAllBodyScrollLocks();
     },
     mounted() {
       document.addEventListener('keydown', (event) => {
