@@ -5,7 +5,7 @@
         .px-4.sm_px-0
           h3.text-lg.font-medium.leading-6.text-gray-900 Account Termination
           p.mt-1.text-sm.leading-5.text-gray-500
-            | Deleting your account is irreversable, so make sure you have
+            | Deleting your account is irreversible, so make sure you have
             | exported all data, before proceeding
       .mt-5.md_mt-0.md_col-span-1.self-center
         base-button(colour='danger' @click="confirmationVisible = true")
@@ -24,7 +24,7 @@
               | Are you sure?
             .mt-2
               p.text-sm.leading-5.text-gray-500
-                | Deleting your account is irreversable. You will lose all your
+                | Deleting your account is irreversible. You will lose all your
                 | manga entries and tags. Do you want to proceed?
         template(slot='actions')
           span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
