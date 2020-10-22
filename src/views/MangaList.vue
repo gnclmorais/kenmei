@@ -48,6 +48,9 @@
           )
             template(slot='icon')
               icon-search.h-5.w-5.text-gray-400
+            template(v-if="searchTerm.length" slot='endIcon')
+              button.focus_outline-none(@click="searchTerm = ''")
+                icon-cross.h-5.w-5.text-gray-400
       .mx-5.mb-5.max-sm_mx-2.max-sm_flex.max-sm_flex-col
         bulk-actions.mb-3.sm_mb-0(
           v-show="entriesSelected"
