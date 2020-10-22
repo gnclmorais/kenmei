@@ -19,7 +19,7 @@
         @input="$emit('input', $event.target.value)"
         @focus="$emit('focus')"
         @blur="$emit('blur')"
-        :class="classes"
+        :class="classes()"
         :placeholder="placeholder"
         :type="type"
       )
@@ -72,17 +72,19 @@
 
         return `errors.${error}`;
       },
-      classes() {
-        return {
-          'pl-10': this.$slots.icon,
-          'pr-10': this.$slots.endIcon,
-          'error placeholder-red-300': this.hasErrors,
-        };
-      },
     },
     methods: {
       focus() {
         this.$refs.input.focus();
+      },
+      classes() {
+        const { icon, endIcon } = this.$slots;
+
+        return {
+          'pl-10': icon,
+          'pr-10': endIcon,
+          'error placeholder-red-300': this.hasErrors,
+        };
       },
     },
   };
