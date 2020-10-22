@@ -75,6 +75,7 @@
       classes() {
         return {
           'pl-10': this.$slots.icon,
+          'pr-10': this.$slots.endIcon,
           'error placeholder-red-300': this.hasErrors,
         };
       },
