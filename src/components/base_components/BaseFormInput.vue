@@ -23,6 +23,8 @@
         :placeholder="placeholder"
         :type="type"
       )
+      .absolute.inset-y-0.right-0.pr-3.flex.items-center(v-if="$slots.endIcon")
+        slot(name="endIcon")
     p.mt-2.text-xs.text-gray-500(v-if="helperText" v-text="helperText")
 </template>
 
