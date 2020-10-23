@@ -101,6 +101,12 @@
     "logo": "sleeping_knight_logo.jpg"
   },
   {
+    "name": "Asura Scans",
+    "url": "https://asurascans.com/",
+    "status": "Supported",
+    "logo": "asura_scans_logo.jpg"
+  },
+  {
     "name": "Project Scans",
     "url": "https://ptscans.com/",
     "status": "In Development",
