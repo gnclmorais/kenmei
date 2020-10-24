@@ -1,13 +1,16 @@
+import i18n from 'i18n';
 import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
 import MangaListTags from '@/components/settings/SettingsMangaListTags.vue';
 import BaseDropdown from '@/components/base_components/BaseDropdown.vue';
+import BaseModal from '@/components/base_components/BaseModal.vue';
 import * as endpoint from '@/services/endpoints/UserTags';
 
 const localVue = createLocalVue();
 
 // To avoid missing directive Vue warnings
 localVue.directive('loading', true);
+jest.mock('lodash/debounce', () => jest.fn((fn) => fn));
 
 describe('SettingsMangaListTags.vue', () => {
   afterEach(() => { jest.restoreAllMocks(); });
@@ -112,14 +115,31 @@ describe('SettingsMangaListTags.vue', () => {
 
       mangaListTags = mount(MangaListTags, {
         localVue,
+        i18n,
         data() { return { tags: [tag1] }; },
       });
     });
 
     it('shows tag creation modal', async () => {
-      mangaListTags.findComponent({ ref: 'openTagCreationModal' }).trigger('click');
+      mangaListTags
+        .findComponent({ ref: 'openTagCreationModal' })
+        .trigger('click');
 
       expect(mangaListTags.vm.modalVisible).toBeTruthy();
+    });
+
+    describe('and there are validation errors', () => {
+      it('shows validation errors', async () => {
+        await mangaListTags
+          .findComponent({ ref: 'openTagCreationModal' })
+          .trigger('click');
+        await mangaListTags
+          .findComponent({ ref: 'addTagButton' })
+          .trigger('click');
+
+        expect(mangaListTags.findComponent(BaseModal).text())
+          .toContain('required');
+      });
     });
 
     describe('and creation is successful', () => {

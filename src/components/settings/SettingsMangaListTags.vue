@@ -59,29 +59,18 @@
     )
       template(slot='body')
         .flex.flex-col.w-full
-          .mt-3.text-center.sm_mt-0.sm_text-left.w-full
-            label.block.text-sm.font-medium.leading-5.text-gray-700(for='name')
-              | Name
-            .mt-1.relative.rounded-md.shadow-sm
-              input#name.form-input.block.w-full.sm_text-sm.sm_leading-5(
-                aria-label='Name'
-                name='name'
-                v-model.trim="form.name"
-                placeholder='Isekai'
-                maxlength="50"
-              )
-          .mt-6.text-center.sm_text-left.w-full
-            label.block.text-sm.font-medium.leading-5.text-gray-700(for='description')
-              | Description
-            .mt-1.relative.rounded-md.shadow-sm
-              .max-w-lg.flex.rounded-md.shadow-sm
-              input#description.form-input.block.w-full.sm_text-sm.sm_leading-5(
-                aria-label='Description'
-                name='description'
-                v-model.trim="form.description"
-                placeholder='Protagonist ends up in another world'
-                maxlength="100"
-              )
+          base-form-input(
+            v-model.trim="$v.form.name.$model"
+            :validator="$v.form.name"
+            label="Name"
+            placeholder="Isekai"
+          )
+          base-form-input.mt-5(
+            v-model.trim="$v.form.description.$model"
+            :validator="$v.form.description"
+            label="Description"
+            placeholder="Protagonist ends up in another world"
+          )
       template(slot='actions')
         span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
           base-button(ref="addTagButton" @click="upsertTag")
@@ -91,6 +80,8 @@
 </template>
 
 <script>
+  import debounce from 'lodash/debounce';
+  import { required, maxLength } from 'vuelidate/lib/validators';
   import { Message } from 'element-ui';
 
   import {
@@ -113,6 +104,17 @@
         tags: [],
       };
     },
+    validations: {
+      form: {
+        name: {
+          required,
+          maxLength50: maxLength(50),
+        },
+        description: {
+          maxLength100: maxLength(100),
+        },
+      },
+    },
     computed: {
       pages() {
         return Math.ceil(this.tags.length / this.tagsPerPage);
@@ -129,6 +131,12 @@
       pages(newVal) {
         if (this.currentPage > newVal) { this.currentPage -= 1; }
       },
+      modalVisible: debounce(function(newVal) { //eslint-disable-line
+        if (!newVal) {
+          this.form = { id: null, name: '', description: '' };
+          this.$v.$reset();
+        }
+      }, 250),
     },
     async created() {
       await this.getTags();
@@ -149,6 +157,9 @@
         this.tagsLoading = false;
       },
       async upsertTag() {
+        this.$v.$touch();
+        if (this.$v.$invalid) return;
+
         this.modalLoading = true;
 
         const isUpdate = this.form.id !== null;
@@ -204,7 +215,6 @@
       closeModal() {
         this.modalVisible = false;
         this.modalLoading = false;
-        this.form = { id: null, name: '', description: '' };
       },
     },
   };
