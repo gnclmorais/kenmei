@@ -11,13 +11,12 @@
       p.mt-2.text-xs.text-gray-500(v-if="helperText" v-text="helperText")
     base-form-input(
       v-else
+      v-model="query"
       ref="searchInput"
-      :value="value"
       :label="label"
       :placeholder="placeholder"
       :helperText="helperText"
       :validator="validator"
-      @input="debounceInput($event)"
       @focus="onFocus"
     )
       template(slot='icon')
@@ -60,10 +59,6 @@
       'overlay-scrollbars': OverlayScrollbarsComponent,
     },
     props: {
-      value: {
-        type: String,
-        required: true,
-      },
       selectedValue: {
         type: String,
         required: true,
@@ -95,6 +90,7 @@
     },
     data() {
       return {
+        query: '',
         dropdownOpen: false,
       };
     },
@@ -104,18 +100,12 @@
       },
     },
     watch: {
-      value(newValue) {
-        if (newValue.length && !this.hasErrors) {
-          if (!this.selectedValue) { this.dropdownOpen = true; }
-        } else {
-          this.dropdownOpen = false;
-        }
-      },
+      query: debounce(function (input) { //eslint-disable-line
+        this.$emit('input', input);
+        this.dropdownOpen = input.length && !this.hasErrors;
+      }, 350),
     },
     methods: {
-      debounceInput: debounce(function (input) { //eslint-disable-line
-        this.$emit('input', input);
-      }, 350),
       async resetSelection() {
         this.$emit('selected', '');
         this.dropdownOpen = true;
@@ -129,7 +119,7 @@
         this.dropdownOpen = false;
       },
       onFocus() {
-        if (this.value.length && !this.hasErrors) { this.dropdownOpen = true; }
+        if (this.query.length && !this.hasErrors) { this.dropdownOpen = true; }
       },
     },
   };

@@ -4,13 +4,12 @@
       label="Series title"
       placeholder="One Piece"
       helperText="You can search by English or Romaji titles"
-      :value="searchQuery"
       :selectedValue="selectedSeriesTitle"
       :items="seriesTitles"
       :loading="loading"
-      :validator="validator.searchQuery"
-      @selected="$emit('seriesSelected', $event)"
-      @input="$emit('input', $event)"
+      :validator="$v.searchQuery"
+      @selected="selectSeries($event)"
+      @input="searchQuery = $event"
     )
       template(slot='icon')
         icon-search.h-5.w-5
@@ -22,10 +21,9 @@
             | required
       .mt-1.relative.rounded-md.shadow-sm.w-auto
         el-select.rounded.w-full(
-          placeholder="Select series first"
-          :value="mangaSourceID"
+          v-model="$v.mangaSourceID.$model"
           :disabled="!availableSources.length"
-          @change="$emit('mangaSourceSelected', $event)"
+          placeholder="Select series first"
         )
           el-option(
             v-for="source in availableSources"
@@ -36,6 +34,7 @@
 </template>
 
 <script>
+  import { required, url, not } from 'vuelidate/lib/validators';
   import debounce from 'lodash/debounce';
   import he from 'he';
   import { Message, Select, Option } from 'element-ui';
@@ -49,28 +48,31 @@
       'el-option': Option,
     },
     props: {
-      searchQuery: {
-        type: String,
-        required: true,
-      },
-      mangaSourceID: {
-        type: Number,
-        default: null,
-      },
-      selectedSeriesTitle: {
-        type: String,
-        default: '',
-      },
-      validator: {
-        type: Object,
+      addingEntry: {
+        type: Boolean,
         required: true,
       },
     },
     data() {
       return {
-        loading: false,
         items: [],
+        searchQuery: '',
+        selectedSeriesTitle: '',
+        mangaSourceID: null,
+        loading: false,
       };
+    },
+    validations: {
+      searchQuery: {
+        required,
+        isNotURL: not(url),
+      },
+      selectedSeriesTitle: {
+        required,
+      },
+      mangaSourceID: {
+        required,
+      },
     },
     computed: {
       ...mapState('lists', [
@@ -82,7 +84,7 @@
         };
       },
       hasErrors() {
-        const { mangaSourceID } = this.validator;
+        const { mangaSourceID } = this.$v;
 
         return !mangaSourceID.required
           && mangaSourceID.$dirty
@@ -103,8 +105,8 @@
     },
     watch: {
       async searchQuery(title) {
-        this.validator.$touch();
-        if (this.validator.searchQuery.$error) {
+        this.$v.$touch();
+        if (this.$v.searchQuery.$error) {
           this.resetItems();
           return;
         }
@@ -127,10 +129,23 @@
       availableSources(sources) {
         if (!sources.length) return;
 
-        this.$emit('mangaSourceSelected', sources[0].id);
+        this.mangaSourceID = sources[0].id;
+      },
+      mangaSourceID(newID, oldID) {
+        if (newID !== oldID) { this.$emit('mangaSourceSelected', newID); }
+      },
+      addingEntry(val) { if (val) { this.$v.$touch(); } },
+      $v: {
+        handler(val) { this.$emit('validationUpdated', val); },
+        deep: true,
+        immediate: true,
       },
     },
     methods: {
+      selectSeries(title) {
+        this.selectedSeriesTitle = title;
+        this.mangaSourceID = null;
+      },
       resetItems: debounce(function (_e) { // eslint-disable-line func-names
         this.items = [];
       }, 200),
