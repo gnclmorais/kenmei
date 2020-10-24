@@ -98,9 +98,14 @@
         dropdownOpen: false,
       };
     },
+    computed: {
+      hasErrors() {
+        return this.validator && this.validator.$invalid;
+      },
+    },
     watch: {
       value(newValue) {
-        if (newValue.length) {
+        if (newValue.length && !this.hasErrors) {
           if (!this.selectedValue) { this.dropdownOpen = true; }
         } else {
           this.dropdownOpen = false;
@@ -124,7 +129,7 @@
         this.dropdownOpen = false;
       },
       onFocus() {
-        if (this.value.length) { this.dropdownOpen = true; }
+        if (this.value.length && !this.hasErrors) { this.dropdownOpen = true; }
       },
     },
   };
