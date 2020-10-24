@@ -36,6 +36,7 @@
 </template>
 
 <script>
+  import debounce from 'lodash/debounce';
   import he from 'he';
   import { Message, Select, Option } from 'element-ui';
   import { mapState } from 'vuex';
@@ -102,8 +103,9 @@
     },
     watch: {
       async searchQuery(title) {
-        if (!title.length) {
-          this.items = [];
+        this.validator.$touch();
+        if (this.validator.searchQuery.$error) {
+          this.resetItems();
           return;
         }
 
@@ -129,6 +131,9 @@
       },
     },
     methods: {
+      resetItems: debounce(function (_e) { // eslint-disable-line func-names
+        this.items = [];
+      }, 200),
     },
   };
 </script>

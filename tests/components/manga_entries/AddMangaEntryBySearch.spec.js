@@ -11,6 +11,7 @@ import * as resource from '@/services/endpoints/v1/manga_series';
 const localVue = createLocalVue();
 
 localVue.use(Vuex);
+jest.mock('lodash/debounce', () => jest.fn((fn) => fn));
 
 describe('AddMangaEntryBySearch.vue', () => {
   let store;
@@ -32,7 +33,11 @@ describe('AddMangaEntryBySearch.vue', () => {
         localVue,
         propsData: {
           searchQuery: '',
-          validator: { mangaSourceID: { required: false, $dirty: false } },
+          validator: {
+            mangaSourceID: { required: false, $dirty: false },
+            searchQuery: { required: false, $dirty: false },
+            $touch: () => jest.fn(),
+          },
         },
       },
     );
@@ -72,7 +77,11 @@ describe('AddMangaEntryBySearch.vue', () => {
             },
             propsData: {
               searchQuery: 'query',
-              validator: { mangaSourceID: { required: false, $dirty: false } },
+              validator: {
+                mangaSourceID: { required: false, $dirty: false },
+                searchQuery: { required: false, $error: true },
+                $touch: () => jest.fn(),
+              },
             },
           },
         );
@@ -101,6 +110,23 @@ describe('AddMangaEntryBySearch.vue', () => {
 
         expect(indexMangaSeriesMock).toHaveBeenCalledWith('query');
         expect(bySearch.vm.items).toEqual(mangaSeries);
+      });
+
+      describe('and there are validation errors', () => {
+        it('does not make an async request', async () => {
+          await bySearch.setProps({
+            searchQuery: 'www.example.com',
+            validator: {
+              mangaSourceID: { required: false, $dirty: false },
+              searchQuery: { required: false, $error: true },
+              $touch: () => jest.fn(),
+            },
+          });
+
+          expect(indexMangaSeriesMock)
+            .not
+            .toHaveBeenCalledWith('www.example.com');
+        });
       });
 
       describe('and request failed', () => {
