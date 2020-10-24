@@ -52,7 +52,7 @@
 </template>
 
 <script>
-  import { required, url } from 'vuelidate/lib/validators';
+  import { required, url, not } from 'vuelidate/lib/validators';
   import { mapState, mapMutations, mapGetters } from 'vuex';
   import { Message, Select, Option } from 'element-ui';
   import debounce from 'lodash/debounce';
@@ -95,6 +95,7 @@
         return {
           searchQuery: {
             required,
+            isNotURL: not(url),
           },
           selectedSeriesTitle: {
             required,

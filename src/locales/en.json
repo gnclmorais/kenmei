@@ -6,6 +6,7 @@
     "minLength8": "must have at least 8 letters",
     "maxLength24": "must have at most 24 letters",
     "sameAs": "must be identical",
+    "isNotURL": "can't be a url",
     "mustBeMangaDex": "must be a MDList url"
   }
 }
