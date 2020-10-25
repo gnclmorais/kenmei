@@ -31,37 +31,9 @@ describe('AddMangaEntryBySearch.vue', () => {
       AddMangaEntryBySearch, {
         store,
         localVue,
-        propsData: {
-          searchQuery: '',
-          validator: {
-            mangaSourceID: { required: false, $dirty: false },
-            searchQuery: { required: false, $dirty: false },
-            $touch: () => jest.fn(),
-          },
-        },
+        propsData: { addingEntry: false },
       },
     );
-  });
-
-  describe('when there are client-side errors', () => {
-    it('shows validation errors', () => {
-      bySearch = shallowMount(
-        AddMangaEntryBySearch, {
-          store,
-          localVue,
-          propsData: {
-            searchQuery: '',
-            validator: { mangaSourceID: { required: false, $dirty: true } },
-          },
-          computed: {
-            availableSources: () => [jest.fn()],
-          },
-        },
-      );
-
-      expect(bySearch.find('span').exists()).toBeTruthy();
-      expect(bySearch.find('span').text()).toContain('required');
-    });
   });
 
   describe('when searchQuery changes', () => {
@@ -72,21 +44,14 @@ describe('AddMangaEntryBySearch.vue', () => {
           AddMangaEntryBySearch, {
             store,
             localVue,
-            data() {
-              return { items: [mangaSeries] };
-            },
+            data() { return { searchQuery: 'query', items: [mangaSeries] }; },
             propsData: {
-              searchQuery: 'query',
-              validator: {
-                mangaSourceID: { required: false, $dirty: false },
-                searchQuery: { required: false, $error: true },
-                $touch: () => jest.fn(),
-              },
+              addingEntry: false,
             },
           },
         );
 
-        await bySearch.setProps({ searchQuery: '' });
+        await bySearch.setData({ searchQuery: '' });
 
         expect(bySearch.vm.items).toEqual([]);
       });
@@ -105,7 +70,7 @@ describe('AddMangaEntryBySearch.vue', () => {
         indexMangaSeriesMock
           .mockResolvedValue({ status: 200, data: { data: mangaSeries } });
 
-        bySearch.setProps({ searchQuery: 'query' });
+        bySearch.setData({ searchQuery: 'query' });
         await flushPromises();
 
         expect(indexMangaSeriesMock).toHaveBeenCalledWith('query');
@@ -114,18 +79,11 @@ describe('AddMangaEntryBySearch.vue', () => {
 
       describe('and there are validation errors', () => {
         it('does not make an async request', async () => {
-          await bySearch.setProps({
-            searchQuery: 'www.example.com',
-            validator: {
-              mangaSourceID: { required: false, $dirty: false },
-              searchQuery: { required: false, $error: true },
-              $touch: () => jest.fn(),
-            },
-          });
+          await bySearch.setData({ searchQuery: 'https://www.example.com' });
 
           expect(indexMangaSeriesMock)
             .not
-            .toHaveBeenCalledWith('www.example.com');
+            .toHaveBeenCalledWith('https://www.example.com');
         });
       });
 
@@ -135,7 +93,7 @@ describe('AddMangaEntryBySearch.vue', () => {
 
           indexMangaSeriesMock.mockResolvedValue({ status: 500 });
 
-          bySearch.setProps({ searchQuery: 'query' });
+          bySearch.setData({ searchQuery: 'query' });
           await flushPromises();
 
           expect(errorMessageMock).toHaveBeenCalledWith(
@@ -157,13 +115,12 @@ describe('AddMangaEntryBySearch.vue', () => {
             return { items: [mangaSeries] };
           },
           propsData: {
-            searchQuery: 'query',
-            validator: { mangaSourceID: { required: false, $dirty: false } },
+            addingEntry: false,
           },
         },
       );
 
-      await bySearch.setProps({ selectedSeriesTitle: mangaSeries.title });
+      await bySearch.setData({ selectedSeriesID: mangaSeries.id });
 
       expect(bySearch.emitted('mangaSourceSelected')[0])
         .toEqual([mangaSeries.mangaSources[0].id]);
@@ -171,20 +128,21 @@ describe('AddMangaEntryBySearch.vue', () => {
   });
 
   describe('when autocomplete component emits selected', () => {
-    it('emits seriesSelected', async () => {
+    it('sets selectedSeriesID and resets mangaSourceID', async () => {
       await bySearch
-        .findComponent(BaseFormAutocomplete).vm.$emit('selected', 'Title');
+        .findComponent(BaseFormAutocomplete).vm.$emit('selected', 1);
 
-      expect(bySearch.emitted('seriesSelected')[0]).toEqual(['Title']);
+      expect(bySearch.vm.selectedSeriesID).toEqual(1);
+      expect(bySearch.vm.mangaSourceID).toEqual(null);
     });
   });
 
   describe('when autocomplete component emits input', () => {
-    it('emits input', async () => {
+    it('sets searchQuery', async () => {
       await bySearch
         .findComponent(BaseFormAutocomplete).vm.$emit('input', 'Title');
 
-      expect(bySearch.emitted('input')[0]).toEqual(['Title']);
+      expect(bySearch.vm.searchQuery).toEqual('Title');
     });
   });
 });

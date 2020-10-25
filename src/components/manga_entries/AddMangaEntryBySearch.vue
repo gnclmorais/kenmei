@@ -4,8 +4,10 @@
       label="Series title"
       placeholder="One Piece"
       helperText="You can search by English or Romaji titles"
-      :selectedValue="selectedSeriesTitle"
-      :items="seriesTitles"
+      valueKey="id"
+      textKey="title"
+      :selectedValue="selectedSeriesID"
+      :items="items"
       :loading="loading"
       :validator="$v.searchQuery"
       @selected="selectSeries($event)"
@@ -34,9 +36,8 @@
 </template>
 
 <script>
-  import { required, url, not } from 'vuelidate/lib/validators';
   import debounce from 'lodash/debounce';
-  import he from 'he';
+  import { required, url, not } from 'vuelidate/lib/validators';
   import { Message, Select, Option } from 'element-ui';
   import { mapState } from 'vuex';
 
@@ -57,7 +58,7 @@
       return {
         items: [],
         searchQuery: '',
-        selectedSeriesTitle: '',
+        selectedSeriesID: '',
         mangaSourceID: null,
         loading: false,
       };
@@ -67,7 +68,7 @@
         required,
         isNotURL: not(url),
       },
-      selectedSeriesTitle: {
+      selectedSeriesID: {
         required,
       },
       mangaSourceID: {
@@ -90,12 +91,8 @@
           && mangaSourceID.$dirty
           && this.availableSources.length;
       },
-      seriesTitles() {
-        return this.items.map((item) => he.decode(item.title));
-      },
       selectedSeries() {
-        return this.items
-          .find((item) => item.title === this.selectedSeriesTitle);
+        return this.items.find((item) => item.id === this.selectedSeriesID);
       },
       availableSources() {
         if (!this.selectedSeries) { return []; }
@@ -143,7 +140,7 @@
     },
     methods: {
       selectSeries(title) {
-        this.selectedSeriesTitle = title;
+        this.selectedSeriesID = title;
         this.mangaSourceID = null;
       },
       resetItems: debounce(function (_e) { // eslint-disable-line func-names
