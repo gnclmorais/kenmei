@@ -110,7 +110,11 @@
       selectedLabel() {
         if (!this.selectedValue) { return; }
         if (this.valueKey.length) {
-          const label = this.items.find((item) => item[this.valueKey] === this.selectedValue)[this.textKey];
+          const label = this
+            .items
+            .find(
+              (item) => item[this.valueKey] === this.selectedValue,
+            )[this.textKey];
 
           return he.decode(label);
         }
@@ -119,7 +123,7 @@
       },
     },
     watch: {
-      query: debounce(function (input) { //eslint-disable-line
+      query: debounce(function(input) { //eslint-disable-line
         this.$emit('input', input);
         this.dropdownOpen = input.length && !this.hasErrors;
       }, 350),
