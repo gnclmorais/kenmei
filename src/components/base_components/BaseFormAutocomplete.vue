@@ -1,13 +1,13 @@
 <template lang="pug">
   .relative
-    template(v-if="selectedValue")
+    template(v-if="selectedLabel")
       label.mb-1(v-if="label" v-text="label")
       .flex.shadow-sm.rounded-md
         a.form-input.w-full(href='#' @click.prevent="resetSelection")
           .text-sm.leading-5.relative
             .icon.text-gray-400(v-if="$slots.icon")
               slot(name="icon")
-            p.selected-value(v-text="selectedValue")
+            p.selected-value(v-text="selectedLabel")
       p.mt-2.text-xs.text-gray-500(v-if="helperText" v-text="helperText")
     base-form-input(
       v-else
@@ -41,16 +41,17 @@
             a.dropdown-item.group(
               v-show="!loading && items.length"
               v-for="(item, index) in items"
-              v-text="item"
+              v-text="itemText(item)"
               :key="index"
               href='#'
-              @click.stop="selectSeries(item)"
+              @click.stop="selectSeries(itemValue(item))"
             )
             p.not-found(v-show="!loading && !items.length")
               | Nothing found
 </template>
 
 <script>
+  import he from 'he';
   import debounce from 'lodash/debounce';
   import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue';
 
@@ -60,8 +61,16 @@
     },
     props: {
       selectedValue: {
-        type: String,
+        type: [String, Number, Object],
         required: true,
+      },
+      valueKey: {
+        type: String,
+        default: '',
+      },
+      textKey: {
+        type: String,
+        default: '',
       },
       items: {
         type: Array,
@@ -98,6 +107,16 @@
       hasErrors() {
         return this.validator && this.validator.$invalid;
       },
+      selectedLabel() {
+        if (!this.selectedValue) { return; }
+        if (this.valueKey.length) {
+          const label = this.items.find((item) => item[this.valueKey] === this.selectedValue)[this.textKey];
+
+          return he.decode(label);
+        }
+
+        return this.items.find((item) => item === this.selectedValue);
+      },
     },
     watch: {
       query: debounce(function (input) { //eslint-disable-line
@@ -120,6 +139,12 @@
       },
       onFocus() {
         if (this.query.length && !this.hasErrors) { this.dropdownOpen = true; }
+      },
+      itemValue(item) {
+        return this.valueKey.length ? item[this.valueKey] : item;
+      },
+      itemText(item) {
+        return this.valueKey.length ? he.decode(item[this.textKey]) : item;
       },
     },
   };
