@@ -28,6 +28,7 @@ module.exports = {
     'max-len': ['error', 80, { ignoreTrailingComments: true }],
     'no-multi-spaces': ['error', { exceptions: { VariableDeclarator: true } }],
     'prefer-promise-reject-errors': 'off',
+    'consistent-return': 'off',
     indent: ['error', 2, { SwitchCase: 0 }],
     'import/extensions': 'off',
     'vue/html-indent': ['error', 2, {

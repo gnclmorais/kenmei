@@ -11,7 +11,7 @@ const localVue = createLocalVue();
 
 localVue.use(Vuex);
 
-jest.useFakeTimers();
+jest.mock('lodash/debounce', () => jest.fn((fn) => fn));
 
 describe('AddMangaEntry.vue', () => {
   let store;
@@ -39,53 +39,31 @@ describe('AddMangaEntry.vue', () => {
 
   describe('when tabs are switched', () => {
     it('resets data to original state', async () => {
-      await addMangaEntry
-        .setData({ searchQuery: 'query', selectedSeriesTitle: 'Title' });
+      await addMangaEntry.setData({ mangaURL: 'example.com' });
 
-      expect(addMangaEntry.vm.searchQuery).toEqual('query');
-      expect(addMangaEntry.vm.selectedSeriesTitle).toEqual('Title');
+      expect(addMangaEntry.vm.mangaURL).toEqual('example.com');
 
       await addMangaEntry.setData({ selectedTab: 'Add with URL' });
 
-      expect(addMangaEntry.vm.searchQuery).toEqual('');
-      expect(addMangaEntry.vm.selectedSeriesTitle).toEqual('');
+      expect(addMangaEntry.vm.mangaURL).toEqual('');
     });
   });
 
   describe('when modal is closed', () => {
-    it.skip('resets data to original state', async () => {
-      await addMangaEntry.setData({
-        searchQuery: 'query', selectedSeriesTitle: 'Title',
-      });
+    beforeEach(() => {
+      addMangaEntry.setData({ mangaSourceID: 123 });
+    });
 
-      expect(addMangaEntry.vm.searchQuery).toEqual('query');
-      expect(addMangaEntry.vm.selectedSeriesTitle).toEqual('Title');
-
+    it('resets data to original state', async () => {
       await addMangaEntry.setProps({ visible: false });
-      jest.runAllTimers();
 
-      expect(addMangaEntry.vm.searchQuery).toEqual('');
-      expect(addMangaEntry.vm.selectedSeriesTitle).toEqual('');
+      expect(addMangaEntry.vm.mangaSourceID).toEqual(null);
     });
   });
 
   describe('when search tab is selected', () => {
     beforeEach(() => {
       addMangaEntry.setData({ selectedTab: 'Search' });
-    });
-
-    describe('and series title is selected', () => {
-      beforeEach(() => {
-        addMangaEntry
-          .findComponent(AddMangaEntryBySearch)
-          .vm
-          .$emit('seriesSelected', 'Title');
-      });
-
-      it('sets selectedSeriesTitle and resets mangaSourceID', async () => {
-        expect(addMangaEntry.vm.selectedSeriesTitle).toEqual('Title');
-        expect(addMangaEntry.vm.mangaSourceID).toEqual(null);
-      });
     });
 
     describe('and manga source is selected', () => {
@@ -105,15 +83,10 @@ describe('AddMangaEntry.vue', () => {
       let createEntrySpy;
 
       beforeEach(() => {
-        addMangaEntry.setData({
-          searchQuery: 'query',
-          selectedSeriesTitle: 'title',
-          mangaSourceID: 123,
-        });
+        addMangaEntry.setData({ mangaSourceID: 123 });
 
         createEntrySpy = jest.spyOn(api, 'create');
       });
-
 
       it('calls create endpoint with mangaSourceID', async () => {
         addMangaEntry.vm.addMangaEntry();

@@ -14,13 +14,10 @@
         )
         .relative(v-if="selectedTab === 'Search'")
           search-manga-entries(
-            :searchQuery="$v.searchQuery.$model"
-            :mangaSourceID="$v.mangaSourceID.$model"
-            :selectedSeriesTitle="selectedSeriesTitle"
-            :validator="$v"
-            @seriesSelected="selectSeries"
+            :key="componentKey"
+            :addingEntry="addingEntry"
             @mangaSourceSelected="mangaSourceID = $event"
-            @input="searchQuery = $event"
+            @validationUpdated="searchValidator = $event"
           )
         base-form-input(
           v-else
@@ -52,7 +49,7 @@
 </template>
 
 <script>
-  import { required, url, not } from 'vuelidate/lib/validators';
+  import { required, url } from 'vuelidate/lib/validators';
   import { mapState, mapMutations, mapGetters } from 'vuex';
   import { Message, Select, Option } from 'element-ui';
   import debounce from 'lodash/debounce';
@@ -80,26 +77,20 @@
     },
     data() {
       return {
-        searchQuery: '',
         mangaURL: '',
         selectedStatus: 1,
-        selectedSeriesTitle: '',
+        componentKey: 0,
         selectedTab: 'Search',
         tabs: ['Search', 'Add with URL'],
         mangaSourceID: null,
+        searchValidator: null,
         loading: false,
+        addingEntry: false,
       };
     },
     validations() {
       if (this.selectedTab === 'Search') {
         return {
-          searchQuery: {
-            required,
-            isNotURL: not(url),
-          },
-          selectedSeriesTitle: {
-            required,
-          },
           mangaSourceID: {
             required,
           },
@@ -120,14 +111,20 @@
       ...mapGetters('lists', [
         'findEntryFromIDs',
       ]),
+      hasErrors() {
+        return this.$v.$invalid
+          || (this.searchValidator && this.searchValidator.$invalid);
+      },
     },
     watch: {
       visible: debounce(function(newVal) { //eslint-disable-line
         if (!newVal) {
-          const { selectedStatus, ...original } = this.$options.data.call(this);
+          const { data } = this.$options;
+          const { selectedStatus, componentKey, ...original } = data.call(this);
 
           // Reset data to initial state
           Object.assign(this.$data, original);
+          this.forceRerender();
           this.$v.$reset();
         }
       }, 250),
@@ -135,7 +132,8 @@
         this.selectedStatus = status === -1 ? 1 : status;
       },
       selectedTab() {
-        const { selectedTab, selectedStatus, ...original } = this.$options.data.call(this);
+        const { data } = this.$options;
+        const { selectedTab, selectedStatus, ...original } = data.call(this);
 
         Object.assign(this.$data, original);
         this.$v.$reset();
@@ -146,13 +144,17 @@
         'addEntry',
         'replaceEntry',
       ]),
-      selectSeries(title) {
-        this.selectedSeriesTitle = title;
-        this.mangaSourceID = null;
-      },
+      forceRerender() { this.componentKey += 1; },
       async addMangaEntry() {
+        this.addingEntry = true;
         this.$v.$touch();
-        if (this.$v.$invalid) return;
+
+        await this.$nextTick(); // wait for child component to update state
+
+        if (this.hasErrors) {
+          this.addingEntry = false;
+          return;
+        }
 
         this.loading = true;
 
@@ -185,6 +187,8 @@
           Message.error('Something went wrong');
           this.$emit('dialogClosed');
         }
+
+        this.addingEntry = false;
       },
     },
   };

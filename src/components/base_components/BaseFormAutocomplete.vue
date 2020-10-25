@@ -1,23 +1,22 @@
 <template lang="pug">
   .relative
-    template(v-if="selectedValue")
+    template(v-if="selectedLabel")
       label.mb-1(v-if="label" v-text="label")
       .flex.shadow-sm.rounded-md
         a.form-input.w-full(href='#' @click.prevent="resetSelection")
           .text-sm.leading-5.relative
             .icon.text-gray-400(v-if="$slots.icon")
               slot(name="icon")
-            p.selected-value(v-text="selectedValue")
+            p.selected-value(v-text="selectedLabel")
       p.mt-2.text-xs.text-gray-500(v-if="helperText" v-text="helperText")
     base-form-input(
       v-else
+      v-model="query"
       ref="searchInput"
-      :value="value"
       :label="label"
       :placeholder="placeholder"
       :helperText="helperText"
       :validator="validator"
-      @input="debounceInput($event)"
       @focus="onFocus"
     )
       template(slot='icon')
@@ -42,16 +41,17 @@
             a.dropdown-item.group(
               v-show="!loading && items.length"
               v-for="(item, index) in items"
-              v-text="item"
+              v-text="itemText(item)"
               :key="index"
               href='#'
-              @click.stop="selectSeries(item)"
+              @click.stop="selectSeries(itemValue(item))"
             )
             p.not-found(v-show="!loading && !items.length")
               | Nothing found
 </template>
 
 <script>
+  import he from 'he';
   import debounce from 'lodash/debounce';
   import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue';
 
@@ -60,13 +60,17 @@
       'overlay-scrollbars': OverlayScrollbarsComponent,
     },
     props: {
-      value: {
-        type: String,
+      selectedValue: {
+        type: [String, Number, Object],
         required: true,
       },
-      selectedValue: {
+      valueKey: {
         type: String,
-        required: true,
+        default: '',
+      },
+      textKey: {
+        type: String,
+        default: '',
       },
       items: {
         type: Array,
@@ -95,6 +99,7 @@
     },
     data() {
       return {
+        query: '',
         dropdownOpen: false,
       };
     },
@@ -102,20 +107,28 @@
       hasErrors() {
         return this.validator && this.validator.$invalid;
       },
-    },
-    watch: {
-      value(newValue) {
-        if (newValue.length && !this.hasErrors) {
-          if (!this.selectedValue) { this.dropdownOpen = true; }
-        } else {
-          this.dropdownOpen = false;
+      selectedLabel() {
+        if (!this.selectedValue) { return; }
+        if (this.valueKey.length) {
+          const label = this
+            .items
+            .find(
+              (item) => item[this.valueKey] === this.selectedValue,
+            )[this.textKey];
+
+          return he.decode(label);
         }
+
+        return this.items.find((item) => item === this.selectedValue);
       },
     },
-    methods: {
-      debounceInput: debounce(function (input) { //eslint-disable-line
+    watch: {
+      query: debounce(function(input) { //eslint-disable-line
         this.$emit('input', input);
+        this.dropdownOpen = input.length && !this.hasErrors;
       }, 350),
+    },
+    methods: {
       async resetSelection() {
         this.$emit('selected', '');
         this.dropdownOpen = true;
@@ -129,7 +142,13 @@
         this.dropdownOpen = false;
       },
       onFocus() {
-        if (this.value.length && !this.hasErrors) { this.dropdownOpen = true; }
+        if (this.query.length && !this.hasErrors) { this.dropdownOpen = true; }
+      },
+      itemValue(item) {
+        return this.valueKey.length ? item[this.valueKey] : item;
+      },
+      itemText(item) {
+        return this.valueKey.length ? he.decode(item[this.textKey]) : item;
       },
     },
   };
