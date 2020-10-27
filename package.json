@@ -29,7 +29,7 @@
     "vue-i18n": "^8.0.0",
     "vue-meta": "^2.4.0",
     "vue-rollbar": "^1.0.0",
-    "vue-router": "^3.4.7",
+    "vue-router": "^3.4.8",
     "vue-scrollto": "^2.19.1",
     "vue-slide-toggle": "^1.1.1",
     "vue-tippy": "^4.7.1",
