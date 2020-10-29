@@ -13,7 +13,7 @@
   "dependencies": {
     "@tailwindcss/ui": "~0.6.2",
     "add": "^2.0.6",
-    "axios": "^0.19.2",
+    "axios": "^0.21.0",
     "body-scroll-lock": "=3.0.2",
     "core-js": "^3.3.2",
     "dayjs": "^1.8.29",
